@@ -11,14 +11,6 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-}
-
-datasource db {
-  provider = "postgresql"
-}
 
 enum UserRole {
   USER
@@ -106,9 +98,9 @@ enum TierEvaluationStatus {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  role      UserRole   @default(USER)
-  status    UserStatus @default(ACTIVE)
+  id     String     @id @default(uuid())
+  role   UserRole   @default(USER)
+  status UserStatus @default(ACTIVE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -123,17 +115,15 @@ model User {
 
   scrimParticipants ScrimParticipant[]
 
-  walletTransactions WalletTransaction[] @relation("WalletOwner")
+  walletTransactions        WalletTransaction[] @relation("WalletOwner")
   createdWalletTransactions WalletTransaction[] @relation("WalletTransactionCreator")
 
   suspensions        UserSuspension[] @relation("SuspendedUser")
   createdSuspensions UserSuspension[] @relation("SuspensionCreator")
 
-  tierEvaluationRequestsSent TierEvaluationRequest[]
-    @relation("TierRequestSender")
+  tierEvaluationRequestsSent TierEvaluationRequest[] @relation("TierRequestSender")
 
-  tierEvaluationRequestsReceived TierEvaluationRequest[]
-    @relation("TierRequestTarget")
+  tierEvaluationRequestsReceived TierEvaluationRequest[] @relation("TierRequestTarget")
 
   createdScrims Scrim[] @relation("ScrimCreator")
   closedScrims  Scrim[] @relation("ScrimCloser")
@@ -145,11 +135,7 @@ model DiscordAccount {
   id String @id @default(uuid())
 
   userId String @unique
-  user   User @relation(
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   discordUserId String @unique
 
@@ -167,11 +153,7 @@ model RiotAccount {
   id String @id @default(uuid())
 
   userId String @unique
-  user   User @relation(
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   puuid String @unique
 
@@ -186,7 +168,7 @@ model RiotAccount {
   soloRank String?
   soloLp   Int?
 
-  linkedAt      DateTime @default(now())
+  linkedAt      DateTime  @default(now())
   lastChangedAt DateTime?
   lastSyncedAt  DateTime?
 
@@ -202,11 +184,7 @@ model RiotAccountHistory {
   id String @id @default(uuid())
 
   riotAccountId String
-  riotAccount   RiotAccount @relation(
-    fields: [riotAccountId],
-    references: [id],
-    onDelete: Cascade
-  )
+  riotAccount   RiotAccount @relation(fields: [riotAccountId], references: [id], onDelete: Cascade)
 
   oldPuuid    String?
   oldGameName String?
@@ -221,11 +199,7 @@ model RiotAccountHistory {
 
 model UserPreference {
   userId String @id
-  user   User @relation(
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   mainPosition Position?
   subPosition  Position?
@@ -253,25 +227,15 @@ model Scrim {
   alarmMessageId   String?
 
   createdById String?
-  createdBy User? @relation(
-    "ScrimCreator",
-    fields: [createdById],
-    references: [id],
-    onDelete: SetNull
-  )
+  createdBy   User?   @relation("ScrimCreator", fields: [createdById], references: [id], onDelete: SetNull)
 
   closedById String?
-  closedBy User? @relation(
-    "ScrimCloser",
-    fields: [closedById],
-    references: [id],
-    onDelete: SetNull
-  )
+  closedBy   User?   @relation("ScrimCloser", fields: [closedById], references: [id], onDelete: SetNull)
 
   participants ScrimParticipant[]
   games        Game[]
 
-  walletTransactions WalletTransaction[]
+  walletTransactions     WalletTransaction[]
   tierEvaluationRequests TierEvaluationRequest[]
 
   createdAt  DateTime  @default(now())
@@ -288,18 +252,10 @@ model ScrimParticipant {
   id String @id @default(uuid())
 
   scrimId String
-  scrim   Scrim @relation(
-    fields: [scrimId],
-    references: [id],
-    onDelete: Cascade
-  )
+  scrim   Scrim  @relation(fields: [scrimId], references: [id], onDelete: Cascade)
 
   userId String
-  user   User @relation(
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   status ParticipantStatus @default(CONFIRMED)
 
@@ -311,7 +267,7 @@ model ScrimParticipant {
   isMvp Boolean @default(false)
   isAce Boolean @default(false)
 
-  joinedAt DateTime @default(now())
+  joinedAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([scrimId, userId])
@@ -323,11 +279,7 @@ model Game {
   id String @id @default(uuid())
 
   scrimId String
-  scrim   Scrim @relation(
-    fields: [scrimId],
-    references: [id],
-    onDelete: Cascade
-  )
+  scrim   Scrim  @relation(fields: [scrimId], references: [id], onDelete: Cascade)
 
   gameNumber Int
 
@@ -352,11 +304,7 @@ model Game {
 
 model UserStats {
   userId String @id
-  user   User @relation(
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   wins   Int @default(0)
   losses Int @default(0)
@@ -371,11 +319,7 @@ model UserStats {
 
 model DefenseStats {
   userId String @id
-  user   User @relation(
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   progress Int @default(0)
   tickets  Int @default(0)
@@ -385,11 +329,7 @@ model DefenseStats {
 
 model Wallet {
   userId String @id
-  user   User @relation(
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   balance BigInt @default(0)
 
@@ -400,19 +340,10 @@ model WalletTransaction {
   id String @id @default(uuid())
 
   userId String
-  user   User @relation(
-    "WalletOwner",
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user   User   @relation("WalletOwner", fields: [userId], references: [id], onDelete: Cascade)
 
   scrimId String?
-  scrim   Scrim? @relation(
-    fields: [scrimId],
-    references: [id],
-    onDelete: SetNull
-  )
+  scrim   Scrim?  @relation(fields: [scrimId], references: [id], onDelete: SetNull)
 
   amount BigInt
 
@@ -423,12 +354,7 @@ model WalletTransaction {
   idempotencyKey String? @unique
 
   createdById String?
-  createdBy User? @relation(
-    "WalletTransactionCreator",
-    fields: [createdById],
-    references: [id],
-    onDelete: SetNull
-  )
+  createdBy   User?   @relation("WalletTransactionCreator", fields: [createdById], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
 
@@ -440,28 +366,18 @@ model UserSuspension {
   id String @id @default(uuid())
 
   userId String
-  user   User @relation(
-    "SuspendedUser",
-    fields: [userId],
-    references: [id],
-    onDelete: Cascade
-  )
+  user   User   @relation("SuspendedUser", fields: [userId], references: [id], onDelete: Cascade)
 
   reason      String
   description String?
 
-  startsAt DateTime @default(now())
+  startsAt DateTime  @default(now())
   endsAt   DateTime?
 
   active Boolean @default(true)
 
   createdById String?
-  createdBy User? @relation(
-    "SuspensionCreator",
-    fields: [createdById],
-    references: [id],
-    onDelete: SetNull
-  )
+  createdBy   User?   @relation("SuspensionCreator", fields: [createdById], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
 
@@ -472,27 +388,13 @@ model TierEvaluationRequest {
   id String @id @default(uuid())
 
   senderId String
-  sender   User @relation(
-    "TierRequestSender",
-    fields: [senderId],
-    references: [id],
-    onDelete: Cascade
-  )
+  sender   User   @relation("TierRequestSender", fields: [senderId], references: [id], onDelete: Cascade)
 
   targetId String
-  target   User @relation(
-    "TierRequestTarget",
-    fields: [targetId],
-    references: [id],
-    onDelete: Cascade
-  )
+  target   User   @relation("TierRequestTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   scrimId String
-  scrim   Scrim @relation(
-    fields: [scrimId],
-    references: [id],
-    onDelete: Cascade
-  )
+  scrim   Scrim  @relation(fields: [scrimId], references: [id], onDelete: Cascade)
 
   direction TierEvaluationDirection
 
@@ -503,7 +405,7 @@ model TierEvaluationRequest {
   requestedRp Int?
   appliedRp   Int?
 
-  createdAt DateTime @default(now())
+  createdAt  DateTime  @default(now())
   reviewedAt DateTime?
 
   @@index([targetId, status])
@@ -529,12 +431,7 @@ model AdminAuditLog {
   id String @id @default(uuid())
 
   adminId String?
-  admin User? @relation(
-    "AdminActor",
-    fields: [adminId],
-    references: [id],
-    onDelete: SetNull
-  )
+  admin   User?   @relation("AdminActor", fields: [adminId], references: [id], onDelete: SetNull)
 
   action     String
   targetType String
