@@ -1,119 +1,93 @@
 "use client";
 
-import Image from "next/image";
-
+import Link from "next/link";
 import {
   useEffect,
   useRef,
   useState,
 } from "react";
 
-type AuthUser = {
-  id: string;
+type RiotAccount = {
+  gameName: string;
+  tagLine: string;
+};
 
-  role:
-    | "USER"
-    | "ADMIN"
-    | "SUPER_ADMIN";
+type AuthUser = {
+  role: string;
+  status: string;
 
   username: string;
   displayName: string;
 
-  avatarUrl:
-    | string
-    | null;
+  discordUserId: string;
+  avatarUrl: string | null;
 
   ggCoin: string;
 
   riotLinked: boolean;
+  riotAccount: RiotAccount | null;
+};
+
+type MeResponse = {
+  authenticated: boolean;
+  user?: AuthUser;
 };
 
 export default function UserMenu() {
-  const [
-    user,
-    setUser,
-  ] =
-    useState<AuthUser | null>(
-      null,
-    );
+  const [user, setUser] =
+    useState<AuthUser | null>(null);
 
-  const [
-    loading,
-    setLoading,
-  ] =
+  const [loading, setLoading] =
     useState(true);
 
-  const [
-    open,
-    setOpen,
-  ] =
+  const [open, setOpen] =
     useState(false);
 
-  const wrapRef =
-    useRef<HTMLDivElement>(
-      null,
-    );
+  const menuRef =
+    useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
-
     async function loadUser() {
       try {
         const response =
-          await fetch(
-            "/api/auth/me",
-            {
-              cache:
-                "no-store",
-            },
-          );
+          await fetch("/api/auth/me", {
+            cache: "no-store",
+          });
 
-        if (
-          !response.ok
-        ) {
-          if (!cancelled) {
-            setUser(null);
-          }
-
-          return;
-        }
-
-        const data =
+        const data: MeResponse =
           await response.json();
 
         if (
-          !cancelled &&
-          data.authenticated
+          response.ok &&
+          data.authenticated &&
+          data.user
         ) {
-          setUser(
-            data.user,
-          );
-        }
-      } catch {
-        if (!cancelled) {
+          setUser(data.user);
+        } else {
           setUser(null);
         }
+      } catch (error) {
+        console.error(
+          "로그인 사용자 조회 실패:",
+          error,
+        );
+
+        setUser(null);
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     }
 
     loadUser();
-
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   useEffect(() => {
-    function handleOutside(
+    function handleOutsideClick(
       event: MouseEvent,
     ) {
       if (
-        wrapRef.current &&
-        !wrapRef.current.contains(
+        menuRef.current &&
+        !menuRef.current.contains(
           event.target as Node,
         )
       ) {
@@ -124,17 +98,14 @@ export default function UserMenu() {
     function handleEscape(
       event: KeyboardEvent,
     ) {
-      if (
-        event.key ===
-        "Escape"
-      ) {
+      if (event.key === "Escape") {
         setOpen(false);
       }
     }
 
     document.addEventListener(
       "mousedown",
-      handleOutside,
+      handleOutsideClick,
     );
 
     document.addEventListener(
@@ -145,7 +116,7 @@ export default function UserMenu() {
     return () => {
       document.removeEventListener(
         "mousedown",
-        handleOutside,
+        handleOutsideClick,
       );
 
       document.removeEventListener(
@@ -155,187 +126,188 @@ export default function UserMenu() {
     };
   }, []);
 
-  async function logout() {
-    await fetch(
-      "/api/auth/logout",
-      {
-        method: "POST",
-      },
-    );
+  async function handleLogout() {
+    try {
+      await fetch(
+        "/api/auth/logout",
+        {
+          method: "POST",
+        },
+      );
 
-    window.location.href =
-      "/";
+      window.location.href = "/";
+    } catch (error) {
+      console.error(
+        "로그아웃 실패:",
+        error,
+      );
+    }
   }
 
   if (loading) {
     return (
-      <div className="login-button auth-loading">
-        <Image
-          src="/images/discord.png"
-          alt="Discord"
-          width={24}
-          height={24}
-        />
-
-        <span>
-          로그인 확인중
-        </span>
+      <div className="auth-loading">
+        로그인 확인중
       </div>
     );
   }
 
   if (!user) {
     return (
-      <a
+      <Link
         href="/api/auth/discord"
         className="login-button"
       >
-        <Image
-          src="/images/discord.png"
-          alt="Discord"
-          width={24}
-          height={24}
-        />
-
-        <span>
-          로그인
-        </span>
-      </a>
+        로그인
+      </Link>
     );
   }
 
   const isAdmin =
     user.role === "ADMIN" ||
-    user.role ===
-      "SUPER_ADMIN";
+    user.role === "SUPER_ADMIN";
 
-  const coinText =
+  const formattedCoin =
     Number(
-      user.ggCoin,
-    ).toLocaleString(
-      "ko-KR",
-    );
+      user.ggCoin ?? "0",
+    ).toLocaleString("ko-KR");
+
+  const profileHref =
+    user.riotLinked &&
+    user.riotAccount
+      ? `/profile-search/result?gameName=${encodeURIComponent(
+          user.riotAccount
+            .gameName,
+        )}&tagLine=${encodeURIComponent(
+          user.riotAccount
+            .tagLine,
+        )}`
+      : "/account";
 
   return (
     <div
-      ref={wrapRef}
       className="user-menu-wrap"
+      ref={menuRef}
     >
       <button
         type="button"
-        className={`user-menu-trigger ${
-          open
-            ? "is-open"
-            : ""
-        }`}
+        className="user-menu-trigger"
         onClick={() =>
-          setOpen(
-            current =>
-              !current,
-          )
+          setOpen((prev) => !prev)
         }
+        aria-expanded={open}
       >
-        <span className="user-menu-avatar">
-          {user.avatarUrl ? (
-            <img
-              src={
-                user.avatarUrl
-              }
-              alt={
-                user.displayName
-              }
-            />
-          ) : (
-            <Image
-              src="/images/discord.png"
-              alt="Discord"
-              width={28}
-              height={28}
-            />
-          )}
-        </span>
+        {user.avatarUrl ? (
+          <img
+            src={user.avatarUrl}
+            alt=""
+            className="user-menu-avatar"
+          />
+        ) : (
+          <div className="user-menu-avatar-fallback">
+            {user.displayName
+              ?.charAt(0)
+              .toUpperCase() ?? "?"}
+          </div>
+        )}
 
-        <span className="user-menu-info">
-          <strong>
-            {
-              user.displayName
-            }
-          </strong>
-
-          <span>
-            {coinText} GG
+        <div className="user-menu-info">
+          <span className="user-menu-name">
+            {user.displayName}
           </span>
-        </span>
+
+          <span className="user-menu-coin">
+            {formattedCoin} GG
+          </span>
+        </div>
 
         <span
-          className="user-menu-arrow"
-          aria-hidden="true"
+          className={`user-menu-arrow ${
+            open ? "open" : ""
+          }`}
         >
           ▾
         </span>
       </button>
 
       {open && (
-        <div className="user-dropdown">
-          <div className="user-dropdown-head">
+        <div className="user-menu-dropdown">
+          <div className="user-menu-dropdown-head">
             <strong>
-              {
-                user.displayName
-              }
+              {user.displayName}
             </strong>
 
             <span>
-              {coinText} GG
+              {formattedCoin} GG
             </span>
+
+            {user.riotLinked &&
+              user.riotAccount && (
+                <small>
+                  {
+                    user.riotAccount
+                      .gameName
+                  }
+                  #
+                  {
+                    user.riotAccount
+                      .tagLine
+                  }
+                </small>
+              )}
           </div>
 
-          <div className="user-dropdown-divider" />
+          {user.riotLinked &&
+          user.riotAccount ? (
+            <>
+              <Link
+                href={profileHref}
+                className="user-menu-item"
+                onClick={() =>
+                  setOpen(false)
+                }
+              >
+                내 프로필
+              </Link>
 
-          <a
-            href="/mypage"
-            className="user-dropdown-item"
-          >
-            내 프로필
-          </a>
-
-          <a
-            href="/mypage#riot"
-            className="user-dropdown-item"
-          >
-            {user.riotLinked
-              ? "Riot 계정 관리"
-              : "Riot 계정 연결"}
-          </a>
-
-          <a
-            href="/mypage#history"
-            className="user-dropdown-item"
-          >
-            내 전적
-          </a>
-
-          <a
-            href="/shop"
-            className="user-dropdown-item"
-          >
-            상점
-          </a>
-
-          {isAdmin && (
-            <a
-              href="/admin"
-              className="user-dropdown-item user-dropdown-admin"
+              <Link
+                href="/account"
+                className="user-menu-item"
+                onClick={() =>
+                  setOpen(false)
+                }
+              >
+                Riot 계정 관리
+              </Link>
+            </>
+          ) : (
+            <Link
+              href="/account"
+              className="user-menu-item"
+              onClick={() =>
+                setOpen(false)
+              }
             >
-              관리자 페이지
-            </a>
+              Riot 계정 연동
+            </Link>
           )}
 
-          <div className="user-dropdown-divider" />
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="user-menu-item user-menu-admin"
+              onClick={() =>
+                setOpen(false)
+              }
+            >
+              관리자
+            </Link>
+          )}
 
           <button
             type="button"
-            className="user-dropdown-item user-dropdown-logout"
-            onClick={logout}
+            className="user-menu-item user-menu-logout"
+            onClick={handleLogout}
           >
             로그아웃
           </button>
