@@ -20,7 +20,10 @@ import styles from
 
 type Props = {
   defaultValue?: string;
-  variant?: "hero" | "topbar";
+
+  variant?:
+    | "hero"
+    | "topbar";
 };
 
 
@@ -82,7 +85,7 @@ export default function MatchSearchInput({
 
             const response =
               await fetch(
-                `/api/matches/search? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+                `/api/matches/search?q=${encodeURIComponent(
                   cleanQuery
                 )}`
               );
@@ -100,7 +103,7 @@ export default function MatchSearchInput({
 
 
             setResults(
-              data.results ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺[]
+              data.results ?? []
             );
           } catch {
             setResults([]);
@@ -131,7 +134,7 @@ export default function MatchSearchInput({
 
 
     router.push(
-      `/matches/result? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+      `/matches/result?${params.toString()}`
     );
   };
 
@@ -159,7 +162,7 @@ export default function MatchSearchInput({
         styles.form,
 
         variant === "hero"
-          ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+          ? styles.hero
           : styles.topbar,
       ].join(" ")}
       onSubmit={
@@ -214,13 +217,13 @@ export default function MatchSearchInput({
 
               <p>
                 <strong>
-                  鈺곌퀬? 모집중`r`n : 종료? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺 ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+                  조회를 원하시는 내전코드
                 </strong>
-                ? 모집중`r`n : 종료? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+                를 입력해주세요!
               </p>
 
               <span>
-                ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺 獄? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺 ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+                내전코드는 디스코드 및 프로필 조회에서 확인이 가능합니다.
               </span>
 
             </div>
@@ -234,7 +237,7 @@ export default function MatchSearchInput({
                   styles.message
                 }
               >
-                野꺜? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+                검색 중입니다.
               </div>
             )}
 
@@ -249,11 +252,11 @@ export default function MatchSearchInput({
               >
 
                 <strong>
-                  野꺜? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺 ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+                  검색 결과가 없습니다.
                 </strong>
 
                 <span>
-                  ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺 ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+                  내전코드를 다시 확인해주세요.
                 </span>
 
               </div>
@@ -320,10 +323,10 @@ export default function MatchSearchInput({
 
                       match.status ===
                       "playing"
-                        ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+                        ? styles.playing
                         : match.status ===
                           "open"
-                        ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
+                        ? styles.open
                         : styles.finished,
                     ].join(" ")}
                   >
