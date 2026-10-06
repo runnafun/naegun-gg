@@ -19,11 +19,8 @@ import styles from
 
 
 type Props = {
-  defaultValue? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺: string;
-
-  variant? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺:
-    | "hero"
-    | "topbar";
+  defaultValue?: string;
+  variant?: "hero" | "topbar";
 };
 
 
