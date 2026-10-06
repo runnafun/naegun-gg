@@ -1,0 +1,552 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+  DELETED
+}
+
+enum Position {
+  TOP
+  JUNGLE
+  MID
+  ADC
+  SUPPORT
+  ANY
+}
+
+enum ScrimType {
+  NORMAL
+  RANKED
+}
+
+enum ScrimStatus {
+  OPEN
+  CLOSED
+  TEAM_SELECTION
+  IN_PROGRESS
+  FINISHED
+  CANCELLED
+  DELETED
+}
+
+enum ScrimRule {
+  HARD_FEARLESS
+  SOFT_FEARLESS
+  NO_BAN
+  BAN_FEARLESS
+}
+
+enum ParticipantStatus {
+  CONFIRMED
+  WAITING
+  CANCELLED
+  REMOVED
+}
+
+enum TeamSide {
+  A
+  B
+}
+
+enum GameStatus {
+  PENDING
+  READY
+  IN_PROGRESS
+  FINISHED
+  VOID
+}
+
+enum WalletTransactionType {
+  SCRIM_WIN
+  SCRIM_LOSS
+  ADMIN_GRANT
+  ADMIN_DEDUCT
+  SHOP_PURCHASE
+  EVENT_REWARD
+  REFUND
+}
+
+enum TierEvaluationDirection {
+  UP
+  DOWN
+}
+
+enum TierEvaluationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id        String     @id @default(uuid())
+  role      UserRole   @default(USER)
+  status    UserStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  discordAccount DiscordAccount?
+  riotAccount    RiotAccount?
+  preferences    UserPreference?
+
+  stats        UserStats?
+  defenseStats DefenseStats?
+  wallet       Wallet?
+
+  scrimParticipants ScrimParticipant[]
+
+  walletTransactions WalletTransaction[] @relation("WalletOwner")
+  createdWalletTransactions WalletTransaction[] @relation("WalletTransactionCreator")
+
+  suspensions        UserSuspension[] @relation("SuspendedUser")
+  createdSuspensions UserSuspension[] @relation("SuspensionCreator")
+
+  tierEvaluationRequestsSent TierEvaluationRequest[]
+    @relation("TierRequestSender")
+
+  tierEvaluationRequestsReceived TierEvaluationRequest[]
+    @relation("TierRequestTarget")
+
+  createdScrims Scrim[] @relation("ScrimCreator")
+  closedScrims  Scrim[] @relation("ScrimCloser")
+
+  adminLogs AdminAuditLog[] @relation("AdminActor")
+}
+
+model DiscordAccount {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  discordUserId String @unique
+
+  username   String
+  globalName String?
+  avatarHash String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([discordUserId])
+}
+
+model RiotAccount {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  puuid String @unique
+
+  gameName String
+  tagLine  String
+
+  region String @default("KR")
+
+  profileIconId Int?
+
+  soloTier String?
+  soloRank String?
+  soloLp   Int?
+
+  linkedAt      DateTime @default(now())
+  lastChangedAt DateTime?
+  lastSyncedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  history RiotAccountHistory[]
+
+  @@index([gameName, tagLine])
+}
+
+model RiotAccountHistory {
+  id String @id @default(uuid())
+
+  riotAccountId String
+  riotAccount   RiotAccount @relation(
+    fields: [riotAccountId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  oldPuuid    String?
+  oldGameName String?
+  oldTagLine  String?
+
+  newPuuid    String
+  newGameName String
+  newTagLine  String
+
+  changedAt DateTime @default(now())
+}
+
+model UserPreference {
+  userId String @id
+  user   User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  mainPosition Position?
+  subPosition  Position?
+
+  updatedAt DateTime @updatedAt
+}
+
+model Scrim {
+  id String @id @default(uuid())
+
+  code String @unique
+
+  type   ScrimType
+  rule   ScrimRule
+  status ScrimStatus @default(OPEN)
+
+  bestOf Int @default(3)
+
+  startAt DateTime
+
+  maxPlayers Int @default(10)
+
+  forumThreadId    String?
+  starterMessageId String?
+  alarmMessageId   String?
+
+  createdById String?
+  createdBy User? @relation(
+    "ScrimCreator",
+    fields: [createdById],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  closedById String?
+  closedBy User? @relation(
+    "ScrimCloser",
+    fields: [closedById],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  participants ScrimParticipant[]
+  games        Game[]
+
+  walletTransactions WalletTransaction[]
+  tierEvaluationRequests TierEvaluationRequest[]
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  closedAt   DateTime?
+  finishedAt DateTime?
+
+  @@index([status])
+  @@index([type, status])
+  @@index([startAt])
+}
+
+model ScrimParticipant {
+  id String @id @default(uuid())
+
+  scrimId String
+  scrim   Scrim @relation(
+    fields: [scrimId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  userId String
+  user   User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  status ParticipantStatus @default(CONFIRMED)
+
+  mainPosition Position
+  subPosition  Position
+
+  team TeamSide?
+
+  isMvp Boolean @default(false)
+  isAce Boolean @default(false)
+
+  joinedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([scrimId, userId])
+  @@index([scrimId, status])
+  @@index([userId])
+}
+
+model Game {
+  id String @id @default(uuid())
+
+  scrimId String
+  scrim   Scrim @relation(
+    fields: [scrimId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  gameNumber Int
+
+  status GameStatus @default(PENDING)
+
+  tournamentCode String?
+  riotGameId     String?
+
+  winnerTeam TeamSide?
+
+  startedAt  DateTime?
+  finishedAt DateTime?
+
+  leaverDetected Boolean @default(false)
+  voidReason     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([scrimId, gameNumber])
+}
+
+model UserStats {
+  userId String @id
+  user   User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  wins   Int @default(0)
+  losses Int @default(0)
+
+  currentStreak Int @default(0)
+  bestStreak    Int @default(0)
+
+  tierScore Int @default(0)
+
+  updatedAt DateTime @updatedAt
+}
+
+model DefenseStats {
+  userId String @id
+  user   User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  progress Int @default(0)
+  tickets  Int @default(0)
+
+  updatedAt DateTime @updatedAt
+}
+
+model Wallet {
+  userId String @id
+  user   User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  balance BigInt @default(0)
+
+  updatedAt DateTime @updatedAt
+}
+
+model WalletTransaction {
+  id String @id @default(uuid())
+
+  userId String
+  user   User @relation(
+    "WalletOwner",
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  scrimId String?
+  scrim   Scrim? @relation(
+    fields: [scrimId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  amount BigInt
+
+  type WalletTransactionType
+
+  description String?
+
+  idempotencyKey String? @unique
+
+  createdById String?
+  createdBy User? @relation(
+    "WalletTransactionCreator",
+    fields: [createdById],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([scrimId])
+}
+
+model UserSuspension {
+  id String @id @default(uuid())
+
+  userId String
+  user   User @relation(
+    "SuspendedUser",
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  reason      String
+  description String?
+
+  startsAt DateTime @default(now())
+  endsAt   DateTime?
+
+  active Boolean @default(true)
+
+  createdById String?
+  createdBy User? @relation(
+    "SuspensionCreator",
+    fields: [createdById],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, active])
+}
+
+model TierEvaluationRequest {
+  id String @id @default(uuid())
+
+  senderId String
+  sender   User @relation(
+    "TierRequestSender",
+    fields: [senderId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  targetId String
+  target   User @relation(
+    "TierRequestTarget",
+    fields: [targetId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  scrimId String
+  scrim   Scrim @relation(
+    fields: [scrimId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  direction TierEvaluationDirection
+
+  reason String
+
+  status TierEvaluationStatus @default(PENDING)
+
+  requestedRp Int?
+  appliedRp   Int?
+
+  createdAt DateTime @default(now())
+  reviewedAt DateTime?
+
+  @@index([targetId, status])
+  @@index([scrimId])
+}
+
+model Notice {
+  id String @id @default(uuid())
+
+  title   String
+  content String
+
+  discordMessageId String?
+  discordThreadId  String?
+
+  published Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AdminAuditLog {
+  id String @id @default(uuid())
+
+  adminId String?
+  admin User? @relation(
+    "AdminActor",
+    fields: [adminId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  action     String
+  targetType String
+  targetId   String?
+
+  beforeData Json?
+  afterData  Json?
+
+  reason String?
+
+  createdAt DateTime @default(now())
+
+  @@index([adminId])
+  @@index([targetType, targetId])
+}

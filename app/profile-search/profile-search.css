@@ -1,0 +1,220 @@
+/* ==================================================
+   PAGE
+================================================== */
+
+.profile-search-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #090a09;
+}
+
+
+/* ==================================================
+   HERO
+================================================== */
+
+.profile-search-hero {
+  position: relative;
+
+  width: 100%;
+
+  min-height:
+    calc(100vh - 220px);
+
+  overflow: hidden;
+
+  background-image:
+    url("/images/background_2.png");
+
+  background-repeat:
+    no-repeat;
+
+  background-position:
+    center top;
+
+  background-size:
+    cover;
+}
+
+
+/* ==================================================
+   OVERLAY
+================================================== */
+
+.profile-search-hero-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to bottom,
+
+      rgba(0, 0, 0, 0.05) 0%,
+
+      rgba(0, 0, 0, 0.05) 38%,
+
+      rgba(9, 10, 9, 0.18) 62%,
+
+      rgba(9, 10, 9, 0.58) 82%,
+
+      #090a09 100%
+    );
+}
+
+
+/* ==================================================
+   CONTENT
+================================================== */
+
+.profile-search-hero-content {
+  position: relative;
+
+  z-index: 2;
+
+  width:
+    min(
+      900px,
+      calc(100% - 40px)
+    );
+
+  margin:
+    0 auto;
+
+  padding-top:
+    250px;
+
+  text-align:
+    center;
+}
+
+
+/* ==================================================
+   TITLE
+================================================== */
+
+.profile-search-title {
+  margin: 0;
+
+  color: #fff;
+
+  font-size:
+    30px;
+
+  font-weight:
+    800;
+
+  line-height:
+    1.4;
+
+  letter-spacing:
+    -1px;
+}
+
+
+/* ==================================================
+   DESCRIPTION
+================================================== */
+
+.profile-search-description {
+  margin:
+    18px 0 0;
+
+  color:
+    rgba(255, 255, 255, 0.65);
+
+  font-size:
+    15px;
+
+  font-weight:
+    400;
+}
+
+
+/* ==================================================
+   FOOTER
+================================================== */
+
+.profile-search-page
+.site-footer {
+  margin-top: 0;
+}
+
+
+/* ==================================================
+   LARGE HEIGHT
+================================================== */
+
+@media (min-height: 900px) {
+
+  .profile-search-hero {
+    min-height:
+      calc(100vh - 200px);
+  }
+
+  .profile-search-hero-content {
+    padding-top:
+      285px;
+  }
+
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 800px) {
+
+  .profile-search-hero {
+    min-height:
+      calc(100vh - 180px);
+  }
+
+  .profile-search-hero-content {
+    width:
+      calc(100% - 28px);
+
+    padding-top:
+      195px;
+  }
+
+  .profile-search-title {
+    font-size:
+      23px;
+  }
+
+  .profile-search-description {
+    margin-top:
+      14px;
+
+    font-size:
+      13px;
+  }
+
+}
+
+
+/* ==================================================
+   SMALL MOBILE
+================================================== */
+
+@media (max-width: 520px) {
+
+  .profile-search-title {
+    font-size:
+      21px;
+  }
+
+  .profile-search-description {
+    font-size:
+      12px;
+  }
+
+}

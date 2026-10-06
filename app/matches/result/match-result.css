@@ -1,0 +1,1408 @@
+/* ==================================================
+   PAGE
+================================================== */
+
+.match-lookup-page {
+  width: 100%;
+  min-height: 100vh;
+
+  overflow-x: clip;
+
+  background: #090a09;
+
+  color: #fff;
+}
+
+
+/* ==================================================
+   FIXED SEARCH BAR
+================================================== */
+
+.match-lookup-topbar {
+  position: fixed;
+
+  top: 72px;
+  left: 0;
+  right: 0;
+
+  z-index: 900;
+
+  width: 100%;
+  height: 78px;
+
+  background: #7eb400;
+
+  transition:
+    top 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+
+.match-lookup-topbar.header-visible {
+  top: 72px;
+}
+
+
+.match-lookup-topbar.header-hidden {
+  top: 0;
+
+  box-shadow:
+    0 10px 28px
+    rgba(
+      0,
+      0,
+      0,
+      0.32
+    );
+}
+
+
+/* ==================================================
+   HEADER + SEARCH SPACE
+
+   Header 72
+   Search 78
+   = 150
+================================================== */
+
+.match-lookup-topbar-spacer {
+  width: 100%;
+
+  height: 150px;
+}
+
+
+/* ==================================================
+   TOP BAR INNER
+================================================== */
+
+.match-lookup-topbar-inner {
+  position: relative;
+
+  width: min(
+    1440px,
+    calc(100% - 70px)
+  );
+
+  height: 78px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.match-lookup-topbar-inner form {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* ==================================================
+   RANKING MINI
+================================================== */
+
+.match-lookup-ranking-mini {
+  position: absolute;
+
+  top: 50%;
+  right: 0;
+
+  transform:
+    translateY(-50%);
+
+  width: 280px;
+  height: 46px;
+
+  padding:
+    0 18px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-radius: 4px;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.18
+    );
+
+  color: #fff;
+
+  font-size: 11px;
+}
+
+
+.match-lookup-ranking-mini strong {
+  font-weight: 800;
+}
+
+
+.match-lookup-ranking-mini span {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.9
+    );
+}
+
+
+/* ==================================================
+   HERO
+================================================== */
+
+.match-lookup-hero {
+  position: relative;
+
+  width: 100%;
+
+  min-height: 1100px;
+
+  overflow: hidden;
+
+  background-image:
+    url("/images/background_1.png");
+
+  background-repeat:
+    no-repeat;
+
+  background-position:
+    center top;
+
+  background-size:
+    cover;
+}
+
+
+.match-lookup-hero::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.05) 0%,
+      rgba(0, 0, 0, 0.05) 38%,
+      rgba(9, 10, 9, 0.22) 62%,
+      rgba(9, 10, 9, 0.68) 83%,
+      #090a09 100%
+    );
+}
+
+
+.match-lookup-hero-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.26) 0%,
+      rgba(0, 0, 0, 0.02) 50%,
+      rgba(0, 0, 0, 0.26) 100%
+    );
+}
+
+
+/* ==================================================
+   MAIN CONTAINER
+
+   다른 페이지와 동일 1440px
+================================================== */
+
+.match-lookup-container {
+  position: relative;
+
+  z-index: 3;
+
+  width: min(
+    1440px,
+    calc(100% - 70px)
+  );
+
+  margin: 0 auto;
+
+  padding:
+    82px 0
+    170px;
+}
+
+
+/* ==================================================
+   MATCH HEADING
+================================================== */
+
+.match-lookup-heading {
+  display: flex;
+  align-items: flex-end;
+
+  gap: 26px;
+}
+
+
+.match-lookup-heading h1 {
+  margin: 0;
+
+  color: #fff;
+
+  font-size: 72px;
+  font-weight: 800;
+
+  line-height: 0.95;
+
+  letter-spacing: -2px;
+}
+
+
+.match-lookup-heading span {
+  margin-bottom: 8px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.88
+    );
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+
+/* ==================================================
+   SECTION TITLE
+================================================== */
+
+.match-lookup-section-title {
+  margin:
+    0 0 16px;
+
+  color: #fff;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  letter-spacing: -0.4px;
+}
+
+
+/* ==================================================
+   RULE AREA
+================================================== */
+
+.match-lookup-rule-area {
+  width: 100%;
+
+  margin-top: 72px;
+}
+
+
+.match-lookup-rule-area
+.match-rule-section {
+  width: 100%;
+
+  margin-top: 0;
+}
+
+
+.match-lookup-rule-area
+.match-rule-inner {
+  width: 100%;
+}
+
+
+.match-lookup-rule-area
+.match-rule-list {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+
+/* ==================================================
+   RULE CARD
+================================================== */
+
+.match-lookup-rule-area
+.rule-card {
+  position: relative;
+
+  width: 100%;
+
+  overflow: hidden;
+
+  background: #101110;
+}
+
+
+.match-lookup-rule-area
+.rule-card-header {
+  position: relative;
+
+  width: 100%;
+  height: 58px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  display: grid;
+
+  grid-template-columns:
+    190px
+    minmax(0, 1fr)
+    54px;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    filter 0.18s ease;
+}
+
+
+.match-lookup-rule-area
+.rule-card-header:hover {
+  filter:
+    brightness(1.07);
+}
+
+
+.match-lookup-rule-area
+.rule-card-header::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to right,
+      rgba(7, 8, 7, 0.93) 0%,
+      rgba(7, 8, 7, 0.78) 22%,
+      rgba(7, 8, 7, 0.55) 53%,
+      rgba(7, 8, 7, 0.75) 100%
+    );
+}
+
+
+/* ==================================================
+   RULE BACKGROUND
+================================================== */
+
+.match-lookup-rule-area
+.rule-landscape-bg {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 0;
+
+  overflow: hidden;
+
+  background-image:
+    url("https://raw.communitydragon.org/10.2/plugins/rcp-fe-lol-collections/global/default/images/summoner-rift-background.jpg");
+
+  background-repeat:
+    no-repeat;
+
+  background-position:
+    center center;
+
+  background-size:
+    cover;
+
+  transform:
+    scale(1.08);
+
+  filter:
+    saturate(0.8)
+    brightness(0.72);
+
+  pointer-events:
+    none;
+}
+
+
+.match-lookup-rule-area
+.rule-landscape-bg::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.52) 0%,
+      rgba(0, 0, 0, 0.24) 40%,
+      rgba(0, 0, 0, 0.18) 62%,
+      rgba(0, 0, 0, 0.46) 100%
+    );
+}
+
+
+/* ==================================================
+   RULE TITLE
+================================================== */
+
+.match-lookup-rule-area
+.rule-card-title-wrap {
+  position: relative;
+
+  z-index: 3;
+
+  height: 100%;
+
+  padding-left: 19px;
+
+  display: flex;
+  align-items: center;
+
+  background:
+    linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.07) 74%,
+      rgba(255, 255, 255, 0) 100%
+    );
+}
+
+
+.match-lookup-rule-area
+.rule-card-title {
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  line-height: 1;
+
+  letter-spacing: -0.2px;
+
+  white-space: nowrap;
+}
+
+
+.match-lookup-rule-area
+.rule-card-summary {
+  position: relative;
+
+  z-index: 3;
+
+  min-width: 0;
+
+  padding:
+    0 20px;
+
+  overflow: hidden;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.74
+    );
+
+  font-size: 13px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+
+.match-lookup-rule-area
+.rule-card-arrow {
+  position: relative;
+
+  z-index: 3;
+
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.88
+    );
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.22
+    );
+}
+
+
+/* ==================================================
+   RULE CHEVRON
+================================================== */
+
+.match-lookup-rule-area
+.rule-chevron {
+  transform:
+    rotate(180deg);
+
+  transition:
+    transform
+    0.24s ease;
+}
+
+
+.match-lookup-rule-area
+.rule-chevron.is-open {
+  transform:
+    rotate(0deg);
+}
+
+
+/* ==================================================
+   RULE BODY
+================================================== */
+
+.match-lookup-rule-area
+.rule-card-body {
+  display: grid;
+
+  grid-template-rows:
+    0fr;
+
+  transition:
+    grid-template-rows
+    0.32s
+    cubic-bezier(
+      0.22,
+      1,
+      0.36,
+      1
+    );
+}
+
+
+.match-lookup-rule-area
+.rule-card-body-open {
+  grid-template-rows:
+    1fr;
+}
+
+
+.match-lookup-rule-area
+.rule-card-body-inner {
+  position: relative;
+
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+
+.match-lookup-rule-area
+.rule-card-body-inner::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      to right,
+      rgba(7, 9, 7, 0.96) 0%,
+      rgba(7, 9, 7, 0.9) 25%,
+      rgba(7, 9, 7, 0.7) 55%,
+      rgba(7, 9, 7, 0.86) 100%
+    );
+}
+
+
+.match-lookup-rule-area
+.rule-card-body
+.rule-landscape-bg {
+  position: absolute;
+
+  inset: 0;
+
+  min-height: 100%;
+
+  background-position:
+    center center;
+
+  background-size:
+    cover;
+
+  transform:
+    scale(1.08);
+
+  filter:
+    saturate(0.72)
+    brightness(0.58);
+}
+
+
+.match-lookup-rule-area
+.rule-card-body-content {
+  position: relative;
+
+  z-index: 3;
+
+  min-height: 145px;
+
+  padding:
+    25px
+    20px
+    27px;
+
+  box-sizing: border-box;
+}
+
+
+.match-lookup-rule-area
+.rule-card-body-content p {
+  max-width: 1260px;
+
+  margin: 0;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.86
+    );
+
+  font-size: 14px;
+  font-weight: 500;
+
+  line-height: 2;
+
+  letter-spacing: -0.2px;
+}
+
+
+.match-lookup-rule-area
+.rule-card.is-open
+.rule-card-title-wrap {
+  background:
+    linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.17) 0%,
+      rgba(255, 255, 255, 0.09) 72%,
+      rgba(255, 255, 255, 0) 100%
+    );
+}
+
+
+/* ==================================================
+   PLAYERS
+================================================== */
+
+.match-lookup-players {
+  width: 100%;
+
+  margin-top: 54px;
+}
+
+
+/* ==================================================
+   TABLE
+================================================== */
+
+.match-lookup-table {
+  width: 100%;
+
+  overflow: hidden;
+
+  background:
+    rgba(
+      28,
+      28,
+      28,
+      0.96
+    );
+}
+
+
+/*
+  정확히 9컬럼
+
+  1 닉네임
+  2 주챔프 / 부챔프
+  3 주포지션
+  4 부포지션
+  5 현재랭크
+  6 탑레이팅
+  7 티어평가도
+  8 최근승률
+  9 내전랭킹
+*/
+
+.match-lookup-table-header,
+.match-lookup-table-row {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(240px, 1.75fr)
+    minmax(175px, 1.25fr)
+    minmax(115px, 0.85fr)
+    minmax(115px, 0.85fr)
+    minmax(105px, 0.75fr)
+    minmax(145px, 1fr)
+    minmax(145px, 1fr)
+    minmax(105px, 0.75fr)
+    minmax(105px, 0.75fr);
+
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+
+/* ==================================================
+   TABLE HEADER
+================================================== */
+
+.match-lookup-table-header {
+  min-height: 46px;
+
+  background:
+    rgba(
+      17,
+      17,
+      17,
+      0.98
+    );
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.68
+    );
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+.match-lookup-table-header
+span {
+  text-align: center;
+
+  white-space: nowrap;
+}
+
+
+.match-lookup-table-header
+span:first-child {
+  padding-left: 24px;
+
+  text-align: left;
+}
+
+
+/* ==================================================
+   TABLE ROW
+================================================== */
+
+.match-lookup-table-row {
+  min-height: 66px;
+
+  border-bottom:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.04
+    );
+
+  background:
+    rgba(
+      42,
+      42,
+      42,
+      0.95
+    );
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.9
+    );
+
+  font-size: 11px;
+
+  transition:
+    background
+    0.16s ease;
+}
+
+
+.match-lookup-table-row:nth-child(odd) {
+  background:
+    rgba(
+      36,
+      36,
+      36,
+      0.96
+    );
+}
+
+
+.match-lookup-table-row:hover {
+  background:
+    rgba(
+      50,
+      50,
+      50,
+      0.98
+    );
+}
+
+
+.match-lookup-table-row
+> span,
+.match-lookup-table-row
+> strong {
+  text-align: center;
+
+  white-space: nowrap;
+}
+
+
+/* ==================================================
+   NICKNAME
+================================================== */
+
+.match-lookup-player {
+  min-width: 0;
+
+  padding-left: 24px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+.match-lookup-profile-image {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  overflow: hidden;
+
+  border-radius: 50%;
+}
+
+
+.match-lookup-profile-image
+img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+.match-lookup-player
+> span {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+
+/* ==================================================
+   CHAMPIONS
+================================================== */
+
+.match-lookup-champions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+}
+
+
+.match-lookup-champion-image {
+  width: 35px;
+  height: 35px;
+
+  flex-shrink: 0;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    rgba(
+      205,
+      171,
+      67,
+      0.72
+    );
+
+  border-radius: 50%;
+}
+
+
+.match-lookup-champion-image
+img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  object-position:
+    center 42%;
+
+  transform:
+    scale(1.34);
+
+  transform-origin:
+    center;
+}
+
+
+/* ==================================================
+   POSITIONS
+================================================== */
+
+.match-lookup-position {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.78
+    );
+
+  white-space: nowrap;
+}
+
+
+.match-lookup-position-symbol {
+  color: #c7a65b;
+
+  font-size: 18px;
+
+  line-height: 1;
+}
+
+
+/* ==================================================
+   CURRENT RANK
+================================================== */
+
+.match-lookup-current-rank {
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 900;
+}
+
+
+/* ==================================================
+   TOP RATING
+================================================== */
+
+.match-lookup-top-rating {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.86
+    );
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* ==================================================
+   TIER EVALUATION
+================================================== */
+
+.match-lookup-tier-evaluation {
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.86
+    );
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* ==================================================
+   WIN RATE
+================================================== */
+
+.match-lookup-winrate {
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* ==================================================
+   INTERNAL RANKING
+================================================== */
+
+.match-lookup-ranking {
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* ==================================================
+   FOOTER
+================================================== */
+
+.match-lookup-page
+.site-footer {
+  margin-top: 0;
+}
+
+
+/* ==================================================
+   1200
+================================================== */
+
+@media (max-width: 1200px) {
+
+  .match-lookup-ranking-mini {
+    width: 240px;
+  }
+
+
+  .match-lookup-table {
+    overflow-x: auto;
+  }
+
+
+  .match-lookup-table-header,
+  .match-lookup-table-row {
+    min-width: 1250px;
+  }
+
+}
+
+
+/* ==================================================
+   TABLET
+================================================== */
+
+@media (max-width: 950px) {
+
+  .match-lookup-topbar-inner,
+  .match-lookup-container {
+    width:
+      calc(
+        100% - 30px
+      );
+  }
+
+
+  .match-lookup-ranking-mini {
+    display: none;
+  }
+
+
+  .match-lookup-heading h1 {
+    font-size: 60px;
+  }
+
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 800px) {
+
+  .match-lookup-topbar {
+    top: 64px;
+
+    height: 70px;
+  }
+
+
+  .match-lookup-topbar.header-visible {
+    top: 64px;
+  }
+
+
+  .match-lookup-topbar.header-hidden {
+    top: 0;
+  }
+
+
+  .match-lookup-topbar-spacer {
+    height: 134px;
+  }
+
+
+  .match-lookup-topbar-inner {
+    width:
+      calc(
+        100% - 28px
+      );
+
+    height: 70px;
+  }
+
+
+  .match-lookup-container {
+    width:
+      calc(
+        100% - 28px
+      );
+
+    padding:
+      65px 0
+      120px;
+  }
+
+
+  .match-lookup-heading {
+    gap: 14px;
+  }
+
+
+  .match-lookup-heading h1 {
+    font-size: 50px;
+
+    letter-spacing: -1px;
+  }
+
+
+  .match-lookup-heading span {
+    margin-bottom: 4px;
+
+    font-size: 11px;
+  }
+
+
+  .match-lookup-rule-area {
+    margin-top: 55px;
+  }
+
+
+  .match-lookup-players {
+    margin-top: 42px;
+  }
+
+
+  /* ==================================================
+     RULE MOBILE
+  ================================================== */
+
+  .match-lookup-rule-area
+  .rule-card-header {
+    height: auto;
+
+    min-height: 62px;
+
+    grid-template-columns:
+      minmax(0, 1fr)
+      48px;
+
+    grid-template-rows:
+      54px
+      auto;
+  }
+
+
+  .match-lookup-rule-area
+  .rule-card-title-wrap {
+    grid-column:
+      1 / 2;
+
+    grid-row:
+      1 / 2;
+
+    padding-left: 16px;
+  }
+
+
+  .match-lookup-rule-area
+  .rule-card-arrow {
+    grid-column:
+      2 / 3;
+
+    grid-row:
+      1 / 2;
+  }
+
+
+  .match-lookup-rule-area
+  .rule-card-summary {
+    grid-column:
+      1 / 3;
+
+    grid-row:
+      2 / 3;
+
+    padding:
+      11px
+      16px
+      14px;
+
+    color:
+      rgba(
+        255,
+        255,
+        255,
+        0.58
+      );
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    white-space: normal;
+  }
+
+
+  .match-lookup-rule-area
+  .rule-card-body-content {
+    min-height: 0;
+
+    padding:
+      18px
+      16px
+      20px;
+  }
+
+
+  .match-lookup-rule-area
+  .rule-card-body-content p {
+    font-size: 13px;
+
+    line-height: 1.85;
+  }
+
+}
+
+
+/* ==================================================
+   SMALL MOBILE
+================================================== */
+
+@media (max-width: 520px) {
+
+  .match-lookup-heading h1 {
+    font-size: 43px;
+  }
+
+
+  .match-lookup-section-title {
+    font-size: 16px;
+  }
+
+
+  .match-lookup-rule-area
+  .rule-card-title {
+    font-size: 13px;
+  }
+
+
+  .match-lookup-rule-area
+  .rule-card-summary {
+    font-size: 11px;
+  }
+
+
+  .match-lookup-rule-area
+  .rule-card-body-content p {
+    font-size: 12px;
+
+    line-height: 1.8;
+  }
+
+}
