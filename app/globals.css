@@ -1742,81 +1742,86 @@ input {
   }
 }
 
-/* ========================================
+/* ==================================================
    AUTH USER MENU
-======================================== */
+================================================== */
 
 .auth-loading {
-  height: 42px;
-  padding: 0 18px;
+  margin-left: 30px;
+  height: 40px;
+
   display: flex;
   align-items: center;
-  justify-content: center;
 
-  border-radius: 10px;
+  padding: 0 14px;
 
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 13px;
   font-weight: 700;
-
-  color: rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.06);
 }
-
-
-/* 전체 영역 */
 
 .user-menu-wrap {
   position: relative;
-  flex-shrink: 0;
-}
 
-
-/* 로그인된 사용자 버튼 */
-
-.user-menu-trigger {
-  min-width: 190px;
-  height: 48px;
-
-  padding: 5px 12px 5px 6px;
+  margin-left: 28px;
 
   display: flex;
   align-items: center;
-  gap: 10px;
 
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 12px;
+  flex-shrink: 0;
+}
 
-  background: rgba(8, 12, 10, 0.92);
+.user-menu-trigger {
+  min-width: 164px;
+  height: 44px;
+
+  padding: 4px 10px 4px 5px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 11px;
+
+  background:
+    rgba(8, 13, 10, 0.72);
 
   color: #fff;
 
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
   cursor: pointer;
 
+  backdrop-filter: blur(10px);
+
   transition:
-    background 0.2s ease,
-    border-color 0.2s ease;
+    background 0.18s ease,
+    border-color 0.18s ease;
 }
 
 .user-menu-trigger:hover {
-  background: rgba(15, 24, 19, 0.98);
-  border-color: rgba(80, 255, 150, 0.28);
+  background:
+    rgba(13, 20, 16, 0.92);
+
+  border-color:
+    rgba(187, 255, 25, 0.25);
 }
-
-
-/* 디스코드 프로필 이미지 */
 
 .user-menu-avatar,
 .user-menu-avatar-fallback {
-  width: 36px;
-  height: 36px;
-
   flex-shrink: 0;
+
+  width: 34px;
+  height: 34px;
 
   border-radius: 50%;
 }
 
 .user-menu-avatar {
   display: block;
+
   object-fit: cover;
 }
 
@@ -1825,173 +1830,157 @@ input {
   align-items: center;
   justify-content: center;
 
-  background: #1c3125;
-
-  font-size: 14px;
-  font-weight: 800;
+  background: #15231a;
 
   color: #fff;
+
+  font-size: 13px;
+  font-weight: 800;
 }
-
-
-/* 닉네임 + 코인 */
 
 .user-menu-info {
   min-width: 0;
+
   flex: 1;
 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
 
-  line-height: 1.15;
+  gap: 2px;
 }
 
 .user-menu-name {
-  width: 100%;
+  max-width: 90px;
 
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 
-  text-align: left;
+  color: #fff;
 
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
 
-  color: #ffffff;
+  line-height: 15px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .user-menu-coin {
-  margin-top: 3px;
+  color: #9cff45;
 
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 800;
 
-  color: #84ff97;
+  line-height: 12px;
 }
 
-
-/* 화살표 */
-
 .user-menu-arrow {
-  margin-left: 4px;
+  margin-left: auto;
 
-  font-size: 11px;
+  color: rgba(255, 255, 255, 0.42);
 
-  color: rgba(255, 255, 255, 0.55);
+  font-size: 9px;
+  line-height: 1;
 
-  transition: transform 0.2s ease;
+  transition: transform 0.18s ease;
 }
 
 .user-menu-arrow.open {
   transform: rotate(180deg);
 }
 
-
-/* ========================================
-   DROPDOWN
-======================================== */
-
 .user-menu-dropdown {
   position: absolute;
 
-  top: calc(100% + 10px);
+  top: calc(100% + 8px);
   right: 0;
 
-  width: 220px;
+  z-index: 99999;
 
-  padding: 8px;
+  width: 190px;
+
+  padding: 7px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 11px;
+
+  background:
+    rgba(7, 11, 8, 0.98);
+
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.5);
 
   display: flex;
   flex-direction: column;
-
-  background: rgba(8, 12, 10, 0.98);
-
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-
-  box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.45);
-
-  overflow: hidden;
-
-  z-index: 99999;
 }
 
-
-/* 드롭다운 상단 사용자 정보 */
-
 .user-menu-dropdown-head {
-  padding: 10px 11px 13px;
+  margin-bottom: 5px;
+
+  padding: 8px 9px 10px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.07);
 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
-  margin-bottom: 6px;
 }
 
 .user-menu-dropdown-head strong {
-  display: block;
+  color: #fff;
 
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
 
-  color: #fff;
+  line-height: 17px;
 }
 
 .user-menu-dropdown-head span {
-  display: block;
+  margin-top: 2px;
 
-  margin-top: 4px;
+  color: #9cff45;
 
-  font-size: 12px;
-  font-weight: 700;
-
-  color: #84ff97;
+  font-size: 11px;
+  font-weight: 800;
 }
 
 .user-menu-dropdown-head small {
-  display: block;
-
   width: 100%;
 
-  margin-top: 7px;
+  margin-top: 5px;
 
   overflow: hidden;
+
+  color: rgba(255, 255, 255, 0.42);
+
+  font-size: 10px;
+
   white-space: nowrap;
   text-overflow: ellipsis;
-
-  font-size: 11px;
-
-  color: rgba(255, 255, 255, 0.48);
 }
-
-
-/* 메뉴 공통 */
 
 .user-menu-item {
   width: 100%;
-  min-height: 40px;
+  height: 36px;
 
-  padding: 0 11px;
-
-  display: flex;
-  align-items: center;
+  padding: 0 10px;
 
   border: 0;
-  border-radius: 8px;
+  border-radius: 7px;
 
   background: transparent;
 
   color: rgba(255, 255, 255, 0.82);
 
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+
+  font-size: 12px;
+  font-weight: 700;
 
   text-align: left;
   text-decoration: none;
@@ -2004,46 +1993,53 @@ input {
 }
 
 .user-menu-item:hover {
-  background: rgba(255, 255, 255, 0.07);
+  background:
+    rgba(255, 255, 255, 0.065);
+
   color: #fff;
 }
 
-
-/* 관리자 */
-
 .user-menu-admin {
-  color: #91e9ad;
+  color: #99e8aa;
 }
 
-
-/* 로그아웃 */
-
 .user-menu-logout {
-  margin-top: 5px;
+  margin-top: 3px;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-
-  border-radius: 0 0 8px 8px;
-
-  color: rgba(255, 120, 120, 0.9);
+  color: #ff9292;
 }
 
 .user-menu-logout:hover {
-  background: rgba(255, 80, 80, 0.08);
-  color: #ff8d8d;
+  background:
+    rgba(255, 70, 70, 0.08);
+
+  color: #ffabab;
 }
 
 
-/* ========================================
-   MOBILE
-======================================== */
+/* ==================================================
+   AUTH USER MENU - MOBILE
+================================================== */
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
+  .auth-loading {
+    margin-left: auto;
+  }
+
+  .user-menu-wrap {
+    margin-left: auto;
+  }
+
   .user-menu-trigger {
-    min-width: auto;
-    height: 44px;
+    min-width: 0;
+    width: 42px;
+    height: 42px;
 
-    padding: 4px 8px;
+    padding: 3px;
+
+    border-radius: 50%;
+
+    justify-content: center;
   }
 
   .user-menu-avatar,
@@ -2052,16 +2048,13 @@ input {
     height: 34px;
   }
 
-  .user-menu-info {
-    display: none;
-  }
-
+  .user-menu-info,
   .user-menu-arrow {
     display: none;
   }
 
   .user-menu-dropdown {
-    width: 210px;
+    width: 190px;
 
     top: calc(100% + 8px);
   }
