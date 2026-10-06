@@ -8,7 +8,7 @@ import {
 
 import type {
   MatchLookupData,
-} from "../../data/matchLookup";
+} from "../../data/matches";
 
 import MatchSearchInput from
   "./MatchSearchInput";

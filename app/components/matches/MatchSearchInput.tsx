@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   FormEvent,
@@ -12,7 +12,7 @@ import {
 
 import type {
   MatchSearchResult,
-} from "../../data/matchLookup";
+} from "../../data/matches";
 
 import styles from
   "./MatchSearchInput.module.css";
@@ -217,13 +217,13 @@ export default function MatchSearchInput({
 
               <p>
                 <strong>
-                  조회를 원하시는 내전코드
+                  議고쉶瑜??먰븯?쒕뒗 ?댁쟾肄붾뱶
                 </strong>
-                를 입력해주세요!
+                瑜??낅젰?댁＜?몄슂!
               </p>
 
               <span>
-                내전코드는 디스코드 및 프로필 조회에서 확인이 가능합니다.
+                ?댁쟾肄붾뱶???붿뒪肄붾뱶 諛??꾨줈??議고쉶?먯꽌 ?뺤씤??媛?ν빀?덈떎.
               </span>
 
             </div>
@@ -237,7 +237,7 @@ export default function MatchSearchInput({
                   styles.message
                 }
               >
-                검색 중입니다.
+                寃??以묒엯?덈떎.
               </div>
             )}
 
@@ -252,11 +252,11 @@ export default function MatchSearchInput({
               >
 
                 <strong>
-                  검색 결과가 없습니다.
+                  寃??寃곌낵媛 ?놁뒿?덈떎.
                 </strong>
 
                 <span>
-                  내전코드를 다시 확인해주세요.
+                  ?댁쟾肄붾뱶瑜??ㅼ떆 ?뺤씤?댁＜?몄슂.
                 </span>
 
               </div>
@@ -310,7 +310,7 @@ export default function MatchSearchInput({
 
                     <span>
                       {
-                        match.ruleType
+                        match.fearlessType
                       }
                     </span>
 
@@ -333,11 +333,11 @@ export default function MatchSearchInput({
                     {
                       match.status ===
                       "playing"
-                        ? "진행중"
+                        ? "吏꾪뻾以?
                         : match.status ===
                           "open"
-                        ? "모집중"
-                        : "종료"
+                        ? "紐⑥쭛以?
+                        : "醫낅즺"
                     }
                   </div>
 

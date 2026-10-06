@@ -126,7 +126,7 @@ export default function MatchBoardSection(
                     </span>
 
                     <span className="tier-avg">
-                      {match.avgTier}
+                      {"avgTier" in match ? match.avgTier : "-"}
                     </span>
                   </div>
 
@@ -136,7 +136,7 @@ export default function MatchBoardSection(
                     </span>
 
                     <span className="tier-max">
-                      {match.maxTier}
+                      {"maxTier" in match ? match.maxTier : "-"}
                     </span>
                   </div>
                 </>
