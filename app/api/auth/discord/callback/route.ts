@@ -19,9 +19,19 @@ import {
   sessionCookieOptions,
 } from "../../../../lib/auth";
 
+function getAppUrl(request: NextRequest) {
+  return (
+    process.env.APP_URL ??
+    request.nextUrl.origin
+  );
+}
+
 export async function GET(
   request: NextRequest,
 ) {
+  const appUrl =
+    getAppUrl(request);
+
   try {
     const code =
       request.nextUrl.searchParams.get(
@@ -47,7 +57,7 @@ export async function GET(
       return NextResponse.redirect(
         new URL(
           "/?login=invalid_state",
-          request.url,
+          appUrl,
         ),
       );
     }
@@ -207,7 +217,7 @@ export async function GET(
       NextResponse.redirect(
         new URL(
           "/",
-          request.url,
+          appUrl,
         ),
       );
 
@@ -221,8 +231,14 @@ export async function GET(
       OAUTH_STATE_COOKIE_NAME,
       "",
       {
+        httpOnly: true,
         path: "/",
         maxAge: 0,
+        sameSite: "lax",
+        secure:
+          process.env
+            .AUTH_COOKIE_SECURE ===
+          "true",
       },
     );
 
@@ -236,7 +252,7 @@ export async function GET(
     return NextResponse.redirect(
       new URL(
         "/?login=error",
-        request.url,
+        appUrl,
       ),
     );
   }
