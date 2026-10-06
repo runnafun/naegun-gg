@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   FormEvent,
@@ -19,9 +19,9 @@ import styles from
 
 
 type Props = {
-  defaultValue?: string;
+  defaultValue? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺: string;
 
-  variant?:
+  variant? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺:
     | "hero"
     | "topbar";
 };
@@ -85,7 +85,7 @@ export default function MatchSearchInput({
 
             const response =
               await fetch(
-                `/api/matches/search?q=${encodeURIComponent(
+                `/api/matches/search? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
                   cleanQuery
                 )}`
               );
@@ -103,7 +103,7 @@ export default function MatchSearchInput({
 
 
             setResults(
-              data.results ?? []
+              data.results ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺[]
             );
           } catch {
             setResults([]);
@@ -134,7 +134,7 @@ export default function MatchSearchInput({
 
 
     router.push(
-      `/matches/result?${params.toString()}`
+      `/matches/result? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
     );
   };
 
@@ -162,7 +162,7 @@ export default function MatchSearchInput({
         styles.form,
 
         variant === "hero"
-          ? styles.hero
+          ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
           : styles.topbar,
       ].join(" ")}
       onSubmit={
@@ -217,13 +217,13 @@ export default function MatchSearchInput({
 
               <p>
                 <strong>
-                  議고쉶瑜??먰븯?쒕뒗 ?댁쟾肄붾뱶
+                  鈺곌퀬? 모집중`r`n : 종료? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺 ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
                 </strong>
-                瑜??낅젰?댁＜?몄슂!
+                ? 모집중`r`n : 종료? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
               </p>
 
               <span>
-                ?댁쟾肄붾뱶???붿뒪肄붾뱶 諛??꾨줈??議고쉶?먯꽌 ?뺤씤??媛?ν빀?덈떎.
+                ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺 獄? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺 ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
               </span>
 
             </div>
@@ -237,7 +237,7 @@ export default function MatchSearchInput({
                   styles.message
                 }
               >
-                寃??以묒엯?덈떎.
+                野꺜? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
               </div>
             )}
 
@@ -252,11 +252,11 @@ export default function MatchSearchInput({
               >
 
                 <strong>
-                  寃??寃곌낵媛 ?놁뒿?덈떎.
+                  野꺜? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺 ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
                 </strong>
 
                 <span>
-                  ?댁쟾肄붾뱶瑜??ㅼ떆 ?뺤씤?댁＜?몄슂.
+                  ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺 ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
                 </span>
 
               </div>
@@ -323,21 +323,21 @@ export default function MatchSearchInput({
 
                       match.status ===
                       "playing"
-                        ? styles.playing
+                        ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
                         : match.status ===
                           "open"
-                        ? styles.open
+                        ? 모집중`r`n : 종료? 모집중`r`n : 종료 : 醫낅즺
                         : styles.finished,
                     ].join(" ")}
                   >
                     {
                       match.status ===
                       "playing"
-                        ? "吏꾪뻾以?
+                        ? "진행중"
                         : match.status ===
                           "open"
-                        ? "紐⑥쭛以?
-                        : "醫낅즺"
+                        ? "모집중"
+                        : "종료"
                     }
                   </div>
 
