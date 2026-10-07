@@ -17,8 +17,18 @@ const POSITIONS = [
   "ANY",
 ] as const;
 
+const PARTICIPANT_STATUSES = [
+  "CONFIRMED",
+  "WAITING",
+  "CANCELLED",
+  "REMOVED",
+] as const;
+
 type PositionValue =
   (typeof POSITIONS)[number];
+
+type ParticipantStatusValue =
+  (typeof PARTICIPANT_STATUSES)[number];
 
 type ParticipantBody = {
   discordUserId?: string;
@@ -26,7 +36,7 @@ type ParticipantBody = {
   mainPosition?: PositionValue;
   subPosition?: PositionValue;
 
-  status?: "CONFIRMED" | "WAITING";
+  status?: ParticipantStatusValue;
 };
 
 function isPosition(
@@ -38,6 +48,77 @@ function isPosition(
       value as PositionValue,
     )
   );
+}
+
+function isParticipantStatus(
+  value: unknown,
+): value is ParticipantStatusValue {
+  return (
+    typeof value === "string" &&
+    PARTICIPANT_STATUSES.includes(
+      value as ParticipantStatusValue,
+    )
+  );
+}
+
+async function getContext(
+  code: string,
+  discordUserId: string,
+) {
+  const scrim =
+    await prisma.scrim.findUnique({
+      where: {
+        code,
+      },
+    });
+
+  if (!scrim) {
+    return {
+      error: NextResponse.json(
+        {
+          ok: false,
+          error: "SCRIM_NOT_FOUND",
+        },
+        {
+          status: 404,
+        },
+      ),
+    };
+  }
+
+  const discordAccount =
+    await prisma.discordAccount.findUnique({
+      where: {
+        discordUserId,
+      },
+
+      include: {
+        user: {
+          include: {
+            riotAccount: true,
+          },
+        },
+      },
+    });
+
+  if (!discordAccount) {
+    return {
+      error: NextResponse.json(
+        {
+          ok: false,
+          error: "USER_NOT_REGISTERED",
+        },
+        {
+          status: 404,
+        },
+      ),
+    };
+  }
+
+  return {
+    scrim,
+    discordAccount,
+  };
 }
 
 export async function POST(
@@ -113,24 +194,39 @@ export async function POST(
     );
   }
 
-  const scrim =
-    await prisma.scrim.findUnique({
-      where: {
-        code,
-      },
-    });
+  const status =
+    body.status ?? "CONFIRMED";
 
-  if (!scrim) {
+  if (
+    status !== "CONFIRMED" &&
+    status !== "WAITING"
+  ) {
     return NextResponse.json(
       {
         ok: false,
-        error: "SCRIM_NOT_FOUND",
+        error:
+          "INVALID_JOIN_STATUS",
       },
       {
-        status: 404,
+        status: 400,
       },
     );
   }
+
+  const result =
+    await getContext(
+      code,
+      discordUserId,
+    );
+
+  if ("error" in result) {
+    return result.error;
+  }
+
+  const {
+    scrim,
+    discordAccount,
+  } = result;
 
   if (scrim.status !== "OPEN") {
     return NextResponse.json(
@@ -144,33 +240,9 @@ export async function POST(
     );
   }
 
-  const discordAccount =
-    await prisma.discordAccount.findUnique({
-      where: {
-        discordUserId,
-      },
-      include: {
-        user: {
-          include: {
-            riotAccount: true,
-          },
-        },
-      },
-    });
-
-  if (!discordAccount) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: "USER_NOT_REGISTERED",
-      },
-      {
-        status: 404,
-      },
-    );
-  }
-
-  if (!discordAccount.user.riotAccount) {
+  if (
+    !discordAccount.user.riotAccount
+  ) {
     return NextResponse.json(
       {
         ok: false,
@@ -188,13 +260,15 @@ export async function POST(
       where: {
         scrimId_userId: {
           scrimId: scrim.id,
-          userId: discordAccount.userId,
+          userId:
+            discordAccount.userId,
         },
       },
 
       create: {
         scrimId: scrim.id,
-        userId: discordAccount.userId,
+        userId:
+          discordAccount.userId,
 
         mainPosition:
           body.mainPosition,
@@ -202,8 +276,7 @@ export async function POST(
         subPosition:
           body.subPosition,
 
-        status:
-          body.status ?? "CONFIRMED",
+        status,
       },
 
       update: {
@@ -213,8 +286,7 @@ export async function POST(
         subPosition:
           body.subPosition,
 
-        status:
-          body.status ?? "CONFIRMED",
+        status,
       },
     });
 
@@ -222,15 +294,150 @@ export async function POST(
     ok: true,
     participant: {
       id: participant.id,
-
       status: participant.status,
-
       mainPosition:
         participant.mainPosition,
-
       subPosition:
         participant.subPosition,
+      team: participant.team,
+    },
+  });
+}
 
+export async function PATCH(
+  request: NextRequest,
+  context: {
+    params: Promise<{
+      code: string;
+    }>;
+  },
+) {
+  if (!isValidBotRequest(request)) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "UNAUTHORIZED",
+      },
+      {
+        status: 401,
+      },
+    );
+  }
+
+  const { code: rawCode } =
+    await context.params;
+
+  const code =
+    rawCode.trim().toUpperCase();
+
+  let body: ParticipantBody;
+
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "INVALID_JSON",
+      },
+      {
+        status: 400,
+      },
+    );
+  }
+
+  const discordUserId =
+    body.discordUserId?.trim();
+
+  if (!discordUserId) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          "DISCORD_USER_ID_REQUIRED",
+      },
+      {
+        status: 400,
+      },
+    );
+  }
+
+  if (
+    !isParticipantStatus(
+      body.status,
+    )
+  ) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          "INVALID_PARTICIPANT_STATUS",
+      },
+      {
+        status: 400,
+      },
+    );
+  }
+
+  const result =
+    await getContext(
+      code,
+      discordUserId,
+    );
+
+  if ("error" in result) {
+    return result.error;
+  }
+
+  const {
+    scrim,
+    discordAccount,
+  } = result;
+
+  const existing =
+    await prisma.scrimParticipant.findUnique({
+      where: {
+        scrimId_userId: {
+          scrimId: scrim.id,
+          userId:
+            discordAccount.userId,
+        },
+      },
+    });
+
+  if (!existing) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          "PARTICIPANT_NOT_FOUND",
+      },
+      {
+        status: 404,
+      },
+    );
+  }
+
+  const participant =
+    await prisma.scrimParticipant.update({
+      where: {
+        id: existing.id,
+      },
+
+      data: {
+        status: body.status,
+      },
+    });
+
+  return NextResponse.json({
+    ok: true,
+    participant: {
+      id: participant.id,
+      status: participant.status,
+      mainPosition:
+        participant.mainPosition,
+      subPosition:
+        participant.subPosition,
       team: participant.team,
     },
   });
