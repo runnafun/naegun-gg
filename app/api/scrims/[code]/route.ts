@@ -1,8 +1,11 @@
 import {
+  NextRequest,
   NextResponse,
 } from "next/server";
 
-import { getScrimByCode } from "@/app/lib/scrims/service";
+import {
+  getScrimByCode,
+} from "@/app/lib/scrims/service";
 
 export const dynamic =
   "force-dynamic";
@@ -10,7 +13,7 @@ export const dynamic =
 export const revalidate = 0;
 
 export async function GET(
-  _request: Request,
+  _request: NextRequest,
   context: {
     params: Promise<{
       code: string;
@@ -21,14 +24,15 @@ export async function GET(
     await context.params;
 
   const scrim =
-    await getScrimByCode(code);
+    await getScrimByCode(
+      code,
+    );
 
   if (!scrim) {
     return NextResponse.json(
       {
-        ok: false,
         error:
-          "SCRIM_NOT_FOUND",
+          "내전을 찾을 수 없습니다.",
       },
       {
         status: 404,
@@ -42,7 +46,6 @@ export async function GET(
 
   return NextResponse.json(
     {
-      ok: true,
       scrim,
     },
     {
