@@ -129,6 +129,8 @@ model User {
   closedScrims  Scrim[] @relation("ScrimCloser")
 
   adminLogs AdminAuditLog[] @relation("AdminActor")
+
+  balanceProfile BalanceProfile?
 }
 
 model DiscordAccount {
@@ -447,3 +449,22 @@ model AdminAuditLog {
   @@index([adminId])
   @@index([targetType, targetId])
 }
+
+model BalanceProfile {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 탑레이팅 원본
+  peakTier String?
+  peakRank String?
+  peakLp   Int?
+
+  // 내전.GG 내부 점수
+  // 신규 유저는 자동 팀 계산 시 peakTier 기준 점수로 자동 초기화
+  tierEvaluation Float?
+  scrimRankScore Float @default(50)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
