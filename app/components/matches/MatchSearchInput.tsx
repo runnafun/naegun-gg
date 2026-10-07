@@ -2,26 +2,35 @@
 
 import {
   FormEvent,
+  useEffect,
   useState,
 } from "react";
 
 import { useRouter } from "next/navigation";
 
+type Props = {
+  variant?: "hero" | "topbar";
+  defaultValue?: string;
+};
+
 export default function MatchSearchInput({
   variant = "hero",
-}: {
-  variant?: "hero" | "topbar";
-}) {
+  defaultValue = "",
+}: Props) {
   const router = useRouter();
 
   const [code, setCode] =
-    useState("");
+    useState(defaultValue);
 
   const [loading, setLoading] =
     useState(false);
 
   const [error, setError] =
     useState("");
+
+  useEffect(() => {
+    setCode(defaultValue);
+  }, [defaultValue]);
 
   const submit = async (
     event: FormEvent,
