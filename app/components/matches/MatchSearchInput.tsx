@@ -2,241 +2,133 @@
 
 import {
   FormEvent,
-  useEffect,
   useState,
 } from "react";
 
 import { useRouter } from "next/navigation";
 
-import type {
-  MatchSearchResult,
-} from "../../data/matches";
-
-import styles from "./MatchSearchInput.module.css";
-
 export default function MatchSearchInput({
   variant = "hero",
 }: {
-  variant?: "hero" | "compact";
+  variant?: "hero" | "topbar";
 }) {
   const router = useRouter();
 
-  const [query, setQuery] =
+  const [code, setCode] =
     useState("");
-
-  const [results, setResults] =
-    useState<MatchSearchResult[]>([]);
 
   const [loading, setLoading] =
     useState(false);
 
-  const [message, setMessage] =
+  const [error, setError] =
     useState("");
 
-  useEffect(() => {
-    const keyword =
-      query.trim().toUpperCase();
-
-    if (!keyword) {
-      setResults([]);
-      setMessage("");
-      return;
-    }
-
-    const timer =
-      window.setTimeout(
-        async () => {
-          setLoading(true);
-
-          try {
-            const response =
-              await fetch(
-                `/api/matches/search?q=${encodeURIComponent(keyword)}`,
-                {
-                  cache: "no-store",
-                },
-              );
-
-            const data =
-              await response.json();
-
-            const nextResults =
-              Array.isArray(
-                data?.results,
-              )
-                ? data.results
-                : [];
-
-            setResults(
-              nextResults,
-            );
-
-            setMessage(
-              nextResults.length
-                ? ""
-                : "검색 결과가 없습니다.",
-            );
-          } catch {
-            setResults([]);
-            setMessage(
-              "내전 검색에 실패했습니다.",
-            );
-          } finally {
-            setLoading(false);
-          }
-        },
-        250,
-      );
-
-    return () =>
-      window.clearTimeout(timer);
-  }, [query]);
-
-  function moveTo(
-    code: string,
-  ) {
-    router.push(
-      `/matches/result?code=${encodeURIComponent(code)}`,
-    );
-  }
-
-  function submit(
+  const submit = async (
     event: FormEvent,
-  ) {
+  ) => {
     event.preventDefault();
 
-    const keyword =
-      query.trim().toUpperCase();
+    const normalized =
+      code
+        .trim()
+        .replace(/\s+/g, "")
+        .toUpperCase();
 
-    if (!keyword) {
-      return;
-    }
-
-    const exact =
-      results.find(
-        (item) =>
-          item.code.toUpperCase() ===
-          keyword,
-      );
-
-    if (exact) {
-      moveTo(exact.code);
-      return;
-    }
-
-    if (results[0]) {
-      moveTo(
-        results[0].code,
+    if (
+      !/^([NR])\d{1,6}$/.test(
+        normalized,
+      )
+    ) {
+      setError(
+        "내전 코드를 확인해주세요. 예: N103 / R105",
       );
       return;
     }
 
-    setMessage(
-      "해당 내전을 찾을 수 없습니다.",
-    );
-  }
+    setLoading(true);
+    setError("");
 
-  const wrapperClass =
-    variant === "hero"
-      ? styles.hero
-      : styles.topbar;
+    try {
+      const response =
+        await fetch(
+          `/api/scrims/${encodeURIComponent(
+            normalized,
+          )}`,
+          {
+            cache: "no-store",
+          },
+        );
+
+      if (!response.ok) {
+        setError(
+          "해당 내전을 찾을 수 없습니다.",
+        );
+        return;
+      }
+
+      router.push(
+        `/matches/result?code=${encodeURIComponent(
+          normalized,
+        )}`,
+      );
+    } catch {
+      setError(
+        "내전 조회 중 오류가 발생했습니다.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <form
       onSubmit={submit}
-      className={`${styles.form} ${wrapperClass}`}
+      className={
+        variant === "hero"
+          ? "matches-search"
+          : "match-search-topbar"
+      }
     >
-      <div className={styles.inputWrap}>
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+        }}
+      >
         <input
-          className={styles.input}
-          value={query}
+          value={code}
           onChange={(event) =>
-            setQuery(
+            setCode(
               event.target.value,
             )
           }
           placeholder="EX) N103 또는 R105"
           autoComplete="off"
+          style={{
+            width: "100%",
+          }}
         />
+
+        <button
+          type="submit"
+          disabled={loading}
+        >
+          {loading
+            ? "조회중"
+            : "검색"}
+        </button>
       </div>
 
-      {query.trim() && (
-        <div className={styles.dropdown}>
-          {loading && (
-            <div className={styles.message}>
-              <strong>
-                내전 검색 중
-              </strong>
-              잠시만 기다려주세요.
-            </div>
-          )}
-
-          {!loading &&
-            message && (
-              <div className={styles.message}>
-                <strong>
-                  검색 결과
-                </strong>
-                {message}
-              </div>
-            )}
-
-          {!loading &&
-            results.map(
-              (match) => (
-                <button
-                  type="button"
-                  key={match.code}
-                  className={styles.result}
-                  onClick={() =>
-                    moveTo(
-                      match.code,
-                    )
-                  }
-                >
-                  <span
-                    className={
-                      styles.resultCode
-                    }
-                  >
-                    {match.code}
-                  </span>
-
-                  <span
-                    className={
-                      styles.resultInfo
-                    }
-                  >
-                    <strong>
-                      {match.matchType}
-                    </strong>
-
-                    <span>
-                      {
-                        match.fearlessType
-                      }
-                    </span>
-                  </span>
-
-                  <span
-                    className={`${styles.status} ${
-                      styles[
-                        match.status
-                      ] ?? ""
-                    }`}
-                  >
-                    {match.status ===
-                    "open"
-                      ? "모집중"
-                      : match.status ===
-                          "playing"
-                        ? "진행중"
-                        : "종료"}
-                  </span>
-                </button>
-              ),
-            )}
-        </div>
+      {error && (
+        <p
+          style={{
+            marginTop: 10,
+            color: "#ff8c8c",
+            fontSize: 13,
+          }}
+        >
+          {error}
+        </p>
       )}
     </form>
   );
