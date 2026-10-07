@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type {
   NormalMatch,
   RankedMatch,
@@ -27,13 +29,7 @@ function PeopleIcon() {
       fill="none"
       aria-hidden="true"
     >
-      <circle
-        cx="10"
-        cy="6"
-        r="4"
-        fill="currentColor"
-      />
-
+      <circle cx="10" cy="6" r="4" fill="currentColor" />
       <path
         d="M3 17c0-3.4 2.9-5.5 7-5.5s7 2.1 7 5.5"
         fill="currentColor"
@@ -51,6 +47,12 @@ export default function MatchBoardSection(
     description,
     matches,
   } = props;
+
+  const openCount =
+    matches.filter(
+      (match) =>
+        match.status === "open",
+    ).length;
 
   return (
     <section
@@ -72,11 +74,19 @@ export default function MatchBoardSection(
         </div>
 
         <span className="matches-open-count">
-          {matches.length}개 모집중
+          {openCount}개 모집중
         </span>
       </div>
 
       <div className="match-list matches-full-list">
+        {matches.length === 0 && (
+          <div className="match-row">
+            <div className="match-time">
+              현재 표시할 내전이 없습니다.
+            </div>
+          </div>
+        )}
+
         {matches.map((match) => {
           const isOpen =
             match.status === "open";
@@ -102,10 +112,7 @@ export default function MatchBoardSection(
 
               <div className="match-people">
                 <PeopleIcon />
-
-                <span>
-                  {match.people}
-                </span>
+                <span>{match.people}</span>
               </div>
 
               <div className="matches-code-block">
@@ -126,7 +133,9 @@ export default function MatchBoardSection(
                     </span>
 
                     <span className="tier-avg">
-                      {"avgTier" in match ? match.avgTier : "-"}
+                      {"avgTier" in match
+                        ? match.avgTier
+                        : "-"}
                     </span>
                   </div>
 
@@ -136,7 +145,9 @@ export default function MatchBoardSection(
                     </span>
 
                     <span className="tier-max">
-                      {"maxTier" in match ? match.maxTier : "-"}
+                      {"maxTier" in match
+                        ? match.maxTier
+                        : "-"}
                     </span>
                   </div>
                 </>
@@ -156,18 +167,21 @@ export default function MatchBoardSection(
                 {isOpen ? "모집중" : "마감"}
               </div>
 
-              <button
-                type="button"
+              <Link
+                href={`/matches/result?code=${encodeURIComponent(match.code)}`}
                 className={`match-action ${
                   isOpen
                     ? "action-open"
                     : "action-closed"
                 }`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                {isOpen
-                  ? "참가하기"
-                  : "모집마감"}
-              </button>
+                보기
+              </Link>
             </div>
           );
         })}

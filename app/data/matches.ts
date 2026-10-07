@@ -1,5 +1,5 @@
 /* ==================================================
-   기존 /matches 목록용 타입
+   /matches 목록 타입
 ================================================== */
 
 export type MatchStatus =
@@ -38,7 +38,10 @@ export type RankedMatch = {
 
 
 /* ==================================================
-   기존 /matches 목록 데이터
+   기존 목록 MOCK DATA
+
+   실제 /matches 화면은 이제 RDS 데이터를 사용합니다.
+   아래 데이터는 기존 import 호환을 위해 유지합니다.
 ================================================== */
 
 export const rankedMatches: RankedMatch[] = [
@@ -178,7 +181,11 @@ export type MatchSearchResult = {
 /* ==================================================
    PLAYER
 
-   표 컬럼과 데이터명을 1:1로 맞춤
+   실제 DB 연동 기준:
+   - currentRank: Riot 현재 티어 문자열
+   - topRating: 탑레이팅
+   - tierEvaluation: 내전.GG 티어평가도
+   - internalRanking: 내전랭킹
 ================================================== */
 
 export type MatchPlayer = {
@@ -188,7 +195,11 @@ export type MatchPlayer = {
 
   profileIcon: string;
 
-  mainChampionImage: string;
+  /*
+    아직 DB에 모스트 챔피언 데이터가 없을 수 있으므로
+    optional 처리합니다.
+  */
+  mainChampionImage?: string;
 
   subChampionImage?: string;
 
@@ -197,29 +208,27 @@ export type MatchPlayer = {
   subRole: string;
 
   /*
-    현재랭크
-    내전.GG 자체 랭크
+    예:
+    "GOLD II"
+    "MASTER 221LP"
+    "언랭크"
   */
-  currentRank: InternalRank;
+  currentRank: string;
 
   /*
-    탑레이팅
+    예:
+    "DIAMOND IV"
   */
   topRating: string;
 
   /*
-    티어평가도
+    내전.GG 내부 평가 점수
+    예: "72.5"
   */
   tierEvaluation: string;
 
-  /*
-    최근승률
-  */
   recentWinRate: number;
 
-  /*
-    내전랭킹
-  */
   internalRanking: number;
 };
 
@@ -245,6 +254,8 @@ export type MatchLookupData = {
 
 /* ==================================================
    DATA DRAGON
+
+   아래 MOCK용 helper는 기존 코드 호환을 위해 유지합니다.
 ================================================== */
 
 const VERSION =
@@ -269,6 +280,10 @@ const profileIcon = (
 
 /* ==================================================
    상세 조회 MOCK DATA
+
+   실제 /matches/result 조회는 RDS를 사용합니다.
+   기존 app/lib/matches.ts 등 옛 import가 남아 있어도
+   빌드가 깨지지 않도록 유지합니다.
 ================================================== */
 
 export const MOCK_MATCHES:
@@ -293,7 +308,7 @@ export const MOCK_MATCHES:
       "하드피어리스",
 
     ruleDescription:
-      "사용된 챔피언은 내전 종료까지 계속 재선택할 수 없는 경쟁 방식입니다.",
+      "사용된 챔피언은 내전 종료까지 다시 선택할 수 없는 방식입니다.",
 
     players: [
       {
@@ -312,19 +327,19 @@ export const MOCK_MATCHES:
           champion("Amumu"),
 
         mainRole:
-          "미드",
+          "MID",
 
         subRole:
-          "서포터",
+          "SUPPORT",
 
         currentRank:
-          "C",
+          "GOLD IV",
 
         topRating:
-          "골드 IV",
+          "GOLD IV",
 
         tierEvaluation:
-          "골드 IV",
+          "40.0",
 
         recentWinRate:
           78,
@@ -349,19 +364,19 @@ export const MOCK_MATCHES:
           champion("Senna"),
 
         mainRole:
-          "원딜",
+          "ADC",
 
         subRole:
-          "서포터",
+          "SUPPORT",
 
         currentRank:
-          "B",
+          "PLATINUM IV",
 
         topRating:
-          "플래티넘 III",
+          "PLATINUM III",
 
         tierEvaluation:
-          "플래티넘 IV",
+          "50.0",
 
         recentWinRate:
           61,
@@ -374,7 +389,7 @@ export const MOCK_MATCHES:
         id: 3,
 
         nickname:
-          "꽃병임#KR1",
+          "테스트03#KR1",
 
         profileIcon:
           profileIcon(31),
@@ -386,19 +401,19 @@ export const MOCK_MATCHES:
           champion("Ahri"),
 
         mainRole:
-          "미드",
+          "MID",
 
         subRole:
-          "탑",
+          "TOP",
 
         currentRank:
-          "B",
+          "PLATINUM II",
 
         topRating:
-          "에메랄드 II",
+          "EMERALD II",
 
         tierEvaluation:
-          "에메랄드 IV",
+          "56.0",
 
         recentWinRate:
           64,
@@ -411,7 +426,7 @@ export const MOCK_MATCHES:
         id: 4,
 
         nickname:
-          "하프틴#KR1",
+          "테스트04#KR1",
 
         profileIcon:
           profileIcon(32),
@@ -423,19 +438,19 @@ export const MOCK_MATCHES:
           champion("Jinx"),
 
         mainRole:
-          "미드",
+          "MID",
 
         subRole:
-          "서포터",
+          "ADC",
 
         currentRank:
-          "C",
+          "GOLD I",
 
         topRating:
-          "플래티넘 IV",
+          "PLATINUM IV",
 
         tierEvaluation:
-          "골드 I",
+          "47.0",
 
         recentWinRate:
           55,
@@ -448,7 +463,7 @@ export const MOCK_MATCHES:
         id: 5,
 
         nickname:
-          "송이는멋쟁#KR1",
+          "테스트05#KR1",
 
         profileIcon:
           profileIcon(33),
@@ -460,19 +475,19 @@ export const MOCK_MATCHES:
           champion("Nautilus"),
 
         mainRole:
-          "서포터",
+          "SUPPORT",
 
         subRole:
-          "미드",
+          "MID",
 
         currentRank:
-          "C",
+          "GOLD II",
 
         topRating:
-          "골드 I",
+          "GOLD I",
 
         tierEvaluation:
-          "골드 II",
+          "44.0",
 
         recentWinRate:
           58,
@@ -485,7 +500,7 @@ export const MOCK_MATCHES:
         id: 6,
 
         nickname:
-          "럭키비키#KR1",
+          "테스트06#KR1",
 
         profileIcon:
           profileIcon(34),
@@ -497,19 +512,19 @@ export const MOCK_MATCHES:
           champion("Renekton"),
 
         mainRole:
-          "정글",
+          "JUNGLE",
 
         subRole:
-          "탑",
+          "TOP",
 
         currentRank:
-          "B",
+          "PLATINUM II",
 
         topRating:
-          "에메랄드 IV",
+          "EMERALD IV",
 
         tierEvaluation:
-          "플래티넘 II",
+          "54.0",
 
         recentWinRate:
           62,
@@ -522,7 +537,7 @@ export const MOCK_MATCHES:
         id: 7,
 
         nickname:
-          "노멘탈뉴비#KR1",
+          "테스트07#KR1",
 
         profileIcon:
           profileIcon(35),
@@ -534,19 +549,19 @@ export const MOCK_MATCHES:
           champion("Lux"),
 
         mainRole:
-          "미드",
+          "MID",
 
         subRole:
-          "서포터",
+          "SUPPORT",
 
         currentRank:
-          "A",
+          "EMERALD II",
 
         topRating:
-          "다이아몬드 IV",
+          "DIAMOND IV",
 
         tierEvaluation:
-          "에메랄드 II",
+          "64.0",
 
         recentWinRate:
           67,
@@ -559,7 +574,7 @@ export const MOCK_MATCHES:
         id: 8,
 
         nickname:
-          "스웨인연구가#KR1",
+          "테스트08#KR1",
 
         profileIcon:
           profileIcon(36),
@@ -571,19 +586,19 @@ export const MOCK_MATCHES:
           champion("Braum"),
 
         mainRole:
-          "미드",
+          "MID",
 
         subRole:
-          "서포터",
+          "SUPPORT",
 
         currentRank:
-          "B",
+          "PLATINUM I",
 
         topRating:
-          "에메랄드 III",
+          "EMERALD III",
 
         tierEvaluation:
-          "플래티넘 I",
+          "58.0",
 
         recentWinRate:
           60,
@@ -596,7 +611,7 @@ export const MOCK_MATCHES:
         id: 9,
 
         nickname:
-          "써부리써봣던#KR1",
+          "테스트09#KR1",
 
         profileIcon:
           profileIcon(37),
@@ -608,19 +623,19 @@ export const MOCK_MATCHES:
           champion("Yone"),
 
         mainRole:
-          "탑",
+          "TOP",
 
         subRole:
-          "미드",
+          "MID",
 
         currentRank:
-          "C",
+          "GOLD I",
 
         topRating:
-          "플래티넘 IV",
+          "PLATINUM IV",
 
         tierEvaluation:
-          "골드 I",
+          "47.0",
 
         recentWinRate:
           53,
@@ -645,19 +660,19 @@ export const MOCK_MATCHES:
           champion("Xayah"),
 
         mainRole:
-          "서포터",
+          "SUPPORT",
 
         subRole:
-          "미드",
+          "MID",
 
         currentRank:
-          "B",
+          "DIAMOND I",
 
         topRating:
-          "챌린저",
+          "MASTER",
 
         tierEvaluation:
-          "다이아몬드 I",
+          "82.0",
 
         recentWinRate:
           78,
@@ -671,7 +686,10 @@ export const MOCK_MATCHES:
 
 
 /* ==================================================
-   검색 결과 DATA
+   검색 MOCK DATA
+
+   실제 검색 API는 RDS 기반 searchMatchLookups를 사용합니다.
+   기존 import 호환 목적으로 유지합니다.
 ================================================== */
 
 export const MOCK_MATCH_SEARCH_RESULTS:

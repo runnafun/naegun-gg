@@ -6,306 +6,209 @@ import {
   useState,
 } from "react";
 
-import {
-  useRouter,
-} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import type {
   MatchSearchResult,
 } from "../../data/matches";
 
-import styles from
-  "./MatchSearchInput.module.css";
-
-
-type Props = {
-  defaultValue?: string;
-
-  variant?:
-    | "hero"
-    | "topbar";
-};
-
+import styles from "./MatchSearchInput.module.css";
 
 export default function MatchSearchInput({
-  defaultValue = "",
   variant = "hero",
-}: Props) {
-  const router =
-    useRouter();
+}: {
+  variant?: "hero" | "compact";
+}) {
+  const router = useRouter();
 
+  const [query, setQuery] =
+    useState("");
 
-  const [
-    query,
-    setQuery,
-  ] = useState(
-    defaultValue
-  );
+  const [results, setResults] =
+    useState<MatchSearchResult[]>([]);
 
+  const [loading, setLoading] =
+    useState(false);
 
-  const [
-    results,
-    setResults,
-  ] = useState<
-    MatchSearchResult[]
-  >([]);
-
-
-  const [
-    focused,
-    setFocused,
-  ] = useState(false);
-
-
-  const [
-    loading,
-    setLoading,
-  ] = useState(false);
-
+  const [message, setMessage] =
+    useState("");
 
   useEffect(() => {
-    const cleanQuery =
-      query.trim();
+    const keyword =
+      query.trim().toUpperCase();
 
-
-    if (!cleanQuery) {
+    if (!keyword) {
       setResults([]);
-      setLoading(false);
-
+      setMessage("");
       return;
     }
-
 
     const timer =
       window.setTimeout(
         async () => {
+          setLoading(true);
+
           try {
-            setLoading(true);
-
-
             const response =
               await fetch(
-                `/api/matches/search?q=${encodeURIComponent(
-                  cleanQuery
-                )}`
+                `/api/matches/search?q=${encodeURIComponent(keyword)}`,
+                {
+                  cache: "no-store",
+                },
               );
-
-
-            if (!response.ok) {
-              setResults([]);
-
-              return;
-            }
-
 
             const data =
               await response.json();
 
+            const nextResults =
+              Array.isArray(
+                data?.results,
+              )
+                ? data.results
+                : [];
 
             setResults(
-              data.results ?? []
+              nextResults,
+            );
+
+            setMessage(
+              nextResults.length
+                ? ""
+                : "검색 결과가 없습니다.",
             );
           } catch {
             setResults([]);
+            setMessage(
+              "내전 검색에 실패했습니다.",
+            );
           } finally {
             setLoading(false);
           }
         },
-        180
+        250,
       );
 
-
-    return () => {
-      window.clearTimeout(
-        timer
-      );
-    };
+    return () =>
+      window.clearTimeout(timer);
   }, [query]);
 
-
-  const openMatch = (
-    match: MatchSearchResult
-  ) => {
-    const params =
-      new URLSearchParams({
-        code:
-          match.code,
-      });
-
-
+  function moveTo(
+    code: string,
+  ) {
     router.push(
-      `/matches/result?${params.toString()}`
+      `/matches/result?code=${encodeURIComponent(code)}`,
     );
-  };
+  }
 
-
-  const handleSubmit = (
-    event:
-      FormEvent<HTMLFormElement>
-  ) => {
+  function submit(
+    event: FormEvent,
+  ) {
     event.preventDefault();
 
+    const keyword =
+      query.trim().toUpperCase();
 
-    if (
-      results.length > 0
-    ) {
-      openMatch(
-        results[0]
-      );
+    if (!keyword) {
+      return;
     }
-  };
 
+    const exact =
+      results.find(
+        (item) =>
+          item.code.toUpperCase() ===
+          keyword,
+      );
+
+    if (exact) {
+      moveTo(exact.code);
+      return;
+    }
+
+    if (results[0]) {
+      moveTo(
+        results[0].code,
+      );
+      return;
+    }
+
+    setMessage(
+      "해당 내전을 찾을 수 없습니다.",
+    );
+  }
+
+  const wrapperClass =
+    variant === "hero"
+      ? styles.hero
+      : styles.topbar;
 
   return (
     <form
-      className={[
-        styles.form,
-
-        variant === "hero"
-          ? styles.hero
-          : styles.topbar,
-      ].join(" ")}
-      onSubmit={
-        handleSubmit
-      }
+      onSubmit={submit}
+      className={`${styles.form} ${wrapperClass}`}
     >
-
       <div className={styles.inputWrap}>
-
         <input
-          type="text"
+          className={styles.input}
           value={query}
-          onChange={
-            (event) =>
-              setQuery(
-                event.target.value
-              )
-          }
-          onFocus={() =>
-            setFocused(true)
-          }
-          onBlur={() =>
-            window.setTimeout(
-              () =>
-                setFocused(false),
-              150
+          onChange={(event) =>
+            setQuery(
+              event.target.value,
             )
           }
-          placeholder="EX) N103"
+          placeholder="EX) N103 또는 R105"
           autoComplete="off"
-          className={
-            styles.input
-          }
         />
-
       </div>
 
-
-      {focused && (
-        <div
-          className={
-            styles.dropdown
-          }
-        >
-
-          {!query.trim() && (
-            <div
-              className={
-                styles.guide
-              }
-            >
-
-              <p>
-                <strong>
-                  조회를 원하시는 내전코드
-                </strong>
-                를 입력해주세요!
-              </p>
-
-              <span>
-                내전코드는 디스코드 및 프로필 조회에서 확인이 가능합니다.
-              </span>
-
+      {query.trim() && (
+        <div className={styles.dropdown}>
+          {loading && (
+            <div className={styles.message}>
+              <strong>
+                내전 검색 중
+              </strong>
+              잠시만 기다려주세요.
             </div>
           )}
 
-
-          {query.trim() &&
-            loading && (
-              <div
-                className={
-                  styles.message
-                }
-              >
-                검색 중입니다.
-              </div>
-            )}
-
-
-          {query.trim() &&
-            !loading &&
-            results.length === 0 && (
-              <div
-                className={
-                  styles.message
-                }
-              >
-
+          {!loading &&
+            message && (
+              <div className={styles.message}>
                 <strong>
-                  검색 결과가 없습니다.
+                  검색 결과
                 </strong>
-
-                <span>
-                  내전코드를 다시 확인해주세요.
-                </span>
-
+                {message}
               </div>
             )}
-
 
           {!loading &&
             results.map(
               (match) => (
                 <button
-                  key={
-                    match.code
-                  }
                   type="button"
-                  className={
-                    styles.result
-                  }
-                  onMouseDown={
-                    (event) => {
-                      event.preventDefault();
-
-                      openMatch(
-                        match
-                      );
-                    }
+                  key={match.code}
+                  className={styles.result}
+                  onClick={() =>
+                    moveTo(
+                      match.code,
+                    )
                   }
                 >
-
-                  <div
+                  <span
                     className={
                       styles.resultCode
                     }
                   >
-                    {
-                      match.code
-                    }
-                  </div>
+                    {match.code}
+                  </span>
 
-
-                  <div
+                  <span
                     className={
                       styles.resultInfo
                     }
                   >
-
                     <strong>
-                      {
-                        match.matchType
-                      }
+                      {match.matchType}
                     </strong>
 
                     <span>
@@ -313,41 +216,28 @@ export default function MatchSearchInput({
                         match.fearlessType
                       }
                     </span>
+                  </span>
 
-                  </div>
-
-
-                  <div
-                    className={[
-                      styles.status,
-
-                      match.status ===
-                      "playing"
-                        ? styles.playing
-                        : match.status ===
-                          "open"
-                        ? styles.open
-                        : styles.finished,
-                    ].join(" ")}
+                  <span
+                    className={`${styles.status} ${
+                      styles[
+                        match.status
+                      ] ?? ""
+                    }`}
                   >
-                    {
-                      match.status ===
-                      "playing"
+                    {match.status ===
+                    "open"
+                      ? "모집중"
+                      : match.status ===
+                          "playing"
                         ? "진행중"
-                        : match.status ===
-                          "open"
-                        ? "모집중"
-                        : "종료"
-                    }
-                  </div>
-
+                        : "종료"}
+                  </span>
                 </button>
-              )
+              ),
             )}
-
         </div>
       )}
-
     </form>
   );
 }

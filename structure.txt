@@ -1,0 +1,183 @@
+System 볼륨에 대한 폴더 경로의 목록입니다.
+볼륨 일련 번호가 000000A5 4C6E:F8F3입니다.
+C:\USERS\ADMINISTRATOR\DESKTOP\NAEGUN-GG\APP
+|   favicon.ico
+|   globals.css
+|   layout.tsx
+|   page.tsx
+|   
++---account
+|       page.tsx
+|       
++---admin
+|   \---scrims
+|       |   page.tsx
+|       |   
+|       \---[code]
+|               page.tsx
+|               team-builder.css
+|               TeamBuilder.tsx
+|               
++---api
+|   +---admin
+|   |   \---scrims
+|   |       \---[code]
+|   |           +---balance
+|   |           |       route.ts
+|   |           |       
+|   |           \---confirm-team
+|   |                   route.ts
+|   |                   
+|   +---auth
+|   |   +---discord
+|   |   |   |   route.ts
+|   |   |   |   
+|   |   |   \---callback
+|   |   |           route.ts
+|   |   |           
+|   |   +---logout
+|   |   |       route.ts
+|   |   |       
+|   |   \---me
+|   |           route.ts
+|   |           
+|   +---bot
+|   |   +---register
+|   |   |       route.ts
+|   |   |       
+|   |   +---scrims
+|   |   |   \---[code]
+|   |   |       |   route.ts
+|   |   |       |   
+|   |   |       \---participants
+|   |   |               route.ts
+|   |   |               
+|   |   \---user
+|   |           route.ts
+|   |           
+|   +---matches
+|   |   \---search
+|   |           route.ts
+|   |           
+|   +---profile-search
+|   |       route.ts
+|   |       
+|   \---scrims
+|       |   route.ts
+|       |   
+|       \---[code]
+|               route.ts
+|               
++---components
+|   |   Footer.tsx
+|   |   Header.tsx
+|   |   
+|   +---auth
+|   |       UserMenu.tsx
+|   |       
+|   +---home
+|   |       ActivitySection.tsx
+|   |       ChampionPreferenceSection.tsx
+|   |       HeroSection.tsx
+|   |       LiveOpenScrims.tsx
+|   |       MatchApplySection.tsx
+|   |       NewsSection.tsx
+|   |       RankingSection.tsx
+|   |       
+|   +---matches
+|   |       LiveMatchBoard.tsx
+|   |       MatchBoardSection.tsx
+|   |       MatchLookupResult.tsx
+|   |       MatchLookupTopBar.tsx
+|   |       MatchRuleGuide.tsx
+|   |       MatchSearchHero.tsx
+|   |       MatchSearchInput.module.css
+|   |       MatchSearchInput.tsx
+|   |       
+|   +---profile-search
+|   |   |   ProfileSearchHero.tsx
+|   |   |   ProfileSearchInput.module.css
+|   |   |   ProfileSearchInput.tsx
+|   |   |   
+|   |   \---result
+|   |           ProfileMatchHistory.tsx
+|   |           ProfileResultHero.tsx
+|   |           ProfileResultTopBar.tsx
+|   |           ProfileSidebar.tsx
+|   |           ProfileSummary.tsx
+|   |           
+|   +---ranking
+|   |       RankingHero.tsx
+|   |       RankingTable.tsx
+|   |       
+|   \---shop
+|           ShopHero.tsx
+|           ShopProductCard.tsx
+|           ShopSection.tsx
+|           
++---data
+|       home.ts
+|       matches.ts
+|       matchRules.ts
+|       profile.ts
+|       ranking.ts
+|       shop.ts
+|       
++---hooks
+|       useScrim.ts
+|       useScrims.ts
+|       
++---lib
+|   |   admin-auth.ts
+|   |   auth.ts
+|   |   bot-auth.ts
+|   |   discord.ts
+|   |   matches.ts
+|   |   matchLookup.ts
+|   |   prisma.ts
+|   |   profile.ts
+|   |   team-balance.ts
+|   |   
+|   \---scrims
+|           service.ts
+|           types.ts
+|           
++---matches
+|   |   matches.css
+|   |   page.tsx
+|   |   
+|   +---result
+|   |       match-result.css
+|   |       page.tsx
+|   |       
+|   \---[code]
+|           match-detail.css
+|           MatchDetailClient.tsx
+|           page.tsx
+|           
++---mypage
+|       page.tsx
+|       
++---profile-search
+|   |   page.tsx
+|   |   profile-search.css
+|   |   
+|   \---result
+|           page.tsx
+|           profile-result.css
+|           
++---ranking
+|       page.tsx
+|       ranking.css
+|       
+\---shop
+        page.tsx
+        shop.css
+        
+System 볼륨에 대한 폴더 경로의 목록입니다.
+볼륨 일련 번호가 00000095 4C6E:F8F3입니다.
+C:\USERS\ADMINISTRATOR\DESKTOP\NAEGUN-GG\PRISMA
+    schema.prisma
+    
+
+에 하위 폴더가 없습니다.

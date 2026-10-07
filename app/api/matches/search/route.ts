@@ -7,6 +7,8 @@ import {
   searchMatchLookups,
 } from "../../../lib/matchLookup";
 
+export const dynamic =
+  "force-dynamic";
 
 export async function GET(
   request: NextRequest
@@ -16,14 +18,18 @@ export async function GET(
       "q"
     ) ?? "";
 
-
   const results =
-    searchMatchLookups(
-      query
-    );
+    await searchMatchLookups(query);
 
-
-  return NextResponse.json({
-    results,
-  });
+  return NextResponse.json(
+    {
+      results,
+    },
+    {
+      headers: {
+        "Cache-Control":
+          "no-store, max-age=0",
+      },
+    },
+  );
 }

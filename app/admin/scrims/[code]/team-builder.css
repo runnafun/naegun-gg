@@ -1,0 +1,171 @@
+.team-admin-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(20, 92, 63, .22), transparent 32rem),
+    #070b09;
+  color: #f6f8f7;
+  padding: 80px 24px;
+}
+
+.team-admin-shell {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.team-admin-head {
+  margin-bottom: 24px;
+}
+
+.team-admin-kicker {
+  margin: 0 0 8px;
+  color: #7e998d;
+  font-size: 12px;
+  letter-spacing: .18em;
+}
+
+.team-admin-head h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.team-builder {
+  display: grid;
+  gap: 18px;
+}
+
+.team-toolbar,
+.balance-summary,
+.team-message {
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(15, 23, 19, .88);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.team-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.team-toolbar div {
+  display: grid;
+  gap: 6px;
+}
+
+.team-toolbar span,
+.balance-summary span,
+.player-card span {
+  color: #92a29b;
+  font-size: 13px;
+}
+
+.team-toolbar button,
+.confirm-row button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 18px;
+  background: #1b5f43;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.team-toolbar button:disabled,
+.confirm-row button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+.player-grid,
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.player-card {
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(255,255,255,.07);
+  background: rgba(12, 18, 15, .9);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.player-card strong {
+  margin-bottom: 3px;
+}
+
+.teams-grid {
+  gap: 20px;
+}
+
+.team-column {
+  border: 1px solid rgba(74, 153, 255, .22);
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(12, 22, 28, .72);
+  display: grid;
+  gap: 10px;
+}
+
+.team-column.red {
+  border-color: rgba(255, 94, 94, .22);
+  background: rgba(30, 15, 15, .68);
+}
+
+.team-column h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 4px;
+}
+
+.team-column h2 small {
+  color: #8e9c96;
+  font-size: 13px;
+}
+
+.player-card select {
+  margin-top: 6px;
+  background: #0c120f;
+  color: white;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 9px;
+  padding: 9px;
+}
+
+.balance-summary {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.confirm-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.confirm-row button {
+  background: #242d29;
+}
+
+.confirm-row .primary {
+  background: #18794e;
+}
+
+@media (max-width: 760px) {
+  .team-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .player-grid,
+  .teams-grid {
+    grid-template-columns: 1fr;
+  }
+}
