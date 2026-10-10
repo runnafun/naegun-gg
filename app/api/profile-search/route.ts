@@ -8,22 +8,36 @@ import {
 } from "../../lib/profile";
 
 
+export const dynamic =
+  "force-dynamic";
+
+export const revalidate = 0;
+
+
 export async function GET(
-  request: NextRequest
+  request: NextRequest,
 ) {
   const query =
     request.nextUrl.searchParams.get(
-      "q"
+      "q",
     ) ?? "";
 
 
   const results =
-    searchProfiles(
-      query
+    await searchProfiles(
+      query,
     );
 
 
-  return NextResponse.json({
-    results,
-  });
+  return NextResponse.json(
+    {
+      results,
+    },
+    {
+      headers: {
+        "Cache-Control":
+          "no-store, max-age=0",
+      },
+    },
+  );
 }

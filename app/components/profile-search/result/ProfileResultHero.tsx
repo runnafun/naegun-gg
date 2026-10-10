@@ -2,10 +2,31 @@ import type {
   ProfileData,
 } from "../../../data/profile";
 
+import ProfileRefreshButton from "./ProfileRefreshButton";
+
 
 type Props = {
   profile: ProfileData;
 };
+
+
+function rankNumber(
+  rank: string,
+) {
+  const map:
+    Record<string, string> = {
+      I: "1",
+      II: "2",
+      III: "3",
+      IV: "4",
+    };
+
+  return (
+    map[
+      rank?.toUpperCase()
+    ] ?? rank ?? ""
+  );
+}
 
 
 export default function ProfileResultHero({
@@ -51,9 +72,10 @@ export default function ProfileResultHero({
                 티어평가 요청하기
               </button>
 
-              <button type="button">
-                전적 갱신하기
-              </button>
+              <ProfileRefreshButton
+                gameName={profile.gameName}
+                tagLine={profile.tagLine}
+              />
 
             </div>
 
@@ -116,20 +138,25 @@ export default function ProfileResultHero({
           <div className="profile-result-rating">
 
             <strong>
-              티어평가도
+              현재 티어
             </strong>
 
             <img
               src={
-                profile.peakTierImage
+                profile.soloTierImage
               }
               alt=""
             />
 
             <span>
-              {profile.peakTier}
-              {" +"}
-              {profile.peakLp}
+              {profile.soloTier}
+              {" "}
+              {rankNumber(
+                profile.soloRank
+              )}
+              {" · "}
+              {profile.soloLp}
+              LP
             </span>
 
           </div>

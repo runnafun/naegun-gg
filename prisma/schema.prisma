@@ -130,7 +130,8 @@ model User {
 
   adminLogs AdminAuditLog[] @relation("AdminActor")
 
-  balanceProfile BalanceProfile?
+  balanceProfile  BalanceProfile?
+  adminCredential AdminCredential?
 }
 
 model DiscordAccount {
@@ -165,10 +166,19 @@ model RiotAccount {
   region String @default("KR")
 
   profileIconId Int?
+  summonerLevel Int?
 
-  soloTier String?
-  soloRank String?
-  soloLp   Int?
+  soloTier   String?
+  soloRank   String?
+  soloLp     Int?
+  soloWins   Int?
+  soloLosses Int?
+
+  flexTier   String?
+  flexRank   String?
+  flexLp     Int?
+  flexWins   Int?
+  flexLosses Int?
 
   linkedAt      DateTime  @default(now())
   lastChangedAt DateTime?
@@ -462,9 +472,43 @@ model BalanceProfile {
   // 내전.GG 내부 점수
   // 신규 유저는 자동 팀 계산 시 peakTier 기준 점수로 자동 초기화
   tierEvaluation Float?
-  scrimRankScore Float @default(50)
+  scrimRankScore Float  @default(50)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model AdminCredential {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  username     String @unique
+  passwordHash String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([username])
+}
+
+
+model RiotMatchCache {
+  id String @id
+
+  puuid String
+
+  queueId Int
+
+  gameCreation BigInt
+  gameDuration Int
+
+  data Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([puuid, gameCreation])
+  @@index([puuid, queueId, gameCreation])
+}

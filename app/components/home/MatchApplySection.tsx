@@ -236,7 +236,13 @@ function MatchRow({
             ? "action-open"
             : "action-closed"
         }`}
-        href={`/matches/result?code=${encodeURIComponent(scrim.code)}`}
+        href={
+          scrim.forumThreadId
+            ? `https://discord.com/channels/${process.env.NEXT_PUBLIC_DISCORD_GUILD_ID}/${scrim.forumThreadId}`
+            : `/matches/result?code=${encodeURIComponent(scrim.code)}`
+        }
+        target={scrim.forumThreadId ? "_blank" : undefined}
+        rel={scrim.forumThreadId ? "noreferrer" : undefined}
         style={{
           display: "flex",
           alignItems: "center",

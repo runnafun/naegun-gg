@@ -8,7 +8,13 @@ export type PublicScrimStatus =
 
 export type PublicScrimParticipant = {
   userId: string;
+
   riotId: string | null;
+
+  puuid: string | null;
+
+  gameName: string | null;
+  tagLine: string | null;
   profileIconId: number | null;
 
   currentTier: string | null;

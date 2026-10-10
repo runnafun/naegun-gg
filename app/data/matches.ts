@@ -17,6 +17,8 @@ export type NormalMatch = {
   map: string;
 
   status: MatchStatus;
+
+  forumThreadId?: string | null;
 };
 
 
@@ -34,6 +36,8 @@ export type RankedMatch = {
   map: string;
 
   status: MatchStatus;
+
+  forumThreadId?: string | null;
 };
 
 
@@ -193,6 +197,9 @@ export type MatchPlayer = {
 
   nickname: string;
 
+  gameName?: string | null;
+  tagLine?: string | null;
+
   profileIcon: string;
 
   /*
@@ -245,6 +252,8 @@ export type MatchLookupData = {
   status: MatchLookupStatus;
 
   ruleTitle: string;
+
+  ruleKey?: string;
 
   ruleDescription: string;
 

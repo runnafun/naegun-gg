@@ -123,6 +123,8 @@ export type MatchHistoryItem = {
 
   queue: string;
 
+  queueId?: number;
+
   ago: string;
 
   duration: string;
@@ -222,6 +224,10 @@ export type ProfileData = {
 
   internalRankTotal: number;
 
+  defenseProgress?: number;
+
+  defenseTickets?: number;
+
 
   soloTier: string;
 
@@ -247,8 +253,18 @@ export type ProfileData = {
 
   soloWinRate: number;
 
+  flexTier?: string;
+  flexRank?: string;
+  flexLp?: number;
+  flexWinRate?: number;
+
+  soloMostChampions?: ProfileChampion[];
+  flexMostChampions?: ProfileChampion[];
+
 
   favoriteLine: string;
+
+  lastUpdatedText?: string;
 
 
   mostChampions: ProfileChampion[];

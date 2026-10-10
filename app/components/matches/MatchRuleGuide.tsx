@@ -12,6 +12,7 @@ import {
 
 type MatchRuleGuideProps = {
   onlyRuleTitle?: string;
+  onlyRuleKey?: string;
 
   showHeading?: boolean;
 
@@ -51,12 +52,21 @@ function ChevronIcon({
 
 export default function MatchRuleGuide({
   onlyRuleTitle,
+  onlyRuleKey,
   showHeading = true,
   defaultOpen = false,
 }: MatchRuleGuideProps) {
 
   const visibleRules =
     useMemo(() => {
+      if (onlyRuleKey) {
+        return matchRules.filter(
+          (rule) =>
+            rule.key ===
+            onlyRuleKey
+        );
+      }
+
       if (!onlyRuleTitle) {
         return matchRules;
       }
@@ -66,7 +76,7 @@ export default function MatchRuleGuide({
           rule.title ===
           onlyRuleTitle
       );
-    }, [onlyRuleTitle]);
+    }, [onlyRuleTitle, onlyRuleKey]);
 
 
   const [

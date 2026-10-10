@@ -41,7 +41,7 @@ export default async function ProfileResultPage({
 
 
   const profile =
-    getProfileByRiotId(
+    await getProfileByRiotId(
       gameName,
       tagLine
     );

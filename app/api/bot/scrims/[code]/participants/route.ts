@@ -4,6 +4,8 @@ import {
 } from "next/server";
 
 import { prisma } from "@/app/lib/prisma";
+import { syncRiotAccountByUserId } from "@/app/lib/riot-sync";
+
 import { isValidBotRequest } from "@/app/lib/bot-auth";
 
 export const dynamic = "force-dynamic";
@@ -288,6 +290,27 @@ export async function POST(
 
         status,
       },
+    });
+
+  /*
+    참가 신청 응답을 Riot API 때문에 지연시키지 않는다.
+    참가자는 즉시 등록하고,
+    Riot 티어/승률/최근 경기 정보는 백그라운드에서 갱신한다.
+  */
+  void syncRiotAccountByUserId(
+    discordAccount.userId,
+  )
+    .then((syncResult) => {
+      console.log(
+        `[SCRIM ${scrim.code}] Riot 자동 갱신 완료`,
+        syncResult,
+      );
+    })
+    .catch((error) => {
+      console.error(
+        `[SCRIM ${scrim.code}] Riot 자동 갱신 실패`,
+        error,
+      );
     });
 
   return NextResponse.json({

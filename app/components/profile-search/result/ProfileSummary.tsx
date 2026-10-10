@@ -55,8 +55,26 @@ function getChampionSplashUrl(
 export default function ProfileSummary({
   profile,
 }: Props) {
+  const soloMostChampions =
+    profile.soloMostChampions ??
+    profile.mostChampions;
+
+  const soloMostTop3 =
+    [...soloMostChampions]
+      .sort(
+        (a, b) =>
+          b.games - a.games
+      )
+      .slice(0, 3);
+
+  const soloRankGameCount =
+    profile.matches.filter(
+      (match) =>
+        match.queueId === 420
+    ).length;
+
   const mostChampion =
-    profile.mostChampions[0];
+    soloMostTop3[0];
 
   const mostChampionSplash =
     mostChampion
@@ -119,56 +137,75 @@ export default function ProfileSummary({
 
           <div className="profile-summary-content">
 
-            <WinRateCircle
-              value={
-                profile.soloWinRate
-              }
-            />
+            {profile.soloWinRate >= 0 ? (
+              <WinRateCircle
+                value={
+                  profile.soloWinRate
+                }
+              />
+            ) : (
+              <strong className="profile-empty-value">
+                -
+              </strong>
+            )}
 
           </div>
 
         </div>
 
 
-        {/* 솔로랭크 모스트 */}
+        {/* 최근 40경기 솔로랭크 모스트 */}
         <div className="profile-result-summary-item">
 
           <span className="profile-summary-label">
-            솔로랭크 모스트
+            최근 40경기 솔로랭크 모스트
           </span>
 
           <div className="profile-summary-content">
 
             <div className="profile-result-most-list">
 
-              {profile.mostChampions.map(
-                (champion) => (
-                  <div
-                    key={
-                      champion.name
-                    }
-                    className="profile-result-most"
-                  >
+              {soloMostTop3.length > 0 ? (
+                soloMostTop3.map(
+                  (champion) => {
 
-                    <div className="profile-result-most-image">
-                      <img
-                        src={
-                          champion.image
-                        }
-                        alt={
-                          champion.name
-                        }
-                      />
-                    </div>
+                    const playRate =
+                      soloRankGameCount > 0
+                        ? Math.round(
+                            (
+                              champion.games /
+                              soloRankGameCount
+                            ) * 100
+                          )
+                        : 0;
 
-                    <strong>
-                      {
-                        champion.winRate
-                      }%
-                    </strong>
+                    return (
+                      <div
+                        key={champion.name}
+                        className="profile-result-most"
+                      >
 
-                  </div>
+                        <div className="profile-result-most-image">
+                          <img
+                            src={champion.image}
+                            alt={champion.name}
+                          />
+                        </div>
+
+                        <strong>
+                          {champion.games}게임
+                          <br />
+                          {playRate}%
+                        </strong>
+
+                      </div>
+                    );
+                  }
                 )
+              ) : (
+                <span className="profile-most-empty">
+                  - 없음
+                </span>
               )}
 
             </div>
@@ -188,37 +225,9 @@ export default function ProfileSummary({
           <div className="profile-summary-content">
 
             <div className="profile-result-most-list">
-
-              {profile.mostChampions.map(
-                (champion) => (
-                  <div
-                    key={
-                      champion.name
-                    }
-                    className="profile-result-most"
-                  >
-
-                    <div className="profile-result-most-image">
-                      <img
-                        src={
-                          champion.image
-                        }
-                        alt={
-                          champion.name
-                        }
-                      />
-                    </div>
-
-                    <strong>
-                      {
-                        champion.winRate
-                      }%
-                    </strong>
-
-                  </div>
-                )
-              )}
-
+              <span className="profile-most-empty">
+                - 없음
+              </span>
             </div>
 
           </div>
@@ -269,7 +278,7 @@ export default function ProfileSummary({
             )
           </span>
 
-          <div className="profile-summary-content">
+          <div className="profile-summary-content profile-rank-summary-content">
 
             <div className="profile-result-rank-shields">
 
@@ -292,8 +301,85 @@ export default function ProfileSummary({
 
             </div>
 
+
+            <div className="profile-defense-system">
+
+              <div className="profile-defense-head">
+
+                <strong>
+                  보호막 시스템
+                </strong>
+
+                <span>
+                  {
+                    profile.defenseProgress ?? 0
+                  }%
+                </span>
+
+              </div>
+
+
+              <div className="profile-defense-progress">
+
+                <i
+                  style={{
+                    width:
+                      `${Math.min(
+                        Math.max(
+                          profile.defenseProgress ?? 0,
+                          0,
+                        ),
+                        100,
+                      )}%`,
+                  }}
+                />
+
+              </div>
+
+
+              <div className="profile-defense-bottom">
+
+                <div className="profile-defense-slots">
+
+                  {Array.from({
+                    length: 2,
+                  }).map(
+                    (_, index) => (
+                      <i
+                        key={index}
+                        className={
+                          index <
+                          (
+                            profile.defenseTickets ?? 0
+                          )
+                            ? "active"
+                            : ""
+                        }
+                      />
+                    )
+                  )}
+
+                </div>
+
+                <span>
+                  {
+                    profile.defenseTickets ?? 0
+                  }
+                  /2
+                </span>
+
+              </div>
+
+
+              <p>
+                100% 달성 시 보호막 1개 획득 · 최대 2개
+              </p>
+
+            </div>
+
           </div>
 
+        </div>
         </div>
 
       </div>

@@ -70,6 +70,19 @@ function toPublicScrim(
                   ? `${p.user.riotAccount.gameName}#${p.user.riotAccount.tagLine}`
                   : null,
 
+              puuid:
+                p.user?.riotAccount?.puuid ??
+                null,
+
+
+              gameName:
+                p.user?.riotAccount?.gameName ??
+                null,
+
+              tagLine:
+                p.user?.riotAccount?.tagLine ??
+                null,
+
               profileIconId:
                 p.user?.riotAccount?.profileIconId ?? null,
 
@@ -82,15 +95,12 @@ function toPublicScrim(
 
               peakTier:
                 p.user?.balanceProfile?.peakTier ??
-                p.user?.riotAccount?.soloTier ??
                 null,
               peakRank:
                 p.user?.balanceProfile?.peakRank ??
-                p.user?.riotAccount?.soloRank ??
                 null,
               peakLp:
                 p.user?.balanceProfile?.peakLp ??
-                p.user?.riotAccount?.soloLp ??
                 null,
 
               tierEvaluation:
@@ -103,8 +113,22 @@ function toPublicScrim(
               losses:
                 p.user?.stats?.losses ?? 0,
 
-              mainPosition: p.mainPosition,
-              subPosition: p.subPosition,
+              mainPosition:
+                p.mainPosition !== "ANY"
+                  ? p.mainPosition
+                  : (
+                      p.user?.preferences?.mainPosition ??
+                      "ANY"
+                    ),
+
+              subPosition:
+                p.subPosition !== "ANY"
+                  ? p.subPosition
+                  : (
+                      p.user?.preferences?.subPosition ??
+                      "ANY"
+                    ),
+
               team: p.team,
               status: p.status,
             })),
@@ -120,6 +144,7 @@ function participantInclude() {
         riotAccount: true,
         balanceProfile: true,
         stats: true,
+        preferences: true,
       },
     },
   } as const;
@@ -139,14 +164,7 @@ export async function getScrims(
   const statusFilter = status
     ? status
     : activeOnly
-      ? {
-          in: [
-            "OPEN",
-            "CLOSED",
-            "TEAM_SELECTION",
-            "IN_PROGRESS",
-          ],
-        }
+      ? "OPEN"
       : {
           in: PUBLIC_STATUSES,
         };

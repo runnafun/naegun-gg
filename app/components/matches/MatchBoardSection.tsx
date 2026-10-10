@@ -168,7 +168,13 @@ export default function MatchBoardSection(
               </div>
 
               <Link
-                href={`/matches/result?code=${encodeURIComponent(match.code)}`}
+                href={
+                  match.forumThreadId
+                    ? `https://discord.com/channels/${process.env.NEXT_PUBLIC_DISCORD_GUILD_ID}/${match.forumThreadId}`
+                    : `/matches/result?code=${encodeURIComponent(match.code)}`
+                }
+                target={match.forumThreadId ? "_blank" : undefined}
+                rel={match.forumThreadId ? "noreferrer" : undefined}
                 className={`match-action ${
                   isOpen
                     ? "action-open"

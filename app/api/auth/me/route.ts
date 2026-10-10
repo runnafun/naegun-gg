@@ -1,28 +1,16 @@
-import {
-  NextResponse,
-} from "next/server";
+import { NextResponse } from "next/server";
 
-import {
-  getSession,
-} from "../../../lib/auth";
-
-import {
-  prisma,
-} from "../../../lib/prisma";
-
-import {
-  getDiscordAvatarUrl,
-} from "../../../lib/discord";
+import { getSession } from "../../../lib/auth";
+import { prisma } from "../../../lib/prisma";
+import { getDiscordAvatarUrl } from "../../../lib/discord";
 
 export async function GET() {
-  const session =
-    await getSession();
+  const session = await getSession();
 
   if (!session) {
     return NextResponse.json(
       {
-        authenticated:
-          false,
+        authenticated: false,
       },
       {
         status: 401,
@@ -30,32 +18,22 @@ export async function GET() {
     );
   }
 
-  const user =
-    await prisma.user.findUnique(
-      {
-        where: {
-          id: session.userId,
-        },
+  const user = await prisma.user.findUnique({
+    where: {
+      id: session.userId,
+    },
+    include: {
+      discordAccount: true,
+      adminCredential: true,
+      wallet: true,
+      riotAccount: true,
+    },
+  });
 
-        include: {
-          discordAccount:
-            true,
-
-          wallet: true,
-
-          riotAccount: true,
-        },
-      },
-    );
-
-  if (
-    !user ||
-    !user.discordAccount
-  ) {
+  if (!user) {
     return NextResponse.json(
       {
-        authenticated:
-          false,
+        authenticated: false,
       },
       {
         status: 401,
@@ -63,21 +41,79 @@ export async function GET() {
     );
   }
 
-  const discord =
-    user.discordAccount;
+  const discord = user.discordAccount;
+  const admin = user.adminCredential;
+
+  if (!discord && !admin) {
+    return NextResponse.json(
+      {
+        authenticated: false,
+      },
+      {
+        status: 401,
+      },
+    );
+  }
+
+  if (admin) {
+    return NextResponse.json({
+      authenticated: true,
+
+      user: {
+        id: user.id,
+        role: user.role,
+        status: user.status,
+
+        username: admin.username,
+        displayName: admin.username,
+
+        discordUserId: null,
+        avatarUrl: null,
+
+        ggCoin: (
+          user.wallet?.balance ??
+          BigInt(0)
+        ).toString(),
+
+        riotLinked: Boolean(
+          user.riotAccount,
+        ),
+
+        riotAccount: user.riotAccount
+          ? {
+              gameName:
+                user.riotAccount.gameName,
+
+              tagLine:
+                user.riotAccount.tagLine,
+            }
+          : null,
+
+        isAdminAccount: true,
+      },
+    });
+  }
+
+  if (!discord) {
+    return NextResponse.json(
+      {
+        authenticated: false,
+      },
+      {
+        status: 401,
+      },
+    );
+  }
 
   return NextResponse.json({
     authenticated: true,
 
     user: {
       id: user.id,
-
       role: user.role,
-
       status: user.status,
 
-      username:
-        discord.username,
+      username: discord.username,
 
       displayName:
         discord.globalName ??
@@ -91,29 +127,26 @@ export async function GET() {
           discord,
         ),
 
-      ggCoin:
-        (
-          user.wallet?.balance ??
-          BigInt(0)
-        ).toString(),
+      ggCoin: (
+        user.wallet?.balance ??
+        BigInt(0)
+      ).toString(),
 
-      riotLinked:
-        Boolean(
-          user.riotAccount,
-        ),
+      riotLinked: Boolean(
+        user.riotAccount,
+      ),
 
-      riotAccount:
-        user.riotAccount
-          ? {
-              gameName:
-                user.riotAccount
-                  .gameName,
+      riotAccount: user.riotAccount
+        ? {
+            gameName:
+              user.riotAccount.gameName,
 
-              tagLine:
-                user.riotAccount
-                  .tagLine,
-            }
-          : null,
+            tagLine:
+              user.riotAccount.tagLine,
+          }
+        : null,
+
+      isAdminAccount: false,
     },
   });
 }

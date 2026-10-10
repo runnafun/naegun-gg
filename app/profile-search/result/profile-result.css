@@ -762,6 +762,178 @@ i.active {
 }
 
 
+
+/* ==================================================
+   RANK + DEFENSE SYSTEM
+================================================== */
+
+.profile-rank-summary-content {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 22px;
+
+  padding-top: 4px;
+}
+
+
+.profile-result-rank-history {
+  justify-content: flex-start;
+}
+
+
+.profile-defense-system {
+  width:
+    min(
+      100%,
+      350px
+    );
+
+  padding-top: 18px;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.08);
+}
+
+
+.profile-defense-head {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 9px;
+}
+
+
+.profile-defense-head strong {
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+
+.profile-defense-head span {
+  color: #9fd41d;
+
+  font-size: 13px;
+  font-weight: 900;
+}
+
+
+.profile-defense-progress {
+  width: 100%;
+  height: 9px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+}
+
+
+.profile-defense-progress i {
+  height: 100%;
+
+  display: block;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #78ad00,
+      #a7d92c
+    );
+}
+
+
+.profile-defense-bottom {
+  margin-top: 13px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.profile-defense-slots {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+.profile-defense-slots i {
+  width: 25px;
+  height: 31px;
+
+  display: block;
+
+  clip-path:
+    polygon(
+      50% 0,
+      100% 18%,
+      88% 73%,
+      50% 100%,
+      12% 73%,
+      0 18%
+    );
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    inset 0 0 0 1px
+    rgba(255, 255, 255, 0.08);
+}
+
+
+.profile-defense-slots i.active {
+  background:
+    linear-gradient(
+      180deg,
+      #b4e536,
+      #78ad00
+    );
+}
+
+
+.profile-defense-bottom > span {
+  color:
+    rgba(255, 255, 255, 0.6);
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+.profile-defense-system p {
+  margin:
+    10px 0 0;
+
+  color:
+    rgba(255, 255, 255, 0.38);
+
+  font-size: 11px;
+  font-weight: 500;
+
+  line-height: 1.5;
+}
+
+
 /* ==================================================
    DETAIL LAYOUT
 ================================================== */
@@ -1237,7 +1409,7 @@ i.active {
   display: grid;
 
   grid-template-columns:
-    repeat(5, 1fr);
+    repeat(3, 1fr);
 
   gap: 4px;
 
@@ -1281,7 +1453,6 @@ i.active {
 
   grid-template-columns:
     minmax(165px, 1.4fr)
-    82px
     120px
     92px
     65px
@@ -2281,3 +2452,137 @@ i.hot {
   }
 
 }
+/* 승/패 상세보기 버튼 색상 */
+.profile-match-wrap.is-win
+.profile-match-toggle {
+  color: #5ca3ff;
+}
+
+.profile-match-wrap.is-lose
+.profile-match-toggle {
+  color: #ff4d63;
+}
+
+
+/* 전적 상세 토글 */
+.profile-match-wrap.is-win
+.profile-match-toggle {
+  color: #5ca3ff !important;
+}
+
+.profile-match-wrap.is-lose
+.profile-match-toggle {
+  color: #e64355 !important;
+}
+
+
+/* 전적 더보기 */
+.profile-match-more {
+  width: 100%;
+  height: 46px;
+
+  border: 0;
+  border-radius: 4px;
+
+  background: #171817;
+
+  color: rgba(255,255,255,.72);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.profile-match-more:hover {
+  background: #202220;
+  color: #fff;
+}
+
+.profile-match-empty {
+  padding: 45px 20px;
+
+  text-align: center;
+
+  color: rgba(255,255,255,.45);
+
+  font-size: 12px;
+}
+
+
+.profile-result-updated {
+  margin-left: 10px;
+
+  color: rgba(255,255,255,.4);
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+
+
+/* === PROFILE UI PATCH === */
+
+.profile-result-tabs button {
+  flex: 1;
+  min-width: 0;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+.profile-result-most strong {
+  text-align: center;
+  line-height: 1.35;
+}
+
+
+
+/* === PROFILE RANK UI FIX === */
+
+.profile-most-empty,
+.profile-side-empty {
+  color: rgba(255,255,255,.42);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-side-empty {
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-side-title-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profile-rank-select {
+  height: 28px;
+  padding: 0 28px 0 10px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.10);
+
+  border-radius: 4px;
+
+  background: #18181f;
+
+  color: #fff;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  outline: none;
+  cursor: pointer;
+}
+
+.profile-rank-select option {
+  background: #18181f;
+  color: #fff;
+}
+

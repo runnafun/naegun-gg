@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type {
   MatchLookupData,
 } from "../../data/matches";
@@ -36,6 +38,9 @@ export default function MatchLookupResult({
             onlyRuleTitle={
               match.ruleTitle
             }
+            onlyRuleKey={
+              match.ruleKey
+            }
             showHeading={false}
             defaultOpen
           />
@@ -65,22 +70,50 @@ export default function MatchLookupResult({
                   key={player.id}
                   className="match-lookup-table-row"
                 >
-                  <div className="match-lookup-player">
-                    <div className="match-lookup-profile-image">
-                      <img
-                        src={
-                          player.profileIcon
-                        }
-                        alt=""
-                      />
-                    </div>
-
-                    <span>
-                      {
-                        player.nickname
+                  {player.gameName && player.tagLine ? (
+                    <Link
+                      href={
+                        `/profile-search/result?gameName=${encodeURIComponent(
+                          player.gameName
+                        )}&tagLine=${encodeURIComponent(
+                          player.tagLine
+                        )}`
                       }
-                    </span>
-                  </div>
+                      className="match-lookup-player match-lookup-player-link"
+                    >
+                      <div className="match-lookup-profile-image">
+                        <img
+                          src={
+                            player.profileIcon
+                          }
+                          alt=""
+                        />
+                      </div>
+
+                      <span>
+                        {
+                          player.nickname
+                        }
+                      </span>
+                    </Link>
+                  ) : (
+                    <div className="match-lookup-player">
+                      <div className="match-lookup-profile-image">
+                        <img
+                          src={
+                            player.profileIcon
+                          }
+                          alt=""
+                        />
+                      </div>
+
+                      <span>
+                        {
+                          player.nickname
+                        }
+                      </span>
+                    </div>
+                  )}
 
                   <div className="match-lookup-champions">
                     {player.mainChampionImage ? (
@@ -148,9 +181,9 @@ export default function MatchLookupResult({
                   </span>
 
                   <strong className="match-lookup-winrate">
-                    {
-                      player.recentWinRate
-                    }%
+                    {player.recentWinRate >= 0
+                      ? `${player.recentWinRate}%`
+                      : "-"}
                   </strong>
 
                   <strong className="match-lookup-ranking">

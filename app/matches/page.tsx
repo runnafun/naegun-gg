@@ -167,6 +167,7 @@ export default function MatchesPage() {
         people:
           `${scrim.participantCount} / ${scrim.maxPlayers}`,
         map: ruleLabel(scrim.rule),
+        forumThreadId: scrim.forumThreadId ?? null,
         status:
           scrim.status === "OPEN"
             ? ("open" as const)
@@ -191,6 +192,7 @@ export default function MatchesPage() {
           avgTier: tiers.avgTier,
           maxTier: tiers.maxTier,
           map: ruleLabel(scrim.rule),
+          forumThreadId: scrim.forumThreadId ?? null,
           status:
             scrim.status === "OPEN"
               ? ("open" as const)

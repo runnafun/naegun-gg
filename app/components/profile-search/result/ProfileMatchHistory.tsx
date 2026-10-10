@@ -113,25 +113,6 @@ function DetailTeamRow({
       </div>
 
 
-      <div className="match-detail-score">
-
-        <strong>
-          {
-            player.opScore
-          }
-        </strong>
-
-        {player.badge && (
-          <span>
-            {
-              player.badge
-            }
-          </span>
-        )}
-
-      </div>
-
-
       <div className="match-detail-kda">
 
         <strong>
@@ -215,7 +196,7 @@ function MatchDetail({
     tab,
     setTab,
   ] = useState<DetailTab>(
-    "summary"
+    "team"
   );
 
 
@@ -223,36 +204,6 @@ function MatchDetail({
     <div className="match-detail-panel">
 
       <div className="match-detail-tabs">
-
-        <button
-          type="button"
-          className={
-            tab === "summary"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setTab("summary")
-          }
-        >
-          종합
-        </button>
-
-
-        <button
-          type="button"
-          className={
-            tab === "score"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setTab("score")
-          }
-        >
-          OP 스코어
-        </button>
-
 
         <button
           type="button"
@@ -301,7 +252,7 @@ function MatchDetail({
       </div>
 
 
-      {tab === "summary" && (
+      {tab === "team" && (
         <div className="match-detail-summary">
 
           <div className="match-detail-header-row">
@@ -310,9 +261,7 @@ function MatchDetail({
               소환사
             </span>
 
-            <span>
-              OP Score
-            </span>
+            
 
             <span>
               KDA
@@ -434,11 +383,7 @@ function MatchDetail({
       )}
 
 
-      {tab !== "summary" && (
-        <div className="match-detail-placeholder">
-          해당 탭 상세 데이터 영역
-        </div>
-      )}
+
 
     </div>
   );
@@ -707,6 +652,87 @@ function MatchCard({
 export default function ProfileMatchHistory({
   matches,
 }: Props) {
+
+  const [
+    tab,
+    setTab,
+  ] = useState<
+    "all" |
+    "scrim" |
+    "solo" |
+    "flex"
+  >("all");
+
+
+  const [
+    visibleCount,
+    setVisibleCount,
+  ] = useState(20);
+
+
+  const changeTab = (
+    value:
+      "all" |
+      "scrim" |
+      "solo" |
+      "flex"
+  ) => {
+    setTab(value);
+    setVisibleCount(20);
+  };
+
+
+  const filteredMatches =
+    matches.filter(
+      (match) => {
+
+        if (
+          tab === "solo"
+        ) {
+          return (
+            match.queueId ===
+            420
+          );
+        }
+
+
+        if (
+          tab === "flex"
+        ) {
+          return (
+            match.queueId ===
+            440
+          );
+        }
+
+
+        if (
+          tab === "scrim"
+        ) {
+          return (
+            match.queue ===
+            "내전"
+          );
+        }
+
+
+        return true;
+      },
+    );
+
+
+  const visibleMatches =
+    filteredMatches.slice(
+      0,
+      visibleCount,
+    );
+
+
+  const hasMore =
+    visibleCount <
+    filteredMatches.length;
+
+
   return (
     <section className="profile-result-history">
 
@@ -714,17 +740,61 @@ export default function ProfileMatchHistory({
 
         <button
           type="button"
-          className="active"
+          className={
+            tab === "all"
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            changeTab("all")
+          }
         >
-          전체전적
+          전체 전적
         </button>
 
-        <button type="button">
-          내전전적
+
+        <button
+          type="button"
+          className={
+            tab === "scrim"
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            changeTab("scrim")
+          }
+        >
+          내전 전적
         </button>
 
-        <button type="button">
-          솔로랭크 전적
+
+        <button
+          type="button"
+          className={
+            tab === "solo"
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            changeTab("solo")
+          }
+        >
+          솔로랭크
+        </button>
+
+
+        <button
+          type="button"
+          className={
+            tab === "flex"
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            changeTab("flex")
+          }
+        >
+          자유랭크
         </button>
 
       </div>
@@ -732,23 +802,42 @@ export default function ProfileMatchHistory({
 
       <div className="profile-match-list">
 
-        {matches.map(
+        {visibleMatches.length === 0 && (
+          <div className="profile-match-empty">
+            표시할 전적이 없습니다.
+          </div>
+        )}
+
+
+        {visibleMatches.map(
           (
             match,
-            index
+            index,
           ) => (
             <MatchCard
               key={
-                match.id
+                `${match.id}-${index}`
               }
-              match={
-                match
-              }
-              defaultOpen={
-                index === 0
-              }
+              match={match}
+              defaultOpen={false}
             />
           )
+        )}
+
+
+        {hasMore && (
+          <button
+            type="button"
+            className="profile-match-more"
+            onClick={() =>
+              setVisibleCount(
+                (value) =>
+                  value + 20
+              )
+            }
+          >
+            전적 더보기
+          </button>
         )}
 
       </div>

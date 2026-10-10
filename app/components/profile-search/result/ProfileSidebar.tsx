@@ -1,6 +1,14 @@
+"use client";
+
+import { useState } from "react";
+
 import type {
   ProfileData,
 } from "../../../data/profile";
+
+import {
+  championNameKo,
+} from "../../../data/champion-ko";
 
 
 type Props = {
@@ -9,9 +17,508 @@ type Props = {
 };
 
 
+const CHAMPION_KO:
+  Record<string, string> = {
+    Aatrox: "아트록스",
+    Ahri: "아리",
+    Akali: "아칼리",
+    Akshan: "아크샨",
+    Alistar: "알리스타",
+    Ambessa: "암베사",
+    Amumu: "아무무",
+    Anivia: "애니비아",
+    Annie: "애니",
+    Aphelios: "아펠리오스",
+    Ashe: "애쉬",
+    AurelionSol: "아우렐리온 솔",
+    Aurora: "오로라",
+    Azir: "아지르",
+    Bard: "바드",
+    Belveth: "벨베스",
+    Blitzcrank: "블리츠크랭크",
+    Brand: "브랜드",
+    Braum: "브라움",
+    Briar: "브라이어",
+    Caitlyn: "케이틀린",
+    Camille: "카밀",
+    Cassiopeia: "카시오페아",
+    Chogath: "초가스",
+    Corki: "코르키",
+    Darius: "다리우스",
+    Diana: "다이애나",
+    Draven: "드레이븐",
+    DrMundo: "문도 박사",
+    Ekko: "에코",
+    Elise: "엘리스",
+    Evelynn: "이블린",
+    Ezreal: "이즈리얼",
+    Fiddlesticks: "피들스틱",
+    Fiora: "피오라",
+    Fizz: "피즈",
+    Galio: "갈리오",
+    Gangplank: "갱플랭크",
+    Garen: "가렌",
+    Gnar: "나르",
+    Gragas: "그라가스",
+    Graves: "그레이브즈",
+    Gwen: "그웬",
+    Hecarim: "헤카림",
+    Heimerdinger: "하이머딩거",
+    Hwei: "흐웨이",
+    Illaoi: "일라오이",
+    Irelia: "이렐리아",
+    Ivern: "아이번",
+    Janna: "잔나",
+    JarvanIV: "자르반 4세",
+    Jax: "잭스",
+    Jayce: "제이스",
+    Jhin: "진",
+    Jinx: "징크스",
+    KSante: "크산테",
+    Kaisa: "카이사",
+    Kalista: "칼리스타",
+    Karma: "카르마",
+    Karthus: "카서스",
+    Kassadin: "카사딘",
+    Katarina: "카타리나",
+    Kayle: "케일",
+    Kayn: "케인",
+    Kennen: "케넨",
+    Khazix: "카직스",
+    Kindred: "킨드레드",
+    Kled: "클레드",
+    KogMaw: "코그모",
+    Leblanc: "르블랑",
+    LeeSin: "리 신",
+    Leona: "레오나",
+    Lillia: "릴리아",
+    Lissandra: "리산드라",
+    Lucian: "루시안",
+    Lulu: "룰루",
+    Lux: "럭스",
+    Malphite: "말파이트",
+    Malzahar: "말자하",
+    Maokai: "마오카이",
+    MasterYi: "마스터 이",
+    Mel: "멜",
+    Milio: "밀리오",
+    MissFortune: "미스 포츈",
+    Mordekaiser: "모데카이저",
+    Morgana: "모르가나",
+    Naafiri: "나피리",
+    Nami: "나미",
+    Nasus: "나서스",
+    Nautilus: "노틸러스",
+    Neeko: "니코",
+    Nidalee: "니달리",
+    Nilah: "닐라",
+    Nocturne: "녹턴",
+    Nunu: "누누와 윌럼프",
+    Olaf: "올라프",
+    Orianna: "오리아나",
+    Ornn: "오른",
+    Pantheon: "판테온",
+    Poppy: "뽀삐",
+    Pyke: "파이크",
+    Qiyana: "키아나",
+    Quinn: "퀸",
+    Rakan: "라칸",
+    Rammus: "람머스",
+    RekSai: "렉사이",
+    Rell: "렐",
+    Renata: "레나타 글라스크",
+    Renekton: "레넥톤",
+    Rengar: "렝가",
+    Riven: "리븐",
+    Rumble: "럼블",
+    Ryze: "라이즈",
+    Samira: "사미라",
+    Sejuani: "세주아니",
+    Senna: "세나",
+    Seraphine: "세라핀",
+    Sett: "세트",
+    Shaco: "샤코",
+    Shen: "쉔",
+    Shyvana: "쉬바나",
+    Singed: "신지드",
+    Sion: "사이온",
+    Sivir: "시비르",
+    Skarner: "스카너",
+    Smolder: "스몰더",
+    Sona: "소나",
+    Soraka: "소라카",
+    Swain: "스웨인",
+    Sylas: "사일러스",
+    Syndra: "신드라",
+    TahmKench: "탐 켄치",
+    Taliyah: "탈리야",
+    Talon: "탈론",
+    Taric: "타릭",
+    Teemo: "티모",
+    Thresh: "쓰레쉬",
+    Tristana: "트리스타나",
+    Trundle: "트런들",
+    Tryndamere: "트린다미어",
+    TwistedFate: "트위스티드 페이트",
+    Twitch: "트위치",
+    Udyr: "우디르",
+    Urgot: "우르곳",
+    Varus: "바루스",
+    Vayne: "베인",
+    Veigar: "베이가",
+    Velkoz: "벨코즈",
+    Vex: "벡스",
+    Vi: "바이",
+    Viego: "비에고",
+    Viktor: "빅토르",
+    Vladimir: "블라디미르",
+    Volibear: "볼리베어",
+    Warwick: "워윅",
+    MonkeyKing: "오공",
+    Xayah: "자야",
+    Xerath: "제라스",
+    XinZhao: "신 짜오",
+    Yasuo: "야스오",
+    Yone: "요네",
+    Yorick: "요릭",
+    Yunara: "유나라",
+    Yuumi: "유미",
+    Zac: "자크",
+    Zed: "제드",
+    Zeri: "제리",
+    Ziggs: "직스",
+    Zilean: "질리언",
+    Zoe: "조이",
+    Zyra: "자이라",
+  };
+
+
+function championKo(
+  name: string,
+) {
+  return (
+    CHAMPION_KO[name] ??
+    name
+  );
+}
+
+const CHAMPION_KR:
+  Record<string, string> = {
+  Aatrox: "아트록스",
+  Ahri: "아리",
+  Akali: "아칼리",
+  Akshan: "아크샨",
+  Alistar: "알리스타",
+  Ambessa: "암베사",
+  Amumu: "아무무",
+  Anivia: "애니비아",
+  Annie: "애니",
+  Aphelios: "아펠리오스",
+  Ashe: "애쉬",
+  AurelionSol: "아우렐리온 솔",
+  Aurora: "오로라",
+  Azir: "아지르",
+  Bard: "바드",
+  Belveth: "벨베스",
+  Blitzcrank: "블리츠크랭크",
+  Brand: "브랜드",
+  Braum: "브라움",
+  Briar: "브라이어",
+  Caitlyn: "케이틀린",
+  Camille: "카밀",
+  Cassiopeia: "카시오페아",
+  Chogath: "초가스",
+  Corki: "코르키",
+  Darius: "다리우스",
+  Diana: "다이애나",
+  Draven: "드레이븐",
+  DrMundo: "문도 박사",
+  Ekko: "에코",
+  Elise: "엘리스",
+  Evelynn: "이블린",
+  Ezreal: "이즈리얼",
+  Fiddlesticks: "피들스틱",
+  Fiora: "피오라",
+  Fizz: "피즈",
+  Galio: "갈리오",
+  Gangplank: "갱플랭크",
+  Garen: "가렌",
+  Gnar: "나르",
+  Gragas: "그라가스",
+  Graves: "그레이브즈",
+  Gwen: "그웬",
+  Hecarim: "헤카림",
+  Heimerdinger: "하이머딩거",
+  Hwei: "흐웨이",
+  Illaoi: "일라오이",
+  Irelia: "이렐리아",
+  Ivern: "아이번",
+  Janna: "잔나",
+  JarvanIV: "자르반 4세",
+  Jax: "잭스",
+  Jayce: "제이스",
+  Jhin: "진",
+  Jinx: "징크스",
+  KSante: "크산테",
+  Kaisa: "카이사",
+  Kalista: "칼리스타",
+  Karma: "카르마",
+  Karthus: "카서스",
+  Kassadin: "카사딘",
+  Katarina: "카타리나",
+  Kayle: "케일",
+  Kayn: "케인",
+  Kennen: "케넨",
+  Khazix: "카직스",
+  Kindred: "킨드레드",
+  Kled: "클레드",
+  KogMaw: "코그모",
+  Leblanc: "르블랑",
+  LeeSin: "리 신",
+  Leona: "레오나",
+  Lillia: "릴리아",
+  Lissandra: "리산드라",
+  Lucian: "루시안",
+  Lulu: "룰루",
+  Lux: "럭스",
+  Malphite: "말파이트",
+  Malzahar: "말자하",
+  Maokai: "마오카이",
+  MasterYi: "마스터 이",
+  Mel: "멜",
+  Milio: "밀리오",
+  MissFortune: "미스 포츈",
+  Mordekaiser: "모데카이저",
+  Morgana: "모르가나",
+  Naafiri: "나피리",
+  Nami: "나미",
+  Nasus: "나서스",
+  Nautilus: "노틸러스",
+  Neeko: "니코",
+  Nidalee: "니달리",
+  Nilah: "닐라",
+  Nocturne: "녹턴",
+  Nunu: "누누와 윌럼프",
+  Olaf: "올라프",
+  Orianna: "오리아나",
+  Ornn: "오른",
+  Pantheon: "판테온",
+  Poppy: "뽀삐",
+  Pyke: "파이크",
+  Qiyana: "키아나",
+  Quinn: "퀸",
+  Rakan: "라칸",
+  Rammus: "람머스",
+  RekSai: "렉사이",
+  Rell: "렐",
+  Renata: "레나타 글라스크",
+  Renekton: "레넥톤",
+  Rengar: "렝가",
+  Riven: "리븐",
+  Rumble: "럼블",
+  Ryze: "라이즈",
+  Samira: "사미라",
+  Sejuani: "세주아니",
+  Senna: "세나",
+  Seraphine: "세라핀",
+  Sett: "세트",
+  Shaco: "샤코",
+  Shen: "쉔",
+  Shyvana: "쉬바나",
+  Singed: "신지드",
+  Sion: "사이온",
+  Sivir: "시비르",
+  Skarner: "스카너",
+  Smolder: "스몰더",
+  Sona: "소나",
+  Soraka: "소라카",
+  Swain: "스웨인",
+  Sylas: "사일러스",
+  Syndra: "신드라",
+  TahmKench: "탐 켄치",
+  Taliyah: "탈리야",
+  Talon: "탈론",
+  Taric: "타릭",
+  Teemo: "티모",
+  Thresh: "쓰레쉬",
+  Tristana: "트리스타나",
+  Trundle: "트런들",
+  Tryndamere: "트린다미어",
+  TwistedFate: "트위스티드 페이트",
+  Twitch: "트위치",
+  Udyr: "우디르",
+  Urgot: "우르곳",
+  Varus: "바루스",
+  Vayne: "베인",
+  Veigar: "베이가",
+  Velkoz: "벨코즈",
+  Vex: "벡스",
+  Vi: "바이",
+  Viego: "비에고",
+  Viktor: "빅토르",
+  Vladimir: "블라디미르",
+  Volibear: "볼리베어",
+  Warwick: "워윅",
+  MonkeyKing: "오공",
+  Xayah: "자야",
+  Xerath: "제라스",
+  XinZhao: "신 짜오",
+  Yasuo: "야스오",
+  Yone: "요네",
+  Yorick: "요릭",
+  Yunara: "유나라",
+  Yuumi: "유미",
+  Zac: "자크",
+  Zed: "제드",
+  Zeri: "제리",
+  Ziggs: "직스",
+  Zilean: "질리언",
+  Zoe: "조이",
+  Zyra: "자이라",
+};
+
+function championKr(
+  name: string,
+) {
+  return (
+    CHAMPION_KR[name] ??
+    name
+  );
+}
+
+
+type RankMode =
+  | "solo"
+  | "flex"
+  | "scrim";
+
+
+function championUsage(
+  matches: ProfileData["matches"],
+  limit: number,
+) {
+  const map =
+    new Map<
+      string,
+      {
+        name: string;
+        image: string;
+        games: number;
+        wins: number;
+      }
+    >();
+
+  for (const match of matches) {
+    const current =
+      map.get(match.champion) ?? {
+        name: match.champion,
+        image: match.championImage,
+        games: 0,
+        wins: 0,
+      };
+
+    current.games += 1;
+
+    if (match.result === "win") {
+      current.wins += 1;
+    }
+
+    map.set(
+      match.champion,
+      current,
+    );
+  }
+
+  const totalGames =
+    matches.length;
+
+  return [...map.values()]
+    .sort(
+      (a, b) =>
+        b.games - a.games
+    )
+    .slice(0, limit)
+    .map(
+      (champion) => ({
+        ...champion,
+
+        playRate:
+          totalGames > 0
+            ? Math.round(
+                (
+                  champion.games /
+                  totalGames
+                ) * 100
+              )
+            : 0,
+
+        winRate:
+          champion.games > 0
+            ? Math.round(
+                (
+                  champion.wins /
+                  champion.games
+                ) * 100
+              )
+            : 0,
+      })
+    );
+}
+
+
 export default function ProfileSidebar({
   profile,
 }: Props) {
+
+  const [
+    rankMode,
+    setRankMode,
+  ] =
+    useState<RankMode>("solo");
+
+  const soloMatches =
+    profile.matches.filter(
+      (match) =>
+        match.queueId === 420
+    );
+
+  const flexMatches =
+    profile.matches.filter(
+      (match) =>
+        match.queueId === 440
+    );
+
+  const scrimMatches =
+    profile.matches.filter(
+      (match) =>
+        match.queue === "내전"
+    );
+
+  const rankMatches =
+    rankMode === "solo"
+      ? soloMatches
+      : rankMode === "flex"
+        ? flexMatches
+        : scrimMatches;
+
+  const rankChampions =
+    championUsage(
+      rankMatches,
+      3,
+    );
+
+  const seasonRankMatches =
+    profile.matches.filter(
+      (match) =>
+        match.queueId === 420 ||
+        match.queueId === 440
+    );
+
+  const seasonChampions =
+    championUsage(
+      seasonRankMatches,
+      10,
+    );
   const maxDayGames =
     Math.max(
       ...profile.activityDays.map(
@@ -29,6 +536,13 @@ export default function ProfileSidebar({
       )
     );
 
+  const peakHour =
+    [...profile.activityHours]
+      .sort(
+        (a, b) =>
+          b.games - a.games
+      )[0];
+
 
   return (
     <aside className="profile-result-sidebar">
@@ -40,57 +554,77 @@ export default function ProfileSidebar({
 
       <div className="profile-side-card">
 
-        <div className="profile-side-title">
-          랭크
+        <div className="profile-side-title profile-side-title-select">
+
+          <span>
+            최근 40경기 플레이 챔피언
+          </span>
+
+          <select
+            value={rankMode}
+            onChange={(event) =>
+              setRankMode(
+                event.target.value as RankMode
+              )
+            }
+            className="profile-rank-select"
+          >
+            <option value="solo">
+              솔로랭크
+            </option>
+
+            <option value="flex">
+              자유랭크
+            </option>
+
+            <option value="scrim">
+              내전
+            </option>
+          </select>
+
         </div>
 
 
-        {profile.mostChampions.map(
-          (champion) => (
-            <div
-              key={
-                champion.name
-              }
-              className="profile-side-champion"
-            >
+        {rankChampions.length > 0 ? (
+          rankChampions.map(
+            (champion) => (
+              <div
+                key={CHAMPION_KO[champion.name] ?? champion.name}
+                className="profile-side-champion"
+              >
 
-              <div className="profile-side-champion-image">
-                <img
-                  src={
-                    champion.image
-                  }
-                  alt={
-                    champion.name
-                  }
-                />
-              </div>
+                <div className="profile-side-champion-image">
+                  <img
+                    src={champion.image}
+                    alt={CHAMPION_KO[champion.name] ?? champion.name}
+                  />
+                </div>
 
 
-              <div className="profile-side-champion-info">
+                <div className="profile-side-champion-info">
 
-                <strong>
-                  {
-                    champion.name
-                  }
-                </strong>
+                  <strong>
+                    {CHAMPION_KO[champion.name] ?? champion.name}
+                  </strong>
 
-                <span>
-                  {
-                    champion.games
-                  } 게임
-                </span>
+                  <span>
+                    {champion.games} 게임
+                  </span>
+
+                </div>
+
+
+                <b>
+                  {champion.playRate}%
+                </b>
 
               </div>
-
-
-              <b>
-                {
-                  champion.winRate
-                }%
-              </b>
-
-            </div>
+            )
           )
+        ) : (
+          <div className="profile-side-empty">
+            - 없음
+          </div>
         )}
 
       </div>
@@ -103,7 +637,7 @@ export default function ProfileSidebar({
       <div className="profile-side-card">
 
         <div className="profile-side-title">
-          퍼포먼스
+          최근 전적 플레이 스타일
         </div>
 
 
@@ -240,100 +774,13 @@ export default function ProfileSidebar({
 
 
       {/* =============================================
-          RECENT
-      ============================================== */}
-
-      <div className="profile-side-card">
-
-        <div className="profile-side-title">
-          최근 7일간 랭크 승률 (+아레나)
-        </div>
-
-
-        {profile.recentChampions.map(
-          (champion) => {
-
-            const wins =
-              Math.round(
-                champion.games *
-                (
-                  champion.winRate /
-                  100
-                )
-              );
-
-
-            const loses =
-              champion.games -
-              wins;
-
-
-            return (
-              <div
-                key={
-                  champion.name
-                }
-                className="profile-recent-row"
-              >
-
-                <div className="profile-recent-champion-image">
-                  <img
-                    src={
-                      champion.image
-                    }
-                    alt={
-                      champion.name
-                    }
-                  />
-                </div>
-
-
-                <strong>
-                  {
-                    champion.name
-                  }
-                </strong>
-
-
-                <div className="profile-recent-result">
-
-                  <span className="recent-win">
-                    {
-                      wins
-                    }승
-                  </span>
-
-                  <span className="recent-lose">
-                    {
-                      loses
-                    }패
-                  </span>
-
-                </div>
-
-
-                <b>
-                  {
-                    champion.winRate
-                  }%
-                </b>
-
-              </div>
-            );
-          }
-        )}
-
-      </div>
-
-
-      {/* =============================================
           ACTIVITY
       ============================================== */}
 
       <div className="profile-side-card">
 
         <div className="profile-side-title">
-          활동 패턴
+          최근 활동 패턴
         </div>
 
 
@@ -436,6 +883,159 @@ export default function ProfileSidebar({
               </div>
             )
           )}
+
+        </div>
+
+      </div>
+
+
+
+
+      {/* =============================================
+          RECENT 40 MATCHES
+      ============================================== */}
+
+      <div className="profile-side-card">
+
+        <div className="profile-side-title">
+          최근 40경기 플레이 챔피언
+        </div>
+
+
+        {seasonChampions.length > 0 ? (
+          seasonChampions.map(
+            (champion) => (
+              <div
+                key={CHAMPION_KO[champion.name] ?? champion.name}
+                className="profile-side-champion"
+              >
+
+                <div className="profile-side-champion-image">
+                  <img
+                    src={champion.image}
+                    alt={CHAMPION_KO[champion.name] ?? champion.name}
+                  />
+                </div>
+
+
+                <div className="profile-side-champion-info">
+
+                  <strong>
+                    {CHAMPION_KO[champion.name] ?? champion.name}
+                  </strong>
+
+                  <span>
+                    {champion.games}게임 · 승률 {champion.winRate}%
+                  </span>
+
+                </div>
+
+
+                <b>
+                  {champion.playRate}%
+                </b>
+
+              </div>
+            )
+          )
+        ) : (
+          <div className="profile-side-empty">
+            - 없음
+          </div>
+        )}
+
+      </div>
+
+
+      {/* =============================================
+          RECENT PLAY STYLE
+      ============================================== */}
+
+      <div className="profile-side-card">
+
+        <div className="profile-side-title">
+          최근 40경기 플레이 스타일
+        </div>
+
+
+        <div className="profile-performance-grid">
+
+          <div className="profile-performance-item">
+
+            <span>
+              주 포지션
+            </span>
+
+            <strong>
+              {profile.favoriteLine}
+            </strong>
+
+          </div>
+
+
+          <div className="profile-performance-item">
+
+            <span>
+              솔로랭크 승률
+            </span>
+
+            <strong>
+              {profile.soloWinRate}%
+            </strong>
+
+            <div className="profile-performance-bar">
+              <i
+                style={{
+                  width:
+                    `${profile.soloWinRate}%`,
+                }}
+              />
+            </div>
+
+          </div>
+
+
+          <div className="profile-performance-item">
+
+            <span>
+              자유랭크 승률
+            </span>
+
+            <strong>
+              {(profile.flexWinRate ?? -1) >= 0
+                ? `${profile.flexWinRate}%`
+                : "-"}
+            </strong>
+
+            <div className="profile-performance-bar">
+              <i
+                style={{
+                  width:
+                    `${(profile.flexWinRate ?? -1) >= 0
+                ? `${profile.flexWinRate}%`
+                : "-"}`,
+                }}
+              />
+            </div>
+
+          </div>
+
+
+          <div className="profile-performance-item">
+
+            <span>
+              가장 활발한 시간
+            </span>
+
+            <strong>
+              {peakHour?.label ?? "-"}
+            </strong>
+
+            <em>
+              {peakHour?.games ?? 0}게임
+            </em>
+
+          </div>
 
         </div>
 
