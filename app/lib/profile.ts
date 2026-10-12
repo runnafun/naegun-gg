@@ -1,4 +1,7 @@
 import { prisma } from "./prisma";
+import { adjustedAbsoluteLp, absoluteLpLabel, baseTierLabel } from "./balance-lp";
+import { getRankedProfileHistory } from "./ranked-profile-history";
+import { getRank } from "@/app/lib/ranked-rewards";
 
 import type {
   RiotMatchDto,
@@ -237,53 +240,9 @@ function positionLabel(
    INTERNAL RANK SHIELD
 ================================================== */
 
-function getInternalRank(
-  progress: number,
-) {
-  const safe =
-    Math.max(
-      0,
-      Math.floor(progress),
-    );
-
-  const index =
-    Math.min(
-      Math.floor(
-        safe /
-        SHIELDS_PER_RANK,
-      ),
-      RANK_ORDER.length - 1,
-    );
-
-  const rank =
-    RANK_ORDER[index];
-
-  const filled =
-    rank === "S"
-      ? Math.min(
-          safe -
-          (
-            RANK_ORDER.length -
-            1
-          ) *
-          SHIELDS_PER_RANK,
-          SHIELDS_PER_RANK,
-        )
-      : safe %
-        SHIELDS_PER_RANK;
-
-  return {
-    rank,
-
-    filled:
-      Math.max(
-        0,
-        filled,
-      ),
-
-    total:
-      SHIELDS_PER_RANK,
-  };
+function getInternalRank(score: number) {
+  const current = getRank(score);
+  return {rank: current.rank,filled: current.shields,total: current.capacity};
 }
 
 
@@ -483,7 +442,7 @@ function detailPlayer(
 }
 
 
-function buildHistory(
+export function buildHistory(
   matches:
     RiotMatchDto[],
   puuid: string,
@@ -597,6 +556,12 @@ function buildHistory(
       return [{
         id:
           index + 1,
+
+        matchId:
+          match.metadata.matchId,
+
+        gameCreation:
+          match.info.gameCreation,
 
         result:
           me.win
@@ -1154,7 +1119,7 @@ export async function searchProfiles(
       include: {
         user: {
           include: {
-            defenseStats: true,
+            stats: true,
           },
         },
       },
@@ -1169,11 +1134,7 @@ export async function searchProfiles(
   return accounts.map(
     (account) => {
       const internal =
-        getInternalRank(
-          account.user
-            .defenseStats
-            ?.progress ?? 0,
-        );
+        getInternalRank(account.user.stats?.tierScore ?? 0);
 
       return {
         puuid:
@@ -1309,6 +1270,13 @@ export async function getProfileByRiotId(
             stats: true,
             defenseStats: true,
             balanceProfile: true,
+            tierEvaluationRequestsReceived: {
+              where: { status: "APPROVED" },
+              select: {
+                direction: true,
+                appliedRp: true,
+              },
+            },
           },
         },
       },
@@ -1415,11 +1383,20 @@ export async function getProfileByRiotId(
   const balance =
     user.balanceProfile;
 
+  const tierEvaluationRp =
+    user.tierEvaluationRequestsReceived.reduce(
+      (total, request) => {
+        const rp = Math.abs(request.appliedRp ?? 0);
+
+        return total +
+          (request.direction === "DOWN" ? -rp : rp);
+      },
+      0,
+    );
+
 
   const internal =
-    getInternalRank(
-      defense?.progress ?? 0,
-    );
+    getInternalRank(stats?.tierScore ?? 0);
 
 
   const liveSolo =
@@ -1478,6 +1455,21 @@ const soloTierKey =
       balance?.peakTier ??
       currentSoloTier,
     );
+  // v17 관리자 LP 보정: 봇 팀 배정과 동일한 함수 사용.
+  const evaluationBase = balance?.evaluationBaseTier
+    ? { tier: balance.evaluationBaseTier, rank: balance.evaluationBaseRank, lp: balance.evaluationBaseLp }
+    : { tier: currentSoloTier, rank: currentSoloRank, lp: currentSoloLp };
+  const evaluationLpOffset = balance?.evaluationLpOffset ?? 0;
+  const evaluationAbsoluteLp = adjustedAbsoluteLp(evaluationBase, evaluationLpOffset);
+  const evaluationTierKey: SoloTierKey = evaluationAbsoluteLp === null
+    ? soloTierKey
+    : evaluationAbsoluteLp >= 2800
+      ? "MASTER"
+      : normalizeTier(
+          ["IRON", "BRONZE", "SILVER", "GOLD", "PLATINUM", "EMERALD", "DIAMOND"][Math.floor(evaluationAbsoluteLp / 400)]
+        );
+
+
 
 
   const wins =
@@ -1516,6 +1508,12 @@ const soloTierKey =
 
 
   return {
+
+    evaluationTierLabel: absoluteLpLabel(evaluationAbsoluteLp),
+    evaluationTierImage: SOLO_TIER_IMAGES[evaluationTierKey],
+    evaluationLpOffset,
+    evaluationBaseLabel: baseTierLabel(evaluationBase),
+
     puuid:
       account.puuid,
 
@@ -1590,6 +1588,7 @@ const soloTierKey =
     soloLp:
       currentSoloLp,
 
+    tierEvaluationRp,
 
     peakTier:
       balance?.peakTier ??
@@ -1724,10 +1723,9 @@ const soloTierKey =
       activity.hours,
 
 
-    matches:
-      buildHistory(
-        riotMatches,
-        account.puuid,
-      ),
+    matches: [
+      ...(await getRankedProfileHistory(account.userId)),
+      ...buildHistory(riotMatches, account.puuid),
+    ],
   };
 }

@@ -183,8 +183,44 @@ function MatchRow({
     >
       <div className="match-left-line" />
 
-      <div className="match-time">
-        {startLabel(scrim)}
+      <Link
+        href={`/matches/result?code=${encodeURIComponent(scrim.code)}`}
+        aria-label={`${scrim.code} 내전 조회`}
+        title={`${scrim.code} 내전 조회`}
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 3,
+          cursor: "pointer",
+        }}
+      />
+
+      <div
+        className="match-time"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: 2,
+        }}
+      >
+        <span style={{ fontSize: 14, lineHeight: "17px" }}>
+          코드 {scrim.code}
+        </span>
+
+        <span
+          title={startLabel(scrim)}
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            fontSize: 11,
+            fontWeight: 500,
+            lineHeight: "14px",
+            color: "#a1a1a1",
+          }}
+        >
+          {startLabel(scrim)}
+        </span>
       </div>
 
       <div className="match-people">
@@ -247,6 +283,8 @@ function MatchRow({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          position: "relative",
+          zIndex: 4,
         }}
       >
         {isOpen ? "참여 보기" : "내전 보기"}

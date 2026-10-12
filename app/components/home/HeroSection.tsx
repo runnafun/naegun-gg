@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ProfileSearchInput from "../profile-search/ProfileSearchInput";
 
 export default function HeroSection() {
   return (
@@ -21,13 +22,7 @@ export default function HeroSection() {
           내전.GG 서버에 오신것을 환영합니다
         </p>
 
-        <div className="hero-search">
-          <input
-            type="text"
-            placeholder="EX) 소환사이름 #KR1"
-            className="hero-search-input"
-          />
-        </div>
+        <ProfileSearchInput variant="home" />
       </div>
     </section>
   );

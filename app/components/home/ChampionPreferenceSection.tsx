@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { championPreference } from "../../data/home";
+import type {
+  HomeChampionPreference,
+} from "../../lib/home-statistics";
 
-type Position = keyof typeof championPreference;
+type Position = keyof HomeChampionPreference;
 
 const positions: {
   key: Position;
@@ -16,7 +18,13 @@ const positions: {
   { key: "support", label: "서폿" },
 ];
 
-export default function ChampionPreferenceSection() {
+export default function ChampionPreferenceSection({
+  data,
+  sampleGames,
+}: {
+  data: HomeChampionPreference;
+  sampleGames: number;
+}) {
   const [position, setPosition] =
     useState<Position>("top");
 
@@ -47,8 +55,18 @@ export default function ChampionPreferenceSection() {
         </div>
       </div>
 
+      <p className="preference-source">
+        저장된 최근 솔로랭크 최대 200경기 기준 ·
+        라인별 픽률 · 분석 {sampleGames}경기
+      </p>
+
       <div className="preference-list">
-        {championPreference[position].map(
+        {data[position].length === 0 && (
+          <div className="preference-empty">
+            아직 집계된 솔로랭크 경기가 없습니다.
+          </div>
+        )}
+        {data[position].map(
           ([name, percent, champion], index) => (
             <article
               key={`${position}-${name}`}

@@ -1,6 +1,7 @@
-import { rankingUsers } from "../../data/ranking";
+import Link from "next/link";
+import type { RankingUser } from "../../data/ranking";
 
-export default function RankingTable() {
+export default function RankingTable({ users }: { users: RankingUser[] }) {
   return (
     <section className="ranking-table-section">
       <div className="ranking-table-wrap">
@@ -15,17 +16,24 @@ export default function RankingTable() {
         </div>
 
         <div className="ranking-table-body">
-          {rankingUsers.map((user) => (
-            <div
+          {users.map((user) => (
+            <Link
+              href={`/profile-search/result?gameName=${encodeURIComponent(user.gameName)}&tagLine=${encodeURIComponent(user.tagLine)}`}
+              aria-label={`${user.summonerName} 프로필 조회`}
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                cursor: "pointer",
+              }}
               className={`ranking-table-row ${
                 user.rank <= 3
                   ? `ranking-top ranking-top-${user.rank}`
                   : ""
               }`}
-              key={user.rank}
+              key={user.puuid}
             >
               <div className="ranking-cell ranking-position">
-                {user.rank}위
+                {user.rank > 0 ? `${user.rank}위` : "미배치"}
               </div>
 
               <div className="ranking-cell ranking-summoner">
@@ -49,6 +57,11 @@ export default function RankingTable() {
               </div>
 
               <div className="ranking-cell ranking-most">
+                {user.mostChampions.length === 0 && (
+                  <span style={{ color: "#aaa" }}>
+                    전적 수집 전
+                  </span>
+                )}
                 {user.mostChampions.map(
                   (champion, index) => (
                     <img
@@ -62,9 +75,9 @@ export default function RankingTable() {
               </div>
 
               <div className="ranking-cell ranking-winrate">
-                {user.winRate}%
+                {user.winRate === null ? "0전" : `${user.winRate}%`}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

@@ -4,10 +4,8 @@ import {
 } from "next/server";
 
 import { prisma } from "@/app/lib/prisma";
-import {
-  balanceTeams,
-  tierToScore,
-} from "@/app/lib/team-balance";
+import { tierToScore } from "@/app/lib/team-balance";
+import { balanceRankTeams } from "@/app/lib/rank-team-balance";
 import { requireAdmin } from "@/app/lib/admin-auth";
 
 export const dynamic =
@@ -34,6 +32,8 @@ async function loadScrim(
               riotAccount: true,
               balanceProfile: true,
               preferences: true,
+              stats: true,
+              defenseStats: true,
             },
           },
         },
@@ -99,6 +99,13 @@ async function buildPayload(
     return {
       error: "SCRIM_NOT_FOUND",
       status: 404,
+    } as const;
+  }
+
+  if (scrim.type !== "RANKED") {
+    return {
+      error: "RANKED_ONLY",
+      status: 403,
     } as const;
   }
 
@@ -187,6 +194,15 @@ async function buildPayload(
           scrimRankScore:
             profile.scrimRankScore ??
             50,
+          scrimGames:
+            (user.stats?.wins ?? 0) +
+            (user.stats?.losses ?? 0),
+          defenseProgress:
+            user.defenseStats?.progress ?? 0,
+          mainPosition:
+            participant.mainPosition,
+          subPosition:
+            participant.subPosition,
         };
       },
     );
@@ -300,8 +316,22 @@ export async function POST(
     );
   }
 
+  if (
+    !(
+      ["CLOSED", "TEAM_SELECTION"] as string[]
+    ).includes(payload.scrim.status)
+  ) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "모집 마감 후 팀 배정할 수 있습니다.",
+      },
+      { status: 409 },
+    );
+  }
+
   const result =
-    balanceTeams(payload.players);
+    balanceRankTeams(payload.players);
 
   if (
     payload.scrim.status === "CLOSED"
@@ -324,7 +354,7 @@ export async function POST(
       br:
         "tierEvaluation*0.45 + currentTier*0.25 + peakTier*0.15 + scrimRank*0.15",
       penalty:
-        "totalDiff*0.65 + topDiff*0.20 + distributionDiff*0.15",
+        "team balance 70% + line balance 20% + position preference 10%",
     },
     result,
   });

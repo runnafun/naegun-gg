@@ -130,6 +130,23 @@ export async function POST(
     );
   }
 
+  if (scrim.type !== "RANKED") {
+    return NextResponse.json(
+      { ok: false, error: "RANKED_ONLY" },
+      { status: 403 },
+    );
+  }
+
+  if (scrim.status !== "TEAM_SELECTION") {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "TEAM_SELECTION_REQUIRED",
+      },
+      { status: 409 },
+    );
+  }
+
   const actual =
     new Set(
       scrim.participants.map(
@@ -156,41 +173,52 @@ export async function POST(
     );
   }
 
-  await prisma.$transaction([
-    prisma.scrimParticipant.updateMany({
-      where: {
-        scrimId: scrim.id,
-        userId: {
-          in: blue,
-        },
-      },
-      data: {
-        team: "A",
-      },
-    }),
-
-    prisma.scrimParticipant.updateMany({
-      where: {
-        scrimId: scrim.id,
-        userId: {
-          in: red,
-        },
-      },
-      data: {
-        team: "B",
-      },
-    }),
-
-    prisma.scrim.update({
+  await prisma.$transaction(async (tx) => {
+    // 중복 확정 방지
+    const lock = await tx.scrim.updateMany({
       where: {
         id: scrim.id,
+        status: "TEAM_SELECTION",
       },
       data: {
-        status:
-          "TEAM_SELECTION",
+        status: "IN_PROGRESS",
       },
-    }),
-  ]);
+    });
+
+    if (lock.count !== 1) {
+      throw new Error("TEAM_ALREADY_CONFIRMED");
+    }
+
+    await tx.scrimParticipant.updateMany({
+      where: {
+        scrimId: scrim.id,
+        userId: { in: blue },
+      },
+      data: { team: "A" },
+    });
+
+    await tx.scrimParticipant.updateMany({
+      where: {
+        scrimId: scrim.id,
+        userId: { in: red },
+      },
+      data: { team: "B" },
+    });
+
+    await tx.adminAuditLog.create({
+      data: {
+        adminId: admin.user?.id ?? null,
+        action: "RANKED_TEAM_CONFIRMED",
+        targetType: "Scrim",
+        targetId: scrim.id,
+        afterData: {
+          code,
+          blueUserIds: blue,
+          redUserIds: red,
+        },
+      },
+    });
+  });
 
   return NextResponse.json({
     ok: true,

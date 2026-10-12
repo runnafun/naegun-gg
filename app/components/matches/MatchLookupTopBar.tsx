@@ -12,6 +12,7 @@ import type {
 
 import MatchSearchInput from
   "./MatchSearchInput";
+import LiveRankingMini from "../ranking/LiveRankingMini";
 
 
 type Props = {
@@ -128,17 +129,7 @@ export default function MatchLookupTopBar({
           />
 
 
-          <div className="match-lookup-ranking-mini">
-
-            <strong>
-              내전.GG 랭킹
-            </strong>
-
-            <span>
-              ▲ 1위 황소고집
-            </span>
-
-          </div>
+          <LiveRankingMini className="match-lookup-ranking-mini" />
 
         </div>
 

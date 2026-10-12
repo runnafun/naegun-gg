@@ -380,7 +380,6 @@ export default function ProfileSummary({
           </div>
 
         </div>
-        </div>
 
       </div>
 

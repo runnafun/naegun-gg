@@ -22,7 +22,8 @@ type Props = {
 
   variant?:
     | "hero"
-    | "topbar";
+    | "topbar"
+    | "home";
 };
 
 
@@ -194,7 +195,9 @@ export default function ProfileSearchInput({
         styles.form,
         variant === "hero"
           ? styles.hero
-          : styles.topbar,
+          : variant === "home"
+            ? styles.home
+            : styles.topbar,
       ].join(" ")}
       onSubmit={
         handleSubmit

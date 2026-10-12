@@ -42,3 +42,23 @@ next-env.d.ts
 
 /app/generated/prisma
 *.bak_*
+
+# EC2 secrets and runtime files
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+*.log
+*.pem
+*.key
+*.p12
+*.pfx
+*.sql
+*.sqlite
+*.sqlite3
+data.json
+.venv/
+venv/
+__pycache__/
+*.zip

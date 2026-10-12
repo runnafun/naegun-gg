@@ -446,3 +446,43 @@
   }
 
 }
+
+/* MAIN PROFILE SEARCH */
+
+.home {
+  width: min(700px, 72vw);
+  margin: 78px auto 0;
+}
+
+.home .input {
+  height: 68px;
+  padding: 0 22px;
+
+  border: 1.5px solid rgba(200, 235, 87, 0.82);
+  border-radius: 12px;
+
+  background: rgba(28, 33, 31, 0.86);
+
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.home .input:focus {
+  border-color: #d5f56a;
+  background: rgba(30, 36, 33, 0.92);
+
+  box-shadow:
+    0 0 0 3px rgba(200, 235, 87, 0.06);
+}
+
+@media (max-width: 800px) {
+  .home {
+    width: min(520px, 88vw);
+    margin-top: 58px;
+  }
+
+  .home .input {
+    height: 56px;
+    font-size: 15px;
+  }
+}

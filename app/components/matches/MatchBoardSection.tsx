@@ -106,6 +106,18 @@ export default function MatchBoardSection(
             >
               <div className="match-left-line" />
 
+              <Link
+                href={`/matches/result?code=${encodeURIComponent(match.code)}`}
+                aria-label={`${match.code} 내전 조회`}
+                title={`${match.code} 내전 조회`}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  zIndex: 3,
+                  cursor: "pointer",
+                }}
+              />
+
               <div className="match-time">
                 {match.time}
               </div>
@@ -184,6 +196,8 @@ export default function MatchBoardSection(
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  position: "relative",
+                  zIndex: 4,
                 }}
               >
                 보기

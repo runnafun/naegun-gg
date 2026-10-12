@@ -472,6 +472,12 @@ model BalanceProfile {
   // 내전.GG 내부 점수
   // 신규 유저는 자동 팀 계산 시 peakTier 기준 점수로 자동 초기화
   tierEvaluation Float?
+  // v17: 관리자 보정 LP (기존 0~100 평가점수는 보존, 계산에서 제외)
+  evaluationLpOffset Int @default(0)
+  // 현재 솔로랭크가 없거나 수동 실력 기준이 필요할 때만 지정
+  evaluationBaseTier String?
+  evaluationBaseRank String?
+  evaluationBaseLp Int?
   scrimRankScore Float  @default(50)
 
   createdAt DateTime @default(now())

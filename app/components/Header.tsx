@@ -17,6 +17,7 @@ type HeaderProps = {
     | "profile"
     | "ranking"
     | "shop"
+    | "notice"
     | "contact";
 };
 
@@ -164,6 +165,15 @@ export default function Header({
             }`}
           >
             상점
+          </a>
+
+          <a
+            href="/notice"
+            className={`nav-item ${
+              active === "notice" ? "active" : ""
+            }`}
+          >
+            공지&이벤트
           </a>
 
           <a

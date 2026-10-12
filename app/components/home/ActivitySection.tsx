@@ -1,7 +1,10 @@
 import {
   cardCollectRanking,
-  weeklyFrequency,
 } from "../../data/home";
+
+import type {
+  WeeklyFrequencyItem,
+} from "../../lib/home-statistics";
 
 function buildChartPoints(
   data: {
@@ -22,9 +25,6 @@ function buildChartPoints(
     ...data.map((item) => item.value)
   );
 
-  const minValue = Math.min(
-    ...data.map((item) => item.value)
-  );
 
   return data.map((item, index) => {
     const x =
@@ -37,9 +37,8 @@ function buildChartPoints(
       bottomY - top - 20;
 
     const y =
-      top +
-      ((maxValue - item.value) /
-        (maxValue - minValue || 1)) *
+      bottomY -
+      (item.value / Math.max(maxValue, 1)) *
         usableHeight;
 
     return {
@@ -50,7 +49,15 @@ function buildChartPoints(
   });
 }
 
-export default function ActivitySection() {
+export default function ActivitySection({
+  weeklyFrequency,
+}: {
+  weeklyFrequency: WeeklyFrequencyItem[];
+}) {
+  const totalScrims = weeklyFrequency.reduce(
+    (sum, item) => sum + item.value,
+    0
+  );
   const chartPoints =
     buildChartPoints(
       weeklyFrequency
@@ -85,9 +92,10 @@ export default function ActivitySection() {
 
         <div className="activity-panel">
           <h2 className="section-title">
-            카드수집 랭킹
+            롤토카드 랭킹
           </h2>
 
+          <div className="collect-preview">
           <div className="collect-list">
             {cardCollectRanking.map(
               (item) => (
@@ -111,6 +119,14 @@ export default function ActivitySection() {
                 </div>
               )
             )}
+          </div>
+
+          <div
+            className="collect-coming-soon"
+            aria-label="롤토카드 랭킹 준비중"
+          >
+            준비중입니다
+          </div>
           </div>
         </div>
 
@@ -243,7 +259,7 @@ export default function ActivitySection() {
               </span>
 
               <strong>
-                총 353회
+                총 {totalScrims.toLocaleString("ko-KR")}회
               </strong>
             </div>
           </div>

@@ -37,6 +37,9 @@ export default function MatchSearchInput({
   const [message, setMessage] =
     useState("");
 
+  const [focused, setFocused] =
+    useState(false);
+
   useEffect(() => {
     setQuery(defaultValue);
   }, [defaultValue]);
@@ -191,15 +194,34 @@ export default function MatchSearchInput({
           }
           placeholder="EX) N103 또는 R105"
           autoComplete="off"
+          onFocus={() => setFocused(true)}
+          onBlur={() => {
+            window.setTimeout(
+              () => setFocused(false),
+              150
+            );
+          }}
         />
       </div>
 
-      {query.trim() && (
+      {focused && (
         <div
           className={
             styles.dropdown
           }
         >
+          {!query.trim() && (
+            <div className={styles.guide}>
+              <p>
+                <strong>내전 코드</strong>를 입력해 주세요!
+              </p>
+
+              <span>
+                내전 코드는 디스코드 내전 모집글이나
+                아래 내전 목록에서 확인할 수 있습니다.
+              </span>
+            </div>
+          )}
           {loading && (
             <div
               className={
@@ -238,11 +260,10 @@ export default function MatchSearchInput({
                   className={
                     styles.result
                   }
-                  onClick={() =>
-                    moveTo(
-                      match.code,
-                    )
-                  }
+                  onMouseDown={(event) => {
+                    event.preventDefault();
+                    moveTo(match.code);
+                  }}
                 >
                   <span
                     className={

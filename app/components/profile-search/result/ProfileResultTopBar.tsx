@@ -11,6 +11,7 @@ import type {
 } from "../../../data/profile";
 
 import ProfileSearchInput from "../ProfileSearchInput";
+import LiveRankingMini from "../../ranking/LiveRankingMini";
 
 
 type Props = {
@@ -109,24 +110,7 @@ export default function ProfileResultTopBar({
           />
 
 
-          <div className="profile-result-ranking-mini">
-
-            <strong>
-              내전.GG 랭킹
-            </strong>
-
-            <span>
-              ▲{" "}
-              {
-                profile.internalRankPosition
-              }
-              위{" "}
-              {
-                profile.gameName
-              }
-            </span>
-
-          </div>
+          <LiveRankingMini className="profile-result-ranking-mini" riotId={`${profile.gameName}#${profile.tagLine}`} />
 
         </div>
       </section>

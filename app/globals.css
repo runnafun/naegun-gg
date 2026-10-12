@@ -2059,3 +2059,128 @@ input {
     top: calc(100% + 8px);
   }
 }
+
+
+/* 메인 프로필 검색 */
+.hero-search-shell {
+  position: relative;
+  width: min(700px, 72vw);
+  margin-top: 78px;
+}
+
+.hero-search-shell .hero-search {
+  width: 100%;
+  margin-top: 0;
+}
+
+.hero-search-results {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  max-height: 180px;
+  overflow-y: auto;
+  text-align: left;
+  background: #1c211f;
+  border: 1px solid rgba(200,235,87,.45);
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+}
+
+.hero-search-result {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: #fff;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.hero-search-result:hover,
+.hero-search-result:focus-visible {
+  background: #303b32;
+}
+
+.hero-search-result img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.hero-search-result span {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.hero-search-result small {
+  margin-left: 6px;
+  color: #adb9ae;
+  font-size: 13px;
+}
+
+.hero-search-message {
+  padding: 17px;
+  color: #d6ded5;
+  font-size: 14px;
+}
+
+@media (max-width: 800px) {
+  .hero-search-shell {
+    width: min(520px, 88vw);
+    margin-top: 58px;
+  }
+}
+
+
+/* ===== 메인 실제 통계 ===== */
+
+.preference-source {
+  margin: 14px 0 -18px;
+  color: rgba(255,255,255,.5);
+  font-size: 12px;
+}
+
+.preference-empty {
+  grid-column: 1 / -1;
+  padding: 55px 16px;
+  text-align: center;
+  color: rgba(255,255,255,.55);
+  font-size: 14px;
+}
+
+/* ===== 롤토카드 랭킹 준비중 ===== */
+
+.collect-preview {
+  position: relative;
+}
+
+.collect-preview .collect-list {
+  filter: blur(7px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.collect-coming-soon {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0,0,0,.64);
+  color: #fff;
+
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+
+  pointer-events: none;
+}

@@ -1,6 +1,11 @@
-import { rankingUsers } from "../../data/home";
+import Link from "next/link";
+import type { HomeRankingUser } from "../../lib/home-ranking";
 
-export default function RankingSection() {
+export default function RankingSection({
+  users,
+}: {
+  users: HomeRankingUser[];
+}) {
   return (
     <section className="ranking-section">
       <h2 className="section-title">
@@ -8,14 +13,18 @@ export default function RankingSection() {
       </h2>
 
       <div className="ranking-list">
-        {rankingUsers.map((user) => (
-          <article
-            key={user.rank}
+        {users.map((user) => (
+          <Link
+            key={user.puuid}
+            href={`/profile-search/result?gameName=${encodeURIComponent(user.gameName)}&tagLine=${encodeURIComponent(user.tagLine)}`}
+            aria-label={`${user.gameName}#${user.tagLine} 프로필 조회`}
             className={`ranking-card ${
-              user.rank === 1 ? "ranking-card-first" : ""
+              user.rank === 1
+                ? "ranking-card-first"
+                : ""
             }`}
             style={{
-              backgroundImage: `url("${user.image}")`,
+              backgroundImage: `url("${user.avatarUrl}")`,
             }}
           >
             <div className="ranking-card-shade" />
@@ -26,15 +35,14 @@ export default function RankingSection() {
 
             <div className="ranking-info">
               <span className="ranking-tier">
-                내전랭크&nbsp;
-                {user.tier}
+                내전랭크&nbsp;{user.tier}
               </span>
 
               <strong className="ranking-nickname">
-                {user.nickname}
+                {user.gameName}
               </strong>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
     </section>

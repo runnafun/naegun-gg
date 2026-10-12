@@ -2586,3 +2586,163 @@ i.hot {
   color: #fff;
 }
 
+/* BO3 내전 시리즈 폴더: 내전 외 전적에는 영향 없음 */
+.profile-scrim-series {
+  width: 100%; overflow: hidden; border: 1px solid #34463c;
+  border-left: 4px solid #64846e; border-radius: 8px; background: #151e18;
+}
+.profile-scrim-series.series-win { border-left-color: #6fbd91; }
+.profile-scrim-series.series-lose { border-left-color: #d3838a; }
+.profile-scrim-series-button {
+  width: 100%; min-height: 95px; border: 0; padding: 18px 20px;
+  display: flex; align-items: center; gap: 16px;
+  background: transparent; text-align: left; color: #f0f5f1;
+  cursor: pointer; transition: background 160ms ease;
+}
+.profile-scrim-series-button:hover { background: #1c2b21; }
+.profile-scrim-series-button:focus-visible { outline: 2px solid #a2d5ad; outline-offset: -3px; }
+.profile-scrim-series-folder {
+  width: 46px; height: 46px; flex: 0 0 46px; display: grid; place-items: center;
+  border-radius: 11px; background: #2a4032; color: #b9dbc0;
+}
+.profile-scrim-series-title { min-width: 0; flex: 1 1 auto; display: flex; flex-direction: column; gap: 8px; }
+.profile-scrim-series-title strong { font-size: 18px; line-height: 1.25; letter-spacing: .015em; }
+.profile-scrim-series-title em {
+  margin-left: 5px; padding: 3px 6px; border: 1px solid #47654c;
+  border-radius: 4px; color: #b6d4b9; font-size: 10px;
+  font-style: normal; vertical-align: middle;
+}
+.profile-scrim-series-title small, .profile-scrim-series-score small {
+  color: #9caea0; font-size: 11px; line-height: 1.35;
+}
+.profile-scrim-series-score {
+  flex: 0 0 auto; display: flex; flex-direction: column;
+  align-items: flex-end; gap: 7px; white-space: nowrap;
+}
+.profile-scrim-series-score b { font-size: 15px; }
+.series-win .profile-scrim-series-score b { color: #9de2b2; }
+.series-lose .profile-scrim-series-score b { color: #f1abb0; }
+.series-partial .profile-scrim-series-score b { color: #e0c894; }
+.profile-scrim-series-arrow {
+  flex: 0 0 auto; margin-left: 9px; color: #b0c2b3; line-height: 0;
+  transition: transform 160ms ease;
+}
+.profile-scrim-series-arrow.is-open { transform: rotate(180deg); }
+.profile-scrim-series-sets {
+  display: flex; flex-direction: column; gap: 10px; padding: 12px;
+  border-top: 1px solid #304038; background: #111713;
+}
+.profile-scrim-set-label {
+  min-height: 36px; display: flex; align-items: center; gap: 10px;
+  padding: 4px 6px; color: #d4e4d8; font-size: 12px;
+}
+.profile-scrim-set-label .set-win { color: #91cbec; }
+.profile-scrim-set-label .set-lose { color: #eda1aa; }
+.profile-scrim-set > .profile-match-wrap { border-radius: 5px; }
+@media (max-width: 600px) {
+  .profile-scrim-series-button { min-height: 86px; gap: 10px; padding: 12px; }
+  .profile-scrim-series-folder { width: 36px; height: 36px; flex-basis: 36px; border-radius: 8px; }
+  .profile-scrim-series-title strong { font-size: 15px; }
+  .profile-scrim-series-title small { font-size: 10px; }
+  .profile-scrim-series-score b { font-size: 12px; }
+  .profile-scrim-series-score small { font-size: 10px; }
+  .profile-scrim-series-arrow { margin-left: 0; }
+  .profile-scrim-series-sets { padding: 8px; }
+}
+
+/* NAEGUN_BO3_CLASSIC_THEME_V4_BEGIN */
+/* 기존 전적카드와 동일한 승패 색상, 내전 시리즈 UI에만 적용 */
+.profile-scrim-series {
+  width: 100%;
+  border: 0;
+  border-radius: 0 !important;
+  overflow: hidden;
+  background: #202020;
+}
+.profile-scrim-series.series-win {
+  background: #273f6d;
+  border-left: 6px solid #458cff;
+}
+.profile-scrim-series.series-lose {
+  background: #6d3e47;
+  border-left: 6px solid #ff415e;
+}
+.profile-scrim-series.series-partial {
+  background: #202020;
+  border-left: 6px solid #777;
+}
+.profile-scrim-series-button {
+  width: 100%;
+  min-height: 125px;
+  padding: 14px 50px 14px 16px;
+  background: transparent !important;
+  color: #fff;
+  border: 0;
+  border-radius: 0 !important;
+}
+.profile-scrim-series-button:hover {
+  background: rgba(0, 0, 0, .08) !important;
+}
+.profile-scrim-series-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -3px;
+}
+.profile-scrim-series-folder {
+  background: transparent !important;
+  color: rgba(255,255,255,.8);
+  border: 0;
+  border-radius: 0 !important;
+}
+.profile-scrim-series-title strong,
+.profile-scrim-series-score b {
+  color: #fff;
+}
+.profile-scrim-series-title em { display: none !important; }
+.profile-scrim-series-title small,
+.profile-scrim-series-score small {
+  color: rgba(255,255,255,.65);
+}
+.profile-scrim-series.series-win .profile-scrim-series-score b {
+  color: #458cff;
+}
+.profile-scrim-series.series-lose .profile-scrim-series-score b {
+  color: #ff415e;
+}
+.profile-scrim-series.series-partial .profile-scrim-series-score b {
+  color: rgba(255,255,255,.8);
+}
+.profile-scrim-series-arrow {
+  color: rgba(255,255,255,.75);
+}
+.profile-scrim-series-sets {
+  background: #202020;
+  border-top: 1px solid rgba(255,255,255,.10);
+  border-radius: 0 !important;
+  padding: 12px;
+  gap: 9px;
+}
+.profile-scrim-set,
+.profile-scrim-set > .profile-match-wrap,
+.profile-scrim-series .profile-match-wrap {
+  border-radius: 0 !important;
+}
+.profile-scrim-set-label {
+  color: rgba(255,255,255,.85);
+}
+.profile-scrim-set-label .set-win { color: #458cff; }
+.profile-scrim-set-label .set-lose { color: #ff415e; }
+@media (max-width: 600px) {
+  .profile-scrim-series-button { min-height: 86px; padding: 12px; }
+  .profile-scrim-series-sets { padding: 8px; }
+  .profile-scrim-series-folder { border-radius: 0 !important; }
+}
+/* NAEGUN_BO3_CLASSIC_THEME_V4_END */
+
+/* NAEGUN_PROFILE_EVAL_3CARDS_V19 */
+.profile-result-evaluation-offset {
+  display: block;
+  margin-top: 7px;
+  color: #b6c1b9;
+  font-size: 11px;
+  font-weight: 500;
+}

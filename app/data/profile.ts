@@ -118,6 +118,8 @@ export type MatchDetail = {
 
 export type MatchHistoryItem = {
   id: number;
+  matchId?: string;
+  gameCreation?: number;
 
   result: "win" | "lose";
 
@@ -202,6 +204,11 @@ export type ActivityHour = {
 ================================================== */
 
 export type ProfileData = {
+  /** 관리자 보정 LP 적용 후 팀 밸런스 평가 티어 */
+  evaluationTierLabel?: string;
+  evaluationTierImage?: string;
+  evaluationLpOffset?: number;
+  evaluationBaseLabel?: string;
   puuid: string;
 
   gameName: string;
@@ -239,6 +246,7 @@ export type ProfileData = {
 
   soloLp: number;
 
+  tierEvaluationRp: number;
 
   peakTier: string;
 
@@ -501,6 +509,7 @@ export const MOCK_PROFILES: ProfileData[] = [
     soloLp:
       59,
 
+    tierEvaluationRp: 0,
 
     peakTier:
       "챌린저",

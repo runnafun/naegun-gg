@@ -85,6 +85,7 @@ export default async function ProfileResultPage({
               matches={
                 profile.matches
               }
+              puuid={profile.puuid}
             />
 
 

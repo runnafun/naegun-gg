@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import { getLiveRankingRows } from "../../lib/live-rank";
 import { matchRules } from "../../data/matchRules";
 import { redirect } from "next/navigation";
 
@@ -365,61 +366,10 @@ export default async function MatchResultPage({
     - scrimRankScore 높은 순
     - 같은 점수는 같은 순위
   */
-  const rankingRows =
-    await prisma.balanceProfile.findMany({
-      orderBy: [
-        {
-          scrimRankScore:
-            "desc",
-        },
-        {
-          updatedAt:
-            "asc",
-        },
-      ],
-
-      select: {
-        userId: true,
-        scrimRankScore: true,
-      },
-    });
-
-
-  const internalRankMap =
-    new Map<string, number>();
-
-  let previousScore:
-    number | null = null;
-
-  let previousRank = 0;
-
-  rankingRows.forEach(
-    (row, index) => {
-
-      const score =
-        Number(
-          row.scrimRankScore ?? 0
-        );
-
-      const rank =
-        previousScore !== null &&
-        score === previousScore
-          ? previousRank
-          : index + 1;
-
-      internalRankMap.set(
-        row.userId,
-        rank,
-      );
-
-      previousScore =
-        score;
-
-      previousRank =
-        rank;
-    }
+  const rankingRows = await getLiveRankingRows();
+  const internalRankMap = new Map<string, number>(
+    rankingRows.map((row) => [row.userId, row.position]),
   );
-
 
   /*
     각 참가자의 RiotMatchCache에서

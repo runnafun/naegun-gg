@@ -21,6 +21,9 @@ type Player = {
   };
   tierEvaluation: number;
   scrimRankScore: number;
+  assignedPosition?: string;
+  adjustedEvaluation?: number;
+  reliability?: number;
 
   currentTierScore?: number;
   peakTierScore?: number;
@@ -170,8 +173,17 @@ export default function TeamBuilder({
         const r =
           nextRed[redIndex];
 
-        nextBlue[blueIndex] = r;
-        nextRed[redIndex] = b;
+        const positions = [
+          "TOP", "JUNGLE", "MID", "ADC", "SUPPORT"
+        ];
+        nextBlue[blueIndex] = {
+          ...r,
+          assignedPosition: positions[blueIndex],
+        };
+        nextRed[redIndex] = {
+          ...b,
+          assignedPosition: positions[redIndex],
+        };
 
         return nextRed;
       });
@@ -378,6 +390,9 @@ export default function TeamBuilder({
                       {player.name}
                     </strong>
                     <span>
+                      배정 라인 {player.assignedPosition ?? "미정"}
+                    </span>
+                    <span>
                       BR{" "}
                       {(
                         player.br ?? 0
@@ -456,6 +471,9 @@ export default function TeamBuilder({
                   <strong>
                     {player.name}
                   </strong>
+                  <span>
+                    배정 라인 {player.assignedPosition ?? "미정"}
+                  </span>
                   <span>
                     BR{" "}
                     {(
