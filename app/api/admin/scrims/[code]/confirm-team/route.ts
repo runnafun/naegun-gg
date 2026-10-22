@@ -5,6 +5,7 @@ import {
 
 import { prisma } from "@/app/lib/prisma";
 import { requireAdmin } from "@/app/lib/admin-auth";
+import { getTrackerConnection } from "@/app/lib/tracker-presence";
 
 export const dynamic =
   "force-dynamic";
@@ -173,8 +174,13 @@ export async function POST(
     );
   }
 
-  await prisma.$transaction(async (tx) => {
-    // 중복 확정 방지
+  const presence = await getTrackerConnection(scrim.id, [...actual]);
+  if (!presence.connected) return NextResponse.json({ok:false,error:"TRACKER_NOT_CONNECTED",message:"트래커 연결 후 확정해주세요."},{status:409});
+  try {
+    await prisma.$transaction(async (tx) => {
+      const fresh = await getTrackerConnection(scrim.id, [...actual], tx);
+      if (!fresh.connected) throw new Error("TRACKER_NOT_CONNECTED");
+      // 중복 확정 방지
     const lock = await tx.scrim.updateMany({
       where: {
         id: scrim.id,
@@ -218,7 +224,14 @@ export async function POST(
         },
       },
     });
-  });
+    });
+  } catch (error) {
+    if (error instanceof Error && error.message === "TRACKER_NOT_CONNECTED")
+      return NextResponse.json({ok:false,error:"TRACKER_NOT_CONNECTED",message:"트래커 연결 후 확정해주세요."},{status:409});
+    if (error instanceof Error && error.message === "TEAM_ALREADY_CONFIRMED")
+      return NextResponse.json({ok:false,error:"TEAM_ALREADY_CONFIRMED"},{status:409});
+    throw error;
+  }
 
   return NextResponse.json({
     ok: true,

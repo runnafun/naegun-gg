@@ -1,4 +1,5 @@
 "use client";
+// naegun-search-hard-navigation-v1
 
 import {
   useEffect,
@@ -6,7 +7,6 @@ import {
   type FormEvent,
 } from "react";
 
-import { useRouter } from "next/navigation";
 
 type SearchItem = {
   puuid: string;
@@ -16,7 +16,7 @@ type SearchItem = {
 };
 
 export default function HomeProfileSearch() {
-  const router = useRouter();
+  
 
   const [query, setQuery] = useState("");
   const [items, setItems] = useState<SearchItem[]>([]);
@@ -84,7 +84,7 @@ export default function HomeProfileSearch() {
       tagLine,
     });
 
-    router.push(
+    window.location.assign(
       `/profile-search/result?${params.toString()}`
     );
   }
@@ -115,7 +115,7 @@ export default function HomeProfileSearch() {
       return;
     }
 
-    router.push("/profile-search");
+    window.location.assign("/profile-search");
   }
 
   return (

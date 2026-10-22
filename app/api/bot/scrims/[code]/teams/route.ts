@@ -3,6 +3,7 @@ import { prisma } from "@/app/lib/prisma";
 import { isValidBotRequest } from "@/app/lib/bot-auth";
 import { balanceRankTeams } from "@/app/lib/rank-team-balance";
 import { buildRankedPayload } from "@/app/lib/ranked-team-data";
+import { getTrackerConnection } from "@/app/lib/tracker-presence";
 
 export const dynamic = "force-dynamic";
 
@@ -117,6 +118,10 @@ export async function GET(
 
   if (!scrim) return fail("NOT_FOUND", 404);
   if (scrim.type !== "RANKED") return fail("RANKED_ONLY", 403);
+  if (request.nextUrl.searchParams.get("trackerStatus") === "1") {
+    const tracker = await getTrackerConnection(scrim.id, scrim.participants.map(p => p.userId));
+    return NextResponse.json({ ok: true, code, ...tracker }, { headers: { "Cache-Control": "no-store" } });
+  }
   if (scrim.status !== "IN_PROGRESS") {
     return fail("NOT_CONFIRMED", 409);
   }
@@ -267,6 +272,8 @@ export async function POST(
     if (scrim.status !== "TEAM_SELECTION") {
       return fail("ALREADY_CONFIRMED_OR_NOT_READY", 409);
     }
+    const presence = await getTrackerConnection(scrim.id, scrim.participants.map(p => p.userId));
+    if (!presence.connected) return fail("TRACKER_NOT_CONNECTED", 409);
 
     const teams = validTeams(body.blue, body.red);
 
@@ -295,6 +302,8 @@ export async function POST(
 
     try {
       await prisma.$transaction(async tx => {
+        const fresh = await getTrackerConnection(scrim.id, scrim.participants.map(p => p.userId), tx);
+        if (!fresh.connected) throw new Error("TRACKER_NOT_CONNECTED");
         const locked = await tx.scrim.updateMany({
           where: {
             id: scrim.id,
@@ -339,6 +348,9 @@ export async function POST(
         });
       });
     } catch (error) {
+      if (error instanceof Error && error.message === "TRACKER_NOT_CONNECTED") {
+        return fail("TRACKER_NOT_CONNECTED", 409);
+      }
       if (
         error instanceof Error &&
         error.message === "ALREADY_CONFIRMED"

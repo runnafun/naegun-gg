@@ -6,7 +6,7 @@ import type {ReactNode} from "react";
 import "./admin-v14.css";
 const menu=[
   {group:"운영 현황",items:[["dashboard","대시보드","▦"],["scrims","내전 관리","⌘"],["members","회원 관리","♙"],["balance","티어 평가","◎"],["rewards","보상·재화","◇"]]},
-  {group:"서비스 콘텐츠",items:[["banners","이벤트 배너","▧"],["notices","공지·이벤트","▤"],["activity","운영 기록","≡"]]},
+  {group:"서비스 콘텐츠",items:[["banners","이벤트 배너","▧"],["shop-titles","커스텀 칭호 승인","✦"],["notices","공지·이벤트","▤"],["activity","운영 기록","≡"]]},
   {group:"관리 도구",items:[["admins","관리자 계정","⚙"]]},
 ];
 export default function AdminFrame({children}:{children:ReactNode}){
@@ -30,8 +30,16 @@ export default function AdminFrame({children}:{children:ReactNode}){
     <aside className={`ng-admin-sidebar ${collapsed?"is-closed":""}`}>
       <a className="ng-admin-logo" href="/admin"><span className="ng-admin-logo-box">N</span><span><b>내전.GG</b><small>CONTROL CENTER</small></span></a>
       <nav className="ng-admin-nav">
+        {/* NAEGUN_ATTENDANCE_ADMIN_NAV_V2 */}
+        <div className="ng-admin-navgroup">
+          <div className="ng-admin-navlabel">출석 관리</div>
+          <a href="/admin/attendance" className={`ng-admin-navitem ${pathname==="/admin/attendance"?"is-active":""}`}>
+            <span className="ng-admin-navicon">▣</span><span>출석체크</span>
+          </a>
+        </div>
+  
         {menu.map(group=><div key={group.group} className="ng-admin-navgroup"><div className="ng-admin-navlabel">{group.group}</div>
-          {group.items.map(([id,label,glyph])=><a key={id} href={id==="balance"?"/admin/balance":`/admin?tab=${id}`} className={`ng-admin-navitem ${pathname==="/admin/balance"&&id==="balance"?"is-active":pathname==="/admin"&&tab===id?"is-active":""}`}><span className="ng-admin-navicon">{glyph}</span><span>{label}</span></a>)}
+          {group.items.map(([id,label,glyph])=><a key={id} href={id==="balance"?"/admin/balance":id==="shop-titles"?"/admin/shop-titles":`/admin?tab=${id}`} className={`ng-admin-navitem ${pathname==="/admin/balance"&&id==="balance"?"is-active":pathname==="/admin"&&tab===id?"is-active":""}`}><span className="ng-admin-navicon">{glyph}</span><span>{label}</span></a>)}
         </div>)}
       </nav>
       <div className="ng-admin-sidefoot"><a href="/" target="_blank" rel="noopener noreferrer">↗ 웹사이트 열기</a><small>{name} · 운영자</small></div>
@@ -46,3 +54,5 @@ export default function AdminFrame({children}:{children:ReactNode}){
     </div>
   </div>;
 }
+
+// NAEGUN_SHOP_V1

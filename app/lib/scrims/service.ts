@@ -20,6 +20,7 @@ type ListOptions = {
   activeOnly?: boolean;
   limit?: number;
   includeParticipants?: boolean;
+  includeHistory?: boolean;
 };
 
 function toPublicScrim(
@@ -159,26 +160,39 @@ export async function getScrims(
     activeOnly = false,
     limit = 100,
     includeParticipants = false,
+    includeHistory = false,
   } = options;
 
+  // 운영 기록은 DB에 그대로 보관. 공개 목록에서만 종료된 경기와
+  // 생성된 지 5시간이 지난 일반내전을 제외합니다.
+  const normalVisibleSince = new Date(Date.now() - 5 * 60 * 60 * 1000);
   const statusFilter = status
     ? status
     : activeOnly
       ? "OPEN"
       : {
-          in: PUBLIC_STATUSES,
+          in: includeHistory ? PUBLIC_STATUSES : ["OPEN", "CLOSED", "TEAM_SELECTION", "IN_PROGRESS"],
         };
 
   const scrims = await prisma.scrim.findMany({
     where: {
       ...(type ? { type } : {}),
       status: statusFilter as any,
+      ...(!includeHistory ? {
+        AND: [
+          { status: { notIn: ["FINISHED", "CANCELLED", "DELETED"] as any } },
+          { OR: [
+            { type: "RANKED" as const },
+            { type: "NORMAL" as const, createdAt: { gte: normalVisibleSince } },
+          ] },
+        ],
+      } : {}),
     },
 
-    orderBy: [
-      { startAt: "asc" },
-      { createdAt: "desc" },
-    ],
+    // 운영 기록은 최신 생성순으로, 공개 모집 목록은 기존 시작 예정순으로.
+    orderBy: includeHistory
+      ? [{ createdAt: "desc" as const }]
+      : [{ startAt: "asc" as const }, { createdAt: "desc" as const }],
 
     take: Math.min(
       Math.max(limit, 1),

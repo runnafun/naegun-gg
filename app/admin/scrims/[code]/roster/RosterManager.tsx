@@ -104,7 +104,7 @@ export default function RosterManager({ code }: { code: string }) {
 
   const panel = { background: "#111714", border: "1px solid #29322c", borderRadius: 12, padding: 18 } as const;
   return (
-    <main style={{ minHeight: "100vh", background: "#080b09", color: "#f4f6f3", padding: "85px 18px", fontFamily: "inherit" }}>
+    <main className="ng-scrim-subpage" style={{ minHeight: "100vh", background: "#080b09", color: "#f4f6f3", padding: "85px 18px", fontFamily: "inherit" }}>
       <section style={{ margin: "0 auto", maxWidth: 1050 }}>
         <Link href={`/admin/scrims/${encodeURIComponent(code)}`} style={{ color: "#9ba79c", textDecoration: "none", fontSize: 13 }}>← 내전 관리로 돌아가기</Link>
         <header style={{ display: "flex", gap: 16, justifyContent: "space-between", alignItems: "center", margin: "18px 0 26px", flexWrap: "wrap" }}>

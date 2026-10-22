@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { RankingUser } from "../../data/ranking";
+import {frameImage} from "@/app/lib/naegun-shop-products";
 
 export default function RankingTable({ users }: { users: RankingUser[] }) {
   return (
@@ -37,11 +38,7 @@ export default function RankingTable({ users }: { users: RankingUser[] }) {
               </div>
 
               <div className="ranking-cell ranking-summoner">
-                <img
-                  src={user.profileIcon}
-                  alt=""
-                  className="ranking-profile-icon"
-                />
+                <span className="ng-shop-avatar-wrap" style={{width:30,height:30,overflow:'visible'}}><img src={user.profileIcon} alt="" className="ranking-profile-icon"/>{user.frameSku&&frameImage(user.frameSku)&&<img src={frameImage(user.frameSku)!} loading="lazy" alt="" className="ng-shop-frame-deco"/>}</span>
 
                 <span>
                   {user.summonerName}
@@ -85,3 +82,4 @@ export default function RankingTable({ users }: { users: RankingUser[] }) {
     </section>
   );
 }
+// NAEGUN_SHOP_V1

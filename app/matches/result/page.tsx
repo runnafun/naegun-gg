@@ -1,4 +1,6 @@
 import { prisma } from "../../lib/prisma";
+import {getFrameMap} from "@/app/lib/naegun-shop-db";
+import "@/app/components/shop/naegun-shop-ui.css";
 import { getLiveRankingRows } from "../../lib/live-rank";
 import { matchRules } from "../../data/matchRules";
 import { redirect } from "next/navigation";
@@ -572,10 +574,13 @@ export default async function MatchResultPage({
   );
 
 
+  const ngFrames=await getFrameMap(participants.map((p:any)=>p.puuid).filter(Boolean));
+
   const players: MatchPlayer[] =
     participants.map(
       (player: any, index: number) => ({
         id: index + 1,
+        frameSku:ngFrames[player.puuid]??null,
 
         nickname:
           player.riotId ??
@@ -681,6 +686,26 @@ export default async function MatchResultPage({
     );
 
 
+  // naegun-ranked-teams-view-v1
+  const blueTeam = players.filter((_, index) =>
+    participants[index]?.status === "CONFIRMED" &&
+    participants[index]?.team === "A"
+  );
+  const redTeam = players.filter((_, index) =>
+    participants[index]?.status === "CONFIRMED" &&
+    participants[index]?.team === "B"
+  );
+
+  const rankedTeamGroups =
+    scrim.type === "RANKED" &&
+    participants.filter(
+      (p) => p.status === "CONFIRMED"
+    ).length === 10 &&
+    blueTeam.length === 5 &&
+    redTeam.length === 5
+      ? { blue: blueTeam, red: redTeam }
+      : undefined;
+
   const match:
     MatchLookupData = {
       code:
@@ -736,6 +761,7 @@ export default async function MatchResultPage({
 
       <MatchLookupResult
         match={match}
+        teams={rankedTeamGroups}
       />
 
       <Footer />
@@ -743,3 +769,5 @@ export default async function MatchResultPage({
     </main>
   );
 }
+
+// NAEGUN_SHOP_V1

@@ -1,0 +1,24 @@
+/* NAEGUN_ATTENDANCE_V1 — original user's 800x1000 card ratio & layer positions */
+.ng-att-page{position:relative;min-height:100vh;background:#041008;color:#f4fff7;overflow-x:hidden;font-family:var(--font-noto-sans-kr),sans-serif}
+.ng-att-bg{position:absolute;inset:0;background:url('/attendance-assets/check_background.png') center top / cover no-repeat;pointer-events:none}
+.ng-att-scrim-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.12) 0%,rgba(0,12,7,.07) 42%,rgba(0,0,0,.24) 100%);pointer-events:none}
+.ng-att-content{position:relative;z-index:1;min-height:calc(100vh - 80px);max-width:1420px;margin:0 auto;padding:220px 30px 70px}
+.ng-att-hero{text-align:center;margin-bottom:80px}.ng-att-hero h1{font-size:clamp(21px,2.2vw,30px);letter-spacing:-1px;font-weight:800;margin:0 0 18px;text-shadow:0 2px 15px #011b11}.ng-att-hero p{margin:0;color:#bdc9c1;font-size:13px;font-weight:500}
+.ng-att-grid{max-width:1260px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));column-gap:22px;row-gap:26px;margin:0 auto}
+.ng-att-card{position:relative;container-type:inline-size;aspect-ratio:800/1000;min-width:0;isolation:isolate;filter:brightness(.64);transition:filter .18s}
+.ng-att-card.is-today{filter:brightness(1.12) drop-shadow(0 0 13px rgba(50,255,149,.5))}
+.ng-att-card.is-claimed{filter:brightness(.65)}
+.ng-att-base{display:block;width:100%;height:100%;object-fit:contain;user-select:none;pointer-events:none}
+.ng-att-number{position:absolute;left:0;right:0;top:6.9%;height:5.1%;display:flex;align-items:center;justify-content:center;font-size:6.75cqw;font-weight:800;line-height:1;color:#f9fffc;text-shadow:0 1px 3px #0a261a;pointer-events:none}
+.ng-att-symbol{position:absolute;left:25.625%;top:23%;width:48.75%;height:39%;display:flex;justify-content:center;align-items:center;pointer-events:none}
+.ng-att-symbol img{display:block;width:100%;height:100%;object-fit:contain;max-width:none;max-height:none;transform-origin:50% 50%}
+.ng-att-label{position:absolute;left:3%;right:3%;top:74.5%;height:5.4%;display:flex;align-items:center;justify-content:center;text-align:center;color:#152b20;font-weight:800;white-space:nowrap;font-size:6cqw;line-height:1;letter-spacing:-.03em;pointer-events:none}
+.ng-att-label--small{font-size:5.2cqw}
+.ng-att-claim-mask,.ng-att-past-mask{position:absolute;z-index:2;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,16,11,.5);pointer-events:none}
+.ng-att-claim-mask span,.ng-att-past-mask span{font-weight:800;font-size:clamp(11px,1vw,17px);text-shadow:0 2px 4px #03180e}
+.ng-att-past-mask{background:rgba(0,9,5,.34)}.ng-att-past-mask span{color:#adbab0}
+.ng-att-bottom{text-align:center;padding-top:72px}.ng-att-check-btn{background:#bbec16;border:none;border-radius:0;padding:14px 34px;color:#101b06;font-size:14px;font-weight:800;cursor:pointer;min-width:155px;transition:filter .18s}
+.ng-att-check-btn:hover:not(:disabled){filter:brightness(1.15)}.ng-att-check-btn:disabled{background:#728459;color:#eaf2da;cursor:default}.ng-att-period{font-size:12px;color:#9ba99e;margin-top:20px}.ng-att-feedback{font-weight:700;color:#b8ff83}.ng-att-error{text-align:center;color:#ffb9b0;font-weight:700;margin:18px auto}
+.ng-att-empty{min-height:280px;padding:80px 16px;text-align:center;font-size:22px;font-weight:800;color:#fff}.ng-att-empty p{font-size:14px;color:#b1beb3;font-weight:400}
+@media(max-width:1140px){.ng-att-content{padding-top:170px}.ng-att-grid{grid-template-columns:repeat(4,minmax(0,1fr));max-width:770px}.ng-att-hero{margin-bottom:55px}}
+@media(max-width:620px){.ng-att-content{padding:145px 16px 50px}.ng-att-hero h1{font-size:19px}.ng-att-hero p{font-size:12px}.ng-att-hero{margin-bottom:35px}.ng-att-grid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px;row-gap:19px;max-width:400px}.ng-att-bottom{padding-top:42px}}

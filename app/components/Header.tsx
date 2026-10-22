@@ -30,6 +30,8 @@ export default function Header({
   ] =
     useState(true);
 
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
   const lastScrollY =
     useRef(0);
 
@@ -108,7 +110,7 @@ export default function Header({
           />
         </a>
 
-        <nav className="nav">
+        <nav className={`nav ${mobileNavOpen ? "nav-mobile-open" : ""}`} onClick={() => setMobileNavOpen(false)}>
           <a
             href="/"
             className={`nav-item ${
@@ -156,6 +158,9 @@ export default function Header({
             내전랭킹
           </a>
 
+          {/* NAEGUN_ATTENDANCE_NAV_V1 */}
+          <a href="/attendance" className="nav-item">출석체크</a>
+
           <a
             href="/shop"
             className={`nav-item ${
@@ -187,9 +192,34 @@ export default function Header({
           >
             문의하기
           </a>
-        </nav>
+        
+          <a target="_blank" rel="noopener noreferrer"
+            href="https://discord.com/channels/1547894802765451295/1558489684303159347"
+            className="nav-item"
+          >
+            랭크트래커
+          </a>
+
+          <a
+            href="https://discord.gg/a2BU6rDWcj"
+            className="nav-item"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            디스코드 서버
+          </a>
+</nav>
 
         <UserMenu />
+        <button
+          type="button"
+          className="mobile-nav-toggle"
+          aria-label={mobileNavOpen ? "메뉴 닫기" : "메뉴 열기"}
+          aria-expanded={mobileNavOpen}
+          onClick={() => setMobileNavOpen((open) => !open)}
+        >
+          <span aria-hidden="true">{mobileNavOpen ? "✕" : "☰"}</span>
+        </button>
       </div>
     </header>
   );

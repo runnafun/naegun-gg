@@ -1,0 +1,542 @@
+/* NAEGUN_SHOP_V1 - dark green shop / inventory */
+.ng-shop-section { margin: 0 0 56px; }
+.ng-shop-section h2 {color:#f4faf5;font-weight:800;font-size:22px;margin:0 0 19px;border-left:3px solid #49a36b;padding-left:13px}
+.ng-shop-grid {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.ng-shop-product {background:#171d18;border:1px solid #28332b;padding:13px;display:flex;flex-direction:column;gap:7px;min-width:0;color:#f8faf7;transition:border-color .15s}
+.ng-shop-product:hover {border-color:#499963}
+.ng-shop-product img {width:100%;aspect-ratio:1;object-fit:contain}
+.ng-shop-product strong {font-size:14px;min-height:39px}
+.ng-shop-product p {color:#889e90;font-size:12px;line-height:1.5;min-height:36px;margin:0}
+.ng-shop-product .price {color:#a3e5aa;font-weight:700;font-size:15px}
+.ng-shop-product button,.ng-inv-card button,.ng-shop-open {border:1px solid #518764;background:#1d4630;color:#f2fff5;padding:9px 10px;font-size:13px;cursor:pointer;font-weight:700}
+.ng-shop-product button:disabled,.ng-inv-card button:disabled {opacity:.5;cursor:default}
+.ng-shop-status {display:flex;justify-content:space-between;align-items:center;gap:10px;color:#d5e9d9;padding:18px 0 30px}
+.ng-shop-status button {color:#f4fff6;border:1px solid #4d8c65;background:#153322;padding:11px 18px;cursor:pointer}
+.ng-shop-notice {color:#a7edb6;padding:9px 0}
+.ng-inv-overlay {position:fixed;inset:0;z-index:2000;background:#000c;display:flex;align-items:center;justify-content:center;padding:16px}
+.ng-inv-modal {background:#0b130e;border:1px solid #355c3f;box-shadow:0 25px 90px #000c;color:#e7f4e9;width:min(940px,100%);max-height:91vh;overflow:auto;padding:24px}
+.ng-inv-header {display:flex;justify-content:space-between;align-items:start;gap:12px}
+.ng-inv-header h2 {margin:0;font-size:24px}
+.ng-inv-header span {font-size:13px;color:#8fa998}
+.ng-inv-header button {border:0;background:transparent;color:#ddd;cursor:pointer;font-size:22px}
+.ng-inv-tabs {display:flex;gap:7px;border-bottom:1px solid #35503a;margin:22px 0;padding-bottom:8px}
+.ng-inv-tabs button {color:#92a99a;background:transparent;border:0;padding:10px 17px;cursor:pointer}
+.ng-inv-tabs button.active {background:#205138;color:white}
+.ng-inv-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.ng-inv-card {display:flex;flex-direction:column;align-items:center;gap:7px;background:#152319;border:1px solid #304537;padding:12px;min-width:0;text-align:center}
+.ng-inv-card img {width:100%;max-width:160px;aspect-ratio:1;object-fit:contain}
+.ng-inv-card b {font-size:13px}.ng-inv-card small {font-size:11px;color:#9aada0;min-height:18px}
+.ng-inv-card button {width:100%}.ng-inv-notice {color:#acdcb6}.ng-inv-unequip {margin-top:15px;background:none;color:#d9eadd;border:1px solid #44604c;padding:10px;cursor:pointer}
+.ng-shop-frame-deco {position:absolute!important;top:50%!important;left:50%!important;width:142.42003%!important;height:142.42003%!important;transform:translate(-50%,-50%)!important;object-fit:contain!important;z-index:5!important;pointer-events:none!important;border:0!important;border-radius:0!important;max-width:none!important;max-height:none!important;overflow:visible!important}
+.ng-shop-avatar-wrap {position:relative!important;display:inline-flex;align-items:center;justify-content:center;overflow:visible!important;isolation:isolate;flex-shrink:0}
+.ng-shop-avatar-wrap > img:not(.ng-shop-frame-deco) {display:block;object-fit:cover;border-radius:50%}
+.profile-result-icon-wrap,.match-lookup-profile-image {overflow:visible!important}
+.profile-result-icon-wrap .ng-shop-frame-deco,.match-lookup-profile-image .ng-shop-frame-deco {border-radius:0!important;}
+@media(max-width:900px){.ng-shop-grid {grid-template-columns:repeat(3,minmax(0,1fr))}.ng-inv-grid {grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.ng-shop-grid {grid-template-columns:repeat(2,minmax(0,1fr))}.ng-inv-grid {grid-template-columns:repeat(2,minmax(0,1fr))}.ng-inv-modal {padding:15px}}
+.ng-inv-editor {padding:17px;margin:0 0 17px;background:#18291e;border:1px solid #5d8969}
+.ng-inv-editor h3 {margin:0 0 10px;font-size:16px}
+.ng-inv-editor label {display:flex;flex-direction:column;gap:7px;font-size:13px;margin:12px 0;color:#d5ebd9}
+.ng-inv-editor input,.ng-inv-editor select {padding:11px;background:#0c1610;color:#f4fff4;border:1px solid #53725c;font-size:14px;min-width:0}
+.ng-inv-editor-actions {display:flex;gap:9px;margin-top:13px}
+.ng-inv-editor-actions button {border:1px solid #638d69;color:#e4ffeb;background:#1b4a2e;padding:10px 17px;cursor:pointer}
+.ng-inv-editor-actions button:disabled {opacity:.5}
+.profile-result-level {z-index:7}
+.ng-custom-title {display:inline-block;margin:8px 0 0!important;color:#dbb872!important;font-size:15px!important;font-weight:800!important;text-shadow:0 0 18px #e9b35f55}
+
+
+/* NAEGUN_SHOP_RESTORE_ORIGINAL_UI_V1 */
+
+.shop-page .ng-shop-legacy-card {
+  display: block;
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  font: inherit;
+  text-align: center;
+  color: inherit;
+  cursor: pointer;
+}
+
+.shop-page .ng-shop-legacy-card:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.shop-page .ng-shop-legacy-card .shop-product-thumb-image {
+  max-width: 85%;
+  max-height: 85%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.shop-page .ng-shop-legacy-card--frame .shop-product-thumb-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.shop-page .ng-shop-legacy-card .shop-product-meta {
+  transform: translateY(-4px);
+}
+
+.shop-page .ng-shop-card-action {
+  display: block;
+  margin-top: 8px;
+  color: #c6c6c6;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.shop-page .ng-shop-legacy-status {
+  padding-top: 0;
+  padding-bottom: 24px;
+}
+
+.shop-page .ng-shop-legacy-status .ng-shop-open {
+  background: #262626;
+  color: white;
+  border: 1px solid #383838;
+}
+
+
+/* NAEGUN_INVENTORY_VISUAL_V2 — only inventory portal */
+body .ng-inv-overlay {
+  position:fixed!important;inset:0!important;z-index:2147483000!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:24px!important;box-sizing:border-box!important;
+  background:rgba(0,5,2,.82)!important;backdrop-filter:blur(4px)!important;
+}
+body .ng-inv-overlay .ng-inv-modal {
+  position:relative!important;display:flex!important;flex-direction:column!important;
+  box-sizing:border-box!important;width:min(940px,100%)!important;max-width:940px!important;
+  height:auto!important;min-height:330px!important;max-height:calc(100dvh - 48px)!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+  opacity:1!important;background:#111713!important;color:#f0f6ed!important;
+  border:1px solid #344739!important;border-radius:8px!important;
+  box-shadow:0 28px 110px #000d!important;isolation:isolate!important;
+}
+body .ng-inv-overlay .ng-inv-header {
+  display:flex!important;align-items:flex-start!important;justify-content:space-between!important;
+  flex-shrink:0!important;gap:12px!important;margin:0!important;padding:24px 28px 19px!important;
+  border-bottom:1px solid #314032!important;background:linear-gradient(105deg,#1e3022,#151c17 80%)!important;
+}
+body .ng-inv-overlay .ng-inv-header h2 {
+  margin:0 0 7px!important;padding:0!important;color:#f8fff6!important;
+  font-size:23px!important;font-weight:800!important;line-height:1.25!important;
+}
+body .ng-inv-overlay .ng-inv-header span {
+  display:block!important;font-size:13px!important;color:#a0b3a5!important;line-height:1.5!important;
+}
+body .ng-inv-overlay .ng-inv-header button {
+  flex:0 0 34px!important;width:34px!important;height:34px!important;
+  margin:0!important;padding:0!important;border:1px solid #3c4e40!important;
+  border-radius:5px!important;background:#223026!important;color:#e5f1e5!important;
+  font-size:18px!important;cursor:pointer!important;
+}
+body .ng-inv-overlay .ng-inv-tabs {
+  display:flex!important;align-items:stretch!important;flex-shrink:0!important;gap:24px!important;
+  margin:0!important;padding:0 28px!important;border:0!important;
+  border-bottom:1px solid #304033!important;background:#151c17!important;
+  overflow-x:auto!important;scrollbar-width:thin!important;
+}
+body .ng-inv-overlay .ng-inv-tabs button {
+  flex:0 0 auto!important;min-height:52px!important;margin:0!important;padding:0 2px!important;
+  border:0!important;border-bottom:3px solid transparent!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;
+  color:#9eaea2!important;font-size:14px!important;font-weight:700!important;
+  white-space:nowrap!important;cursor:pointer!important;
+}
+body .ng-inv-overlay .ng-inv-tabs button.active {
+  color:#dcff8d!important;border-bottom-color:#b7e631!important;
+}
+body .ng-inv-overlay .ng-inv-grid {
+  box-sizing:border-box!important;display:grid!important;
+  grid-template-columns:repeat(auto-fill,minmax(150px,168px))!important;
+  align-content:start!important;justify-content:start!important;gap:14px!important;
+  width:100%!important;height:auto!important;min-height:210px!important;
+  max-height:min(56vh,550px)!important;overflow-y:auto!important;overflow-x:hidden!important;
+  margin:0!important;padding:24px 28px 28px!important;background:#111713!important;
+}
+body .ng-inv-overlay .ng-inv-card {
+  box-sizing:border-box!important;display:flex!important;flex-direction:column!important;
+  align-items:stretch!important;gap:7px!important;width:100%!important;min-width:0!important;
+  margin:0!important;padding:12px!important;border:1px solid #354237!important;
+  border-radius:6px!important;background:#1b231d!important;text-align:center!important;
+}
+body .ng-inv-overlay .ng-inv-card:hover {border-color:#759357!important;}
+body .ng-inv-overlay .ng-inv-card > img {
+  display:block!important;align-self:center!important;box-sizing:border-box!important;
+  width:100%!important;max-width:136px!important;height:136px!important;max-height:136px!important;
+  aspect-ratio:1!important;margin:0!important;padding:8px!important;
+  object-fit:contain!important;overflow:visible!important;border:0!important;
+  border-radius:5px!important;background:radial-gradient(circle,#2d3d32,#171e19 72%)!important;
+}
+body .ng-inv-overlay .ng-inv-card > b {
+  display:block!important;min-height:35px!important;margin:2px 0 0!important;
+  color:#f1f8ee!important;font-size:13px!important;font-weight:800!important;
+  line-height:1.4!important;overflow-wrap:anywhere!important;
+}
+body .ng-inv-overlay .ng-inv-card > small {
+  display:block!important;min-height:18px!important;color:#a5b8a9!important;
+  font-size:11px!important;line-height:1.5!important;
+}
+body .ng-inv-overlay .ng-inv-card > button {
+  display:block!important;box-sizing:border-box!important;width:100%!important;min-height:35px!important;
+  margin-top:auto!important;padding:8px!important;border-radius:4px!important;
+  border:1px solid #b9e93b!important;background:#b9ea32!important;color:#152208!important;
+  font-size:12px!important;font-weight:800!important;cursor:pointer!important;
+}
+body .ng-inv-overlay .ng-inv-card > button:disabled {
+  background:#29392d!important;border-color:#3d5241!important;
+  color:#a7b5a9!important;cursor:default!important;opacity:1!important;
+}
+body .ng-inv-overlay .ng-inv-grid > p {
+  grid-column:1/-1!important;justify-self:center!important;align-self:center!important;
+  margin:25px 0!important;color:#aab9ae!important;font-size:14px!important;
+}
+body .ng-inv-overlay .ng-inv-editor {
+  margin:16px 28px 0!important;padding:16px!important;background:#1b2b20!important;
+  border:1px solid #4a7051!important;border-radius:5px!important;
+}
+body .ng-inv-overlay .ng-inv-editor input,
+body .ng-inv-overlay .ng-inv-editor select {box-sizing:border-box!important;width:100%!important;}
+body .ng-inv-overlay .ng-inv-notice {
+  margin:12px 28px 0!important;padding:10px 12px!important;
+  background:#1e3525!important;border:1px solid #41644a!important;color:#d8f6d3!important;
+}
+body .ng-inv-overlay .ng-inv-unequip {
+  flex-shrink:0!important;align-self:flex-end!important;
+  margin:0 28px 22px!important;border-radius:4px!important;
+}
+@media(max-width:650px) {
+  body .ng-inv-overlay {padding:10px!important;}
+  body .ng-inv-overlay .ng-inv-modal {max-height:calc(100dvh - 20px)!important;}
+  body .ng-inv-overlay .ng-inv-header {padding:19px 17px 15px!important;}
+  body .ng-inv-overlay .ng-inv-header h2 {font-size:20px!important;}
+  body .ng-inv-overlay .ng-inv-tabs {gap:18px!important;padding:0 17px!important;}
+  body .ng-inv-overlay .ng-inv-tabs button {min-height:46px!important;font-size:12px!important;}
+  body .ng-inv-overlay .ng-inv-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;padding:16px!important;max-height:52dvh!important;
+  }
+  body .ng-inv-overlay .ng-inv-card {padding:9px!important;}
+  body .ng-inv-overlay .ng-inv-card > img {height:110px!important;max-height:110px!important;}
+  body .ng-inv-overlay .ng-inv-editor {margin:12px 17px 0!important;}
+  body .ng-inv-overlay .ng-inv-notice {margin:10px 17px 0!important;}
+  body .ng-inv-overlay .ng-inv-unequip {margin:0 17px 16px!important;}
+}
+
+
+/* NAEGUN_INVENTORY_SQUARE_SHOP_V3
+   Inventory ONLY. Preserve transparent black square modal.
+   New square category buttons; original shop-like square product cards.
+*/
+html body .ng-inv-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  padding: clamp(12px, 3.4vw, 50px) !important;
+  background: rgba(0,0,0,.38) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html body .ng-inv-overlay .ng-inv-modal {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+  width: min(1320px, 100%) !important;
+  max-width: 1320px !important;
+  height: min(760px, calc(100dvh - 60px)) !important;
+  min-height: 0 !important;
+  max-height: calc(100dvh - 24px) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  color: #fff !important;
+  background: rgba(0,0,0,.86) !important;
+  opacity: 1 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-align: left !important;
+}
+html body .ng-inv-overlay .ng-inv-header {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 15px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 31px 32px 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+html body .ng-inv-overlay .ng-inv-header h2 {
+  margin: 0 0 12px !important;
+  padding: 0 !important;
+  color: #fff !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+}
+html body .ng-inv-overlay .ng-inv-header span {
+  color: rgba(255,255,255,.66) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+html body .ng-inv-overlay .ng-inv-header button {
+  flex: 0 0 35px !important;
+  width: 35px !important;
+  height: 35px !important;
+  padding: 0 !important;
+  color: #cfcfcf !important;
+  font-size: 26px !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+}
+html body .ng-inv-overlay .ng-inv-header button:hover { color: #fff !important; }
+/* The old text-and-underline tabs are replaced by real square category buttons. */
+html body .ng-inv-overlay .ng-inv-tabs {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  align-items: stretch !important;
+  flex-wrap: nowrap !important;
+  gap: 9px !important;
+  box-sizing: border-box !important;
+  width: auto !important;
+  margin: 33px 32px 0 !important;
+  padding: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: thin !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+html body .ng-inv-overlay .ng-inv-tabs button {
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 44px !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 21px !important;
+  color: #bdbdbd !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+  background: #262626 !important;
+  border: 0 !important;
+  border-bottom: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+html body .ng-inv-overlay .ng-inv-tabs button:hover {
+  color: #fff !important;
+  background: #363636 !important;
+}
+html body .ng-inv-overlay .ng-inv-tabs button.active,
+html body .ng-inv-overlay .ng-inv-tabs button.active:hover {
+  color: #101800 !important;
+  background: #b9ee08 !important;
+  border: 0 !important;
+  border-bottom: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html body .ng-inv-overlay .ng-inv-grid {
+  display: grid !important;
+  flex: 1 1 auto !important;
+  grid-template-columns: repeat(7, minmax(0,1fr)) !important;
+  grid-auto-rows: max-content !important;
+  align-content: start !important;
+  justify-content: start !important;
+  box-sizing: border-box !important;
+  gap: 13px !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 30px 32px 32px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+html body .ng-inv-overlay .ng-inv-card {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  box-sizing: border-box !important;
+  gap: 6px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 223px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 14px 11px 13px !important;
+  text-align: center !important;
+  color: #fff !important;
+  background: #262626 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html body .ng-inv-overlay .ng-inv-card:hover { background: #2f2f2f !important; }
+html body .ng-inv-overlay .ng-inv-card > img {
+  display: block !important;
+  align-self: center !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 128px !important;
+  height: 112px !important;
+  max-height: 112px !important;
+  aspect-ratio: auto !important;
+  margin: 0 0 4px !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+html body .ng-inv-overlay .ng-inv-card > b {
+  display: block !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #f9f9f9 !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  line-height: 1.4 !important;
+  overflow-wrap: anywhere !important;
+}
+html body .ng-inv-overlay .ng-inv-card > small {
+  display: block !important;
+  min-height: 16px !important;
+  margin: 0 !important;
+  color: #9a9a9a !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+}
+html body .ng-inv-overlay .ng-inv-card > button {
+  display: block !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 32px !important;
+  margin: auto 0 0 !important;
+  padding: 7px 8px !important;
+  color: #111 !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  cursor: pointer !important;
+  background: #b9ee08 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+html body .ng-inv-overlay .ng-inv-card > button:disabled {
+  color: #aaa !important;
+  background: #393939 !important;
+  border: 0 !important;
+  opacity: 1 !important;
+  cursor: default !important;
+}
+html body .ng-inv-overlay .ng-inv-grid > p {
+  grid-column: 1 / -1 !important;
+  justify-self: start !important;
+  align-self: start !important;
+  margin: 15px 0 !important;
+  color: #bbb !important;
+}
+html body .ng-inv-overlay .ng-inv-editor {
+  flex: 0 0 auto !important;
+  max-height: 42dvh !important;
+  margin: 18px 32px 0 !important;
+  padding: 16px !important;
+  overflow-y: auto !important;
+  color: #fff !important;
+  background: rgba(35,35,35,.94) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+html body .ng-inv-overlay .ng-inv-editor input,
+html body .ng-inv-overlay .ng-inv-editor select {
+  box-sizing: border-box !important;
+  background: #171717 !important;
+  color: #fff !important;
+  border: 1px solid #454545 !important;
+  border-radius: 0 !important;
+}
+html body .ng-inv-overlay .ng-inv-notice {
+  flex: 0 0 auto !important;
+  margin: 12px 32px 0 !important;
+  padding: 9px 12px !important;
+  color: #c6ff9d !important;
+  background: rgba(35,35,35,.7) !important;
+  border: 0 !important;
+}
+html body .ng-inv-overlay .ng-inv-unequip {
+  align-self: flex-end !important;
+  flex: 0 0 auto !important;
+  margin: 0 32px 24px !important;
+  padding: 9px 17px !important;
+  color: #d9d9d9 !important;
+  background: #292929 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  cursor: pointer !important;
+}
+@media(max-width:1200px) {
+  html body .ng-inv-overlay .ng-inv-grid { grid-template-columns: repeat(6,minmax(0,1fr)) !important; }
+}
+@media(max-width:950px) {
+  html body .ng-inv-overlay .ng-inv-grid { grid-template-columns: repeat(4,minmax(0,1fr)) !important; }
+}
+@media(max-width:650px) {
+  html body .ng-inv-overlay { padding: 10px !important; }
+  html body .ng-inv-overlay .ng-inv-modal {
+    width: 100% !important;
+    height: calc(100dvh - 20px) !important;
+    max-height: calc(100dvh - 20px) !important;
+  }
+  html body .ng-inv-overlay .ng-inv-header { padding: 22px 17px 0 !important; }
+  html body .ng-inv-overlay .ng-inv-header h2 { font-size: 21px !important; }
+  html body .ng-inv-overlay .ng-inv-header span { font-size: 12px !important; }
+  html body .ng-inv-overlay .ng-inv-tabs { gap: 7px !important; margin: 24px 17px 0 !important; }
+  html body .ng-inv-overlay .ng-inv-tabs button { min-height: 39px !important; padding: 0 13px !important; font-size: 12px !important; }
+  html body .ng-inv-overlay .ng-inv-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 10px !important;
+    padding: 20px 17px !important;
+  }
+  html body .ng-inv-overlay .ng-inv-card { min-height: 212px !important; }
+  html body .ng-inv-overlay .ng-inv-editor { margin: 12px 17px 0 !important; }
+  html body .ng-inv-overlay .ng-inv-notice { margin: 9px 17px 0 !important; }
+  html body .ng-inv-overlay .ng-inv-unequip { margin: 0 17px 17px !important; }
+}
+

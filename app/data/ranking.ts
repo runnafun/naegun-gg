@@ -1,5 +1,6 @@
 export type RankingUser = {
   puuid: string;
+  frameSku?: string|null;
   gameName: string;
   tagLine: string;
   rank: number;
@@ -10,3 +11,5 @@ export type RankingUser = {
   mostChampions: string[];
   winRate: number | null;
 };
+
+// NAEGUN_SHOP_V1

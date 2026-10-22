@@ -193,6 +193,7 @@ export type MatchSearchResult = {
 ================================================== */
 
 export type MatchPlayer = {
+  frameSku?: string|null;
   id: number;
 
   nickname: string;
@@ -721,3 +722,5 @@ export const MOCK_MATCH_SEARCH_RESULTS:
         match.status,
     })
   );
+
+// NAEGUN_SHOP_V1

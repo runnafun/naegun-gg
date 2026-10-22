@@ -1,0 +1,38 @@
+.ng-landing{min-height:100vh;background:#090d0a;color:#f5f8f5;font-family:var(--font-noto-sans-kr),Arial,sans-serif}
+.ng-landing *{box-sizing:border-box}.ng-landing a{text-decoration:none}
+.ng-landing-wrap{max-width:1060px;margin:0 auto;padding-left:24px;padding-right:24px}
+.ng-landing-hero{position:relative;isolation:isolate;overflow:hidden;padding:174px 0 120px;background:radial-gradient(ellipse at 92% 12%,#1a462b 0%,transparent 36%),linear-gradient(145deg,#0d2115,#050b08 72%)}
+.ng-landing-hero:after{content:"";position:absolute;z-index:-1;inset:auto 0 0;height:190px;background:linear-gradient(0deg,#090d0a,transparent)}
+.ng-landing-kicker,.ng-landing-label{color:#87d9a0;font-weight:800;font-size:12px;letter-spacing:.10em}
+.ng-landing h1{margin:25px 0 27px;font-size:clamp(35px,4.8vw,64px);letter-spacing:-.065em;line-height:1.25;font-weight:900;color:#fff;word-break:keep-all}
+.ng-landing-intro{max-width:750px;font-size:clamp(15px,1.6vw,17px);line-height:2;color:#c3d8c9;word-break:keep-all}
+.ng-landing-intro strong{color:#f3fff6}
+.ng-landing-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:34px}
+.ng-landing-action-primary,.ng-landing-action-secondary{display:inline-flex;align-items:center;justify-content:center;gap:13px;min-height:53px;padding:15px 24px;border-radius:8px;font-weight:800;font-size:14px;transition:transform .2s,background .2s}
+.ng-landing-action-primary{background:#37ad6a;color:#061309!important}.ng-landing-action-primary:hover{background:#69db92;transform:translateY(-1px)}
+.ng-landing-action-secondary{color:#e8f4ea!important;background:#1b2d20;border:1px solid #3c5843}.ng-landing-action-secondary:hover{background:#253f2c}
+.ng-landing-hero-note{color:#94ad9b;font-size:12px;margin:20px 0 0}
+.ng-landing-body{padding-top:38px;padding-bottom:110px}.ng-landing-body>section{padding:72px 0;border-bottom:1px solid #294130}
+.ng-landing h2{margin:12px 0 16px;font-size:clamp(24px,3vw,35px);line-height:1.42;letter-spacing:-.04em;color:#fff}
+.ng-landing-section-intro{max-width:810px;font-size:15px;line-height:1.95;color:#bccfc0}
+.ng-landing-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:33px}
+.ng-landing-cards>div{border:1px solid #2c4934;border-radius:12px;background:linear-gradient(135deg,#152a1b,#111a14);padding:29px}
+.ng-landing-cards span{color:#91dca5;font-weight:900;font-size:12px}
+.ng-landing-cards h3{margin:13px 0;font-size:18px;color:#edf6ef;letter-spacing:-.025em}
+.ng-landing-cards p,.ng-landing-join p{font-size:14px;line-height:1.85;color:#b9cbbb}
+.ng-landing-join{display:grid;grid-template-columns:1fr 1.2fr;gap:46px}
+.ng-landing-join ol{list-style:none;margin:0;padding:0;display:grid;gap:13px}
+.ng-landing-join li{display:flex;gap:19px;padding:20px 22px;border:1px solid #27402f;border-radius:10px;background:#121d16}
+.ng-landing-join li b{font-size:21px;color:#86d39d}.ng-landing-join li strong{font-size:15px;color:#f0f5f0}
+.ng-landing-join li p{margin:7px 0 0}
+.ng-landing-guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:30px}
+.ng-landing-guide-grid>a{display:flex;flex-direction:column;gap:15px;min-height:196px;background:#15231a;border:1px solid #35513b;border-radius:12px;padding:24px;transition:border-color .2s}
+.ng-landing-guide-grid>a:hover{border-color:#68b37d}.ng-landing-guide-grid>a>span:first-child{color:#81c995;font-size:12px;font-weight:800}
+.ng-landing-guide-grid strong{font-size:17px;line-height:1.6;color:#f0f5f1;word-break:keep-all}
+.ng-landing-guide-arrow{margin-top:auto;color:#9fdeac;font-size:13px}
+.ng-landing-faq details{border-bottom:1px solid #284130;padding:21px 4px}.ng-landing-faq details:first-of-type{margin-top:24px;border-top:1px solid #284130}
+.ng-landing-faq summary{cursor:pointer;font-weight:700;font-size:15px;color:#edf7ed}.ng-landing-faq details p{font-size:14px;color:#b7c9ba;line-height:1.95;margin:17px 0 0}
+.ng-landing-bottom-cta{margin:70px 0 0;padding:54px 26px;text-align:center;border:1px solid #3a7450;border-radius:16px;background:linear-gradient(125deg,#1a3b27,#122719)}
+.ng-landing-bottom-cta p{font-size:14px;color:#c5d9c9;line-height:1.8;margin:0 0 30px}
+.ng-landing-bottom-cta a{display:inline-flex;padding:16px 24px;border-radius:8px;background:#3ab36e;color:#061408;font-weight:800;font-size:14px}
+@media(max-width:780px){.ng-landing-hero{padding:126px 0 75px}.ng-landing-wrap{padding-left:20px;padding-right:20px}.ng-landing-join{grid-template-columns:1fr;gap:17px}.ng-landing-guide-grid{grid-template-columns:1fr}.ng-landing-cards{grid-template-columns:1fr}.ng-landing-body>section{padding:53px 0}.ng-landing-bottom-cta{padding:39px 19px}.ng-landing h1{font-size:clamp(33px,7vw,47px)}}

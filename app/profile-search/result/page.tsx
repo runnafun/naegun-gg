@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import {getPublicStyleForPuuid} from "@/app/lib/naegun-shop-db";
+import "@/app/components/shop/naegun-shop-ui.css";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -54,6 +56,8 @@ export default async function ProfileResultPage({
   }
 
 
+  const ngStyle=await getPublicStyleForPuuid(profile.puuid);
+
   return (
     <main className="profile-result-page">
 
@@ -67,6 +71,8 @@ export default async function ProfileResultPage({
 
       <ProfileResultHero
         profile={profile}
+        frameSku={ngStyle.frameSku}
+        shopTitle={ngStyle.title}
       />
 
 
@@ -105,3 +111,4 @@ export default async function ProfileResultPage({
     </main>
   );
 }
+// NAEGUN_SHOP_V1

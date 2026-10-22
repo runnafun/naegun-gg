@@ -5,10 +5,13 @@ import {
 } from "../../../data/profile";
 
 import ProfileRefreshButton from "./ProfileRefreshButton";
+import {frameImage} from "@/app/lib/naegun-shop-products";
 
 
 type Props = {
   profile: ProfileData;
+  frameSku?: string|null;
+  shopTitle?: string|null;
 };
 
 
@@ -119,7 +122,7 @@ function evaluationRank(profile: ProfileData) {
 }
 
 export default function ProfileResultHero({
-  profile,
+  profile,frameSku,shopTitle,
 }: Props) {
   const evaluated = evaluationRank(profile);
 
@@ -138,6 +141,7 @@ export default function ProfileResultHero({
               alt=""
               className="profile-result-icon"
             />
+            {frameSku && frameImage(frameSku,'full') && <img src={frameImage(frameSku,'full')!} className="ng-shop-frame-deco" alt="" aria-hidden="true"/>}
 
             <span className="profile-result-level">
               {profile.level}
@@ -173,7 +177,7 @@ export default function ProfileResultHero({
 
             <p>
               내전.GG에 등록된 소환사입니다.
-            </p>
+            </p>            {shopTitle && <p className="ng-custom-title">✦ {shopTitle}</p>}
 
           </div>
 
@@ -229,3 +233,4 @@ export default function ProfileResultHero({
     </section>
   );
 }
+// NAEGUN_SHOP_V1

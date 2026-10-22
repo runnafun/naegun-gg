@@ -137,8 +137,10 @@ async function loadMostChampions(
 // 실제 RDS에서 유저 전체 조회
 // ========================================
 
-export async function getRankingUsers():
-  Promise<RankingUser[]> {
+export async function getRankingUsers(
+  targetPuuids?: string[],
+): Promise<RankingUser[]> {
+  if (targetPuuids?.length === 0) return [];
 
   const accounts = await prisma.riotAccount.findMany({
     where: {
@@ -146,7 +148,8 @@ export async function getRankingUsers():
         status: {
           not: "DELETED"
         }
-      }
+      },
+      ...(targetPuuids ? { puuid: { in: targetPuuids } } : {}),
     },
 
     select: {

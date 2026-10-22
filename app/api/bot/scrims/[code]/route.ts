@@ -4,6 +4,7 @@ import {
 } from "next/server";
 
 import { prisma } from "@/app/lib/prisma";
+import {closeShopItemsForScrim,releaseShopItemsForCancelledScrim} from "@/app/lib/naegun-shop-db";
 import { isValidBotRequest } from "@/app/lib/bot-auth";
 
 export const dynamic = "force-dynamic";
@@ -176,6 +177,9 @@ export async function PATCH(
       },
     });
 
+  if(scrim.type==='RANKED'&&nextStatus==='CLOSED')await closeShopItemsForScrim(scrim.id);
+  if(scrim.type==='RANKED'&&['CANCELLED','DELETED'].includes(nextStatus))await releaseShopItemsForCancelledScrim(scrim.id);
+
   return NextResponse.json({
     ok: true,
     scrim: {
@@ -188,3 +192,5 @@ export async function PATCH(
     },
   });
 }
+
+// NAEGUN_SHOP_V1

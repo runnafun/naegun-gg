@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import InventoryModal from "@/app/components/shop/InventoryModal";
+
 import {
   useEffect,
   useRef,
@@ -42,6 +44,7 @@ export default function UserMenu() {
 
   const [open, setOpen] =
     useState(false);
+  const [inventoryOpen,setInventoryOpen]=useState(false);
 
   const menuRef =
     useRef<HTMLDivElement | null>(null);
@@ -125,6 +128,8 @@ export default function UserMenu() {
       );
     };
   }, []);
+
+  useEffect(()=>{const refresh=()=>{fetch('/api/auth/me',{cache:'no-store'}).then(r=>r.json()).then(d=>{if(d.authenticated&&d.user)setUser(d.user)}).catch(()=>{})};window.addEventListener('naegun-shop-updated',refresh);return()=>window.removeEventListener('naegun-shop-updated',refresh)},[]);
 
   async function handleLogout() {
     try {
@@ -302,6 +307,8 @@ export default function UserMenu() {
             </Link>
           )}
 
+          <button type="button" className="user-menu-item" onClick={()=>{setOpen(false);setInventoryOpen(true)}}>내 보관함</button>
+
           {isAdmin && (
             <Link
               href="/admin"
@@ -323,6 +330,8 @@ export default function UserMenu() {
           </button>
         </div>
       )}
+      {inventoryOpen && <InventoryModal onClose={()=>setInventoryOpen(false)}/>}
     </div>
   );
 }
+// NAEGUN_SHOP_V1

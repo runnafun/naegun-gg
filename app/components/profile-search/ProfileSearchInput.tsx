@@ -1,4 +1,5 @@
 "use client";
+// naegun-search-hard-navigation-v1
 
 import {
   FormEvent,
@@ -6,9 +7,6 @@ import {
   useState,
 } from "react";
 
-import {
-  useRouter,
-} from "next/navigation";
 
 import type {
   ProfileSearchResult,
@@ -32,8 +30,7 @@ export default function ProfileSearchInput({
   variant = "hero",
 }: Props) {
 
-  const router =
-    useRouter();
+  
 
 
   const [
@@ -157,7 +154,7 @@ export default function ProfileSearchInput({
       });
 
 
-    router.push(
+    window.location.assign(
       `/profile-search/result?${params.toString()}`
     );
   };

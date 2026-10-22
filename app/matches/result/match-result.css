@@ -1420,3 +1420,97 @@ img {
   text-underline-offset: 3px;
 }
 
+
+/* naegun-ranked-teams-view-v1 */
+
+.match-lookup-team-group + .match-lookup-team-group {
+  margin-top: 24px;
+}
+
+.match-lookup-team-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 54px;
+  padding: 12px 24px;
+  color: #f6f8fc;
+  border-left: 4px solid transparent;
+  font-size: 14px;
+}
+
+.match-lookup-team-label strong {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.match-lookup-team-label span {
+  opacity: .75;
+}
+
+.match-lookup-team-group--blue .match-lookup-team-label {
+  background: linear-gradient(
+    90deg,
+    rgba(32,75,150,.85),
+    rgba(23,34,51,.96)
+  );
+  border-left-color: #548fff;
+}
+
+.match-lookup-team-group--red .match-lookup-team-label {
+  background: linear-gradient(
+    90deg,
+    rgba(142,38,58,.84),
+    rgba(43,27,34,.96)
+  );
+  border-left-color: #ff6676;
+}
+
+@media (max-width: 800px) {
+  .match-lookup-team-label {
+    min-height: 46px;
+    padding: 10px 15px;
+  }
+}
+
+
+/* NAEGUN_MATCH_FRAME_SIZE_FIX_V1 */
+
+/*
+ * 프로필 이미지 36x36px을 기준으로
+ * 테두리 1024/719 비율 적용.
+ * 테두리 장식은 사진 위에 겹치고 자르지 않음.
+ */
+
+.match-lookup-profile-image {
+  position: relative !important;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  overflow: visible !important;
+  isolation: isolate;
+}
+
+.match-lookup-profile-image > img:not(.ng-shop-frame-deco) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.match-lookup-profile-image > .ng-shop-frame-deco {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 142.42003% !important;
+  height: 142.42003% !important;
+  transform: translate(-50%, -50%) !important;
+  object-fit: contain !important;
+  max-width: none !important;
+  max-height: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import {frameImage} from "@/app/lib/naegun-shop-products";
 
 import type {
   MatchLookupData,
@@ -7,12 +8,18 @@ import type {
 import MatchRuleGuide from
   "./MatchRuleGuide";
 
+// naegun-ranked-teams-view-v1
 type Props = {
   match: MatchLookupData;
+  teams?: {
+    blue: MatchLookupData["players"];
+    red: MatchLookupData["players"];
+  };
 };
 
 export default function MatchLookupResult({
   match,
+  teams,
 }: Props) {
   return (
     <section className="match-lookup-hero">
@@ -51,7 +58,35 @@ export default function MatchLookupResult({
             내전 조회결과
           </h2>
 
-          <div className="match-lookup-table">
+          {(teams ? [
+            {
+              key: "blue",
+              label: "블루팀",
+              players: teams.blue,
+            },
+            {
+              key: "red",
+              label: "레드팀",
+              players: teams.red,
+            },
+          ] : [
+            {
+              key: "all",
+              label: null,
+              players: match.players,
+            },
+          ]).map((group) => (
+            <div
+              key={group.key}
+              className={`match-lookup-team-group match-lookup-team-group--${group.key}`}
+            >
+              {group.label && (
+                <div className="match-lookup-team-label">
+                  <strong>{group.label}</strong>
+                  <span>{group.players.length}명</span>
+                </div>
+              )}
+              <div className="match-lookup-table">
             <div className="match-lookup-table-header">
               <span>닉네임</span>
               <span>주챔프 / 부챔프</span>
@@ -64,7 +99,7 @@ export default function MatchLookupResult({
               <span>내전랭킹</span>
             </div>
 
-            {match.players.map(
+            {group.players.map(
               (player) => (
                 <div
                   key={player.id}
@@ -88,6 +123,7 @@ export default function MatchLookupResult({
                           }
                           alt=""
                         />
+                        {player.frameSku&&frameImage(player.frameSku)&&<img src={frameImage(player.frameSku)!} loading="lazy" alt="" className="ng-shop-frame-deco"/>}
                       </div>
 
                       <span>
@@ -105,6 +141,7 @@ export default function MatchLookupResult({
                           }
                           alt=""
                         />
+                        {player.frameSku&&frameImage(player.frameSku)&&<img src={frameImage(player.frameSku)!} loading="lazy" alt="" className="ng-shop-frame-deco"/>}
                       </div>
 
                       <span>
@@ -194,9 +231,13 @@ export default function MatchLookupResult({
                 </div>
               )
             )}
-          </div>
+              </div>
+            </div>
+          ))}
         </section>
       </div>
     </section>
   );
 }
+
+// NAEGUN_SHOP_V1

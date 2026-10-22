@@ -18,7 +18,7 @@ export default function TrackerAdminPage(){
     }catch(e){setError(String(e instanceof Error?e.message:e));}
   },[code]);
   useEffect(()=>{if(code) void load();},[code,load]);
-  return <main style={{minHeight:"100vh",background:"#080d0a",color:"#f1f5ef",padding:"48px 28px"}}>
+  return <main className="ng-scrim-subpage" style={{minHeight:"100vh",background:"#080d0a",color:"#f1f5ef",padding:"48px 28px"}}>
     <div style={{maxWidth:1180,margin:"0 auto"}}>
     <Link href={`/admin/scrims/${encodeURIComponent(code)}`} style={{color:"#bfe999"}}>← 팀 배정 관리</Link>
     <h1 style={{margin:"30px 0 8px"}}>{code} · 경기 트래커 관리</h1>

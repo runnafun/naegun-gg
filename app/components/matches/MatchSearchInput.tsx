@@ -1,4 +1,5 @@
 "use client";
+// naegun-search-hard-navigation-v1
 
 import {
   FormEvent,
@@ -6,7 +7,6 @@ import {
   useState,
 } from "react";
 
-import { useRouter } from "next/navigation";
 
 import type {
   MatchSearchResult,
@@ -23,7 +23,7 @@ export default function MatchSearchInput({
   variant = "hero",
   defaultValue = "",
 }: Props) {
-  const router = useRouter();
+  
 
   const [query, setQuery] =
     useState(defaultValue);
@@ -122,7 +122,7 @@ export default function MatchSearchInput({
   function moveTo(
     code: string,
   ) {
-    router.push(
+    window.location.assign(
       `/matches/result?code=${encodeURIComponent(
         code,
       )}`,

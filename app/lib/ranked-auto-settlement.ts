@@ -1,4 +1,5 @@
 import { prisma } from "@/app/lib/prisma";
+import {applyShopSettlementEffects} from "@/app/lib/naegun-shop-db";
 import { applyProtection, applyRankResult, getRank, loadRankSettlement } from "@/app/lib/ranked-rewards";
 import { revalidatePath } from "next/cache";
 
@@ -44,7 +45,10 @@ export async function settleRankedAutomatically(code:string):Promise<{
       const isAce=p.userId===info.suggestedAce;
       const stats=await tx.userStats.findUnique({where:{userId:p.userId}});
       const defense=await tx.defenseStats.findUnique({where:{userId:p.userId}});
+      const shopEffect=await applyShopSettlementEffects(tx,info.scrim.id,p.userId,win,stats?.tierScore??0);
       const rank=applyRankResult(stats?.tierScore??0,win,defense?.tickets??0);
+      if(shopEffect.shield&&!win){rank.after=rank.before;rank.usedTicket=false;rank.afterRank=getRank(rank.after);}
+      if(shopEffect.double&&win){rank.after=Math.min(102,rank.before+2);rank.afterRank=getRank(rank.after);}
       const protection=applyProtection(defense?.progress??0,
         (defense?.tickets??0)-(rank.usedTicket?1:0),5+(isMvp?50:0)+(isAce?25:0));
       const streak=win?(stats?.currentStreak??0)+1:0;
@@ -91,3 +95,5 @@ export async function settleRankedAutomatically(code:string):Promise<{
   catch(e){console.warn("RANKED_REVALIDATE_WARN",errorText(e));}
   return {status:"FINISHED",settled:true,winner:result.winner,wins:result.wins};
 }
+
+// NAEGUN_SHOP_V1

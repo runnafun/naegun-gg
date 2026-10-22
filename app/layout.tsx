@@ -9,6 +9,7 @@ const notoSansKR = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://내전.com"),
   title: "내전.GG",
   description: "내전을 더 재밌게 즐기자",
 };

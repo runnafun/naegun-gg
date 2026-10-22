@@ -111,6 +111,16 @@ export async function GET(
       ? rawStatus
       : null;
 
+  // 트래커/봇 재시작 복구 전용 경량 상태 조회 (민감한 참가자 데이터 제외).
+  // DELETED도 포함해 오래된 봇 모집글이 다시 열리지 않도록 합니다.
+  if (request.nextUrl.searchParams.get("compact") === "1") {
+    const rows = await prisma.scrim.findMany({
+      select: { code: true, status: true },
+    });
+    return NextResponse.json({ ok: true, scrims: rows },
+      { headers: { "Cache-Control": "no-store" } });
+  }
+
   const scrims =
     await prisma.scrim.findMany({
       where: {

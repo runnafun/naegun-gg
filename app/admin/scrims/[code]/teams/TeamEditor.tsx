@@ -54,7 +54,7 @@ export default function TeamEditor({ code }: { code: string }) {
   }
 
   return (
-    <main style={{ minHeight: "100vh", background: "#090c0a", color: "#f1f5ee", padding: "90px 20px", fontFamily: "inherit" }}>
+    <main className="ng-scrim-subpage" style={{ minHeight: "100vh", background: "#090c0a", color: "#f1f5ee", padding: "90px 20px", fontFamily: "inherit" }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <Link href={`/admin/scrims/${encodeURIComponent(code)}`} style={{ color: "#a3b5a5", textDecoration: "none", fontSize: 13 }}>← 팀 배정 관리로 돌아가기</Link>
         <div style={{ margin: "22px 0", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 15, justifyContent: "space-between" }}>

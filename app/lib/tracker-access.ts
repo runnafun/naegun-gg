@@ -30,21 +30,9 @@ export async function loadTrackerScrim(code: string) {
 }
 
 export async function getTrackerRoster(scrim: NonNullable<Awaited<ReturnType<typeof loadTrackerScrim>>>) {
-  const confirm = await prisma.adminAuditLog.findFirst({
-    where: { action: "RANKED_TEAM_CONFIRMED", targetType: "Scrim", targetId: scrim.id },
-    orderBy: { createdAt: "desc" }, select: { afterData: true },
-  });
-  type Entry = { userId: string; assignedPosition: string };
-  const log = confirm?.afterData as { blue?: Entry[]; red?: Entry[] } | null;
-  const pos = new Map<string,string>();
-  for (const p of [...(log?.blue ?? []), ...(log?.red ?? [])]) {
-    if (p.userId && p.assignedPosition) pos.set(p.userId,p.assignedPosition);
-  }
+  // 확정된 팀 명단만 제공한다. 실제 라인은 팀원들이 자유롭게 정한다.
   return scrim.participants.map(p => ({
     riotId: `${p.user.riotAccount!.gameName}#${p.user.riotAccount!.tagLine}`,
     team: p.team!,
-    position: pos.get(p.userId) ?? p.mainPosition,
-  })).sort((a,b) => a.team.localeCompare(b.team) ||
-    ["TOP","JUNGLE","MID","ADC","SUPPORT"].indexOf(a.position) -
-    ["TOP","JUNGLE","MID","ADC","SUPPORT"].indexOf(b.position));
+  })).sort((a, b) => a.team.localeCompare(b.team) || a.riotId.localeCompare(b.riotId));
 }

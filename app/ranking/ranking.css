@@ -519,3 +519,55 @@
     font-size: 11px;
   }
 }
+
+/* NAEGUN_RANK_FRAME_CLIP_FIX_V2 */
+
+.ranking-summoner {
+  overflow: visible !important;
+}
+
+.ranking-summoner .ng-shop-avatar-wrap {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 30px !important;
+  height: 30px !important;
+  flex: 0 0 30px !important;
+  overflow: visible !important;
+  isolation: isolate;
+  z-index: 1;
+}
+
+.ranking-summoner .ng-shop-avatar-wrap
+> .ranking-profile-icon {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+.ranking-summoner .ng-shop-avatar-wrap
+> .ng-shop-frame-deco {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 142.42003% !important;
+  height: 142.42003% !important;
+  transform: translate(-50%, -50%) !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+@media(max-width:600px) {
+  .ranking-summoner .ng-shop-avatar-wrap {
+    width: 26px !important;
+    height: 26px !important;
+    flex-basis: 26px !important;
+  }
+}

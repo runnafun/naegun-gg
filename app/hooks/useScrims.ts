@@ -19,6 +19,7 @@ type UseScrimsOptions = {
   active?: boolean;
   limit?: number;
   participants?: boolean;
+  history?: boolean;
   intervalMs?: number;
 };
 
@@ -38,6 +39,7 @@ export function useScrims(
     active = false,
     limit = 100,
     participants = false,
+    history = false,
     intervalMs = 5000,
   } = options;
 
@@ -73,10 +75,10 @@ export function useScrims(
       }
 
       if (active) {
-        params.set(
-          "active",
-          "1",
-        );
+        params.set("active", "1");
+      }
+      if (history) {
+        params.set("history", "1");
       }
 
       params.set(
@@ -175,6 +177,7 @@ export function useScrims(
       active,
       limit,
       participants,
+      history,
     ]);
 
   useEffect(() => {

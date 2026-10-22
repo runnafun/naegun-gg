@@ -1,5 +1,6 @@
 import { NextRequest,NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
+import {applyShopSettlementEffects} from "@/app/lib/naegun-shop-db";
 import { requireAdmin } from "@/app/lib/admin-auth";
 import { applyProtection,applyRankResult,getRank,loadRankSettlement } from "@/app/lib/ranked-rewards";
 export const dynamic="force-dynamic";
@@ -47,7 +48,10 @@ export async function POST(request:NextRequest,context:Params){
           tx.userStats.findUnique({where:{userId:p.userId}}),
           tx.defenseStats.findUnique({where:{userId:p.userId}}),
         ]);
-        const rank=applyRankResult(stats?.tierScore??0,win,defense?.tickets??0);
+        const shopEffect=await applyShopSettlementEffects(tx,info.scrim.id,p.userId,win,stats?.tierScore??0);
+      const rank=applyRankResult(stats?.tierScore??0,win,defense?.tickets??0);
+      if(shopEffect.shield&&!win){rank.after=rank.before;rank.usedTicket=false;rank.afterRank=getRank(rank.after);}
+      if(shopEffect.double&&win){rank.after=Math.min(102,rank.before+2);rank.afterRank=getRank(rank.after);}
         const protection=applyProtection(defense?.progress??0,
           (defense?.tickets??0)-(rank.usedTicket?1:0),5+(isMvp?50:0)+(isAce?25:0));
         const streak=win?(stats?.currentStreak??0)+1:0;
@@ -89,3 +93,5 @@ export async function POST(request:NextRequest,context:Params){
     return fail(message, /ALREADY_SETTLED|STATUS_CHANGED|UNIQUE|P2002/.test(message)?409:400);
   }
 }
+
+// NAEGUN_SHOP_V1

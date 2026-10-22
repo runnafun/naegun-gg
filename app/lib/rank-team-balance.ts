@@ -176,7 +176,7 @@ function evaluate(
   const bOptions = lineups(blue);
   const rOptions = lineups(red);
 
-  // 팀 밸런스 70% + 라인 20% + 선호도 10%
+  // 주포지션 분배(필수) 이후: 팀 전력 55% + 매치업 17% + 주/부 선호도 28%.
   for (const b of bOptions) {
     for (const r of rOptions) {
       const lineDiff = avg(
@@ -191,8 +191,8 @@ function evaluate(
       // 주포지션/부포지션 불이익을 LP 단위로 환산 (전력 점수에 직접 가산하지 않음).
       const positionPenalty = (b.penalty + r.penalty) / 10 * 8;
 
-      // 팀 합계 70%, 같은 라인 매칭 20%, 포지션 선호도 10%.
-      const penalty = teamPenalty * 0.70 + lineDiff * 0.20 + positionPenalty * 0.10;
+      // 부포지션을 포함한 팀 커버리지를 기존보다 강하게 반영.
+      const penalty = teamPenalty * 0.55 + lineDiff * 0.17 + positionPenalty * 0.28;
 
       if (
         !best ||
@@ -217,6 +217,24 @@ function evaluate(
   };
 }
 
+// 주포지션은 팀별 인원 차이가 최대 1명이 되도록 강제한다.
+// 부포지션과 팀 내 라인 커버리지는 기존 최적화 로직으로 평가한다.
+// assignedPosition은 서버 호환을 위한 내부 슬롯이지 실제 플레이 지시가 아니다.
+function balancedPrimaryPositions(blue: RankRatedPlayer[], red: RankRatedPlayer[]): boolean {
+  const counts = new Map<string, number>();
+  const bucket = (p: RankRatedPlayer) =>
+    LANES.includes(p.mainPosition as Lane) ? p.mainPosition! : "ANY";
+  for (const p of blue) {
+    const k = bucket(p);
+    counts.set(k, (counts.get(k) ?? 0) + 1);
+  }
+  for (const p of red) {
+    const k = bucket(p);
+    counts.set(k, (counts.get(k) ?? 0) - 1);
+  }
+  return [...counts.values()].every(diff => Math.abs(diff) <= 1);
+}
+
 export function balanceRankTeams(
   input: RankPlayer[]
 ) {
@@ -233,6 +251,7 @@ export function balanceRankTeams(
 
   let best:
     ReturnType<typeof evaluate> | null = null;
+  let evaluatedCombinations = 0;
 
   // 10명 중 첫 선수를 블루에 고정
   // 실제 비교 조합 = 126개
@@ -253,7 +272,23 @@ export function balanceRankTeams(
       }
     }
 
-    const candidate =
+    // 주 서폿 3명이 한 팀에 전부 몰리는 조합 등을 배제한다.
+    if (!balancedPrimaryPositions(blue, red)) continue;
+    evaluatedCombinations++;
+
+    // NAEGUN_MAIN_LANE_SPLIT_V2
+    if (!LANES.every((lane) =>
+      Math.abs(
+        blue.filter(
+          p => p.mainPosition === lane
+        ).length -
+        red.filter(
+          p => p.mainPosition === lane
+        ).length
+      ) <= 1
+    )) continue;
+
+        const candidate =
       evaluate(blue, red);
 
     if (
@@ -294,6 +329,6 @@ export function balanceRankTeams(
       Math.max(1, (blueTotal + redTotal) / 2)
       * 100
     ),
-    evaluatedCombinations: 126,
+    evaluatedCombinations,
   };
 }

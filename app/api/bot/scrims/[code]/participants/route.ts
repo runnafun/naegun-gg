@@ -4,6 +4,7 @@ import {
 } from "next/server";
 
 import { prisma } from "@/app/lib/prisma";
+import {bindShopItemsToScrim,releaseShopItemsForUser} from "@/app/lib/naegun-shop-db";
 import { syncRiotAccountByUserId } from "@/app/lib/riot-sync";
 
 import { isValidBotRequest } from "@/app/lib/bot-auth";
@@ -292,6 +293,8 @@ export async function POST(
       },
     });
 
+  if(scrim.type==='RANKED' && status==='CONFIRMED') await bindShopItemsToScrim(discordAccount.userId,scrim.id);
+
   /*
     참가 신청 응답을 Riot API 때문에 지연시키지 않는다.
     참가자는 즉시 등록하고,
@@ -451,6 +454,10 @@ export async function PATCH(
         status: body.status,
       },
     });
+  if(scrim.type==='RANKED') {
+    if(body.status==='CANCELLED'||body.status==='REMOVED') await releaseShopItemsForUser(discordAccount.userId,scrim.id);
+    else if(body.status==='CONFIRMED'&&scrim.status==='OPEN') await bindShopItemsToScrim(discordAccount.userId,scrim.id);
+  }
 
   return NextResponse.json({
     ok: true,
@@ -465,3 +472,5 @@ export async function PATCH(
     },
   });
 }
+
+// NAEGUN_SHOP_V1

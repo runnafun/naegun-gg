@@ -2184,3 +2184,67 @@ input {
 
   pointer-events: none;
 }
+
+
+/* NAEGUN_HEADER_LINKS_20261013 */
+/* 9개 메뉴가 좁은 PC 화면에서 겹치지 않도록 조정 */
+.nav {
+  gap: clamp(12px, 1.35vw, 24px);
+  min-width: 0;
+}
+.nav-item {
+  white-space: nowrap;
+}
+.mobile-nav-toggle {
+  display: none;
+}
+@media (min-width: 801px) and (max-width: 1400px) {
+  .header-inner { padding-left: 18px; padding-right: 18px; }
+  .logo img { height: 32px; }
+  .nav { gap: 12px; }
+  .nav-item { font-size: 14px; }
+  .user-menu-wrap { margin-left: 13px; }
+  .login-button { margin-left: 13px; }
+}
+@media (max-width: 1180px) {
+  .nav { display: none; }
+  .user-menu-wrap, .auth-loading, .login-button { margin-left: auto; }
+  .mobile-nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    margin-left: 10px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, .20);
+    border-radius: 8px;
+    background: rgba(15, 24, 19, .95);
+    color: white;
+    cursor: pointer;
+    font-size: 21px;
+  }
+  .nav.nav-mobile-open {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+    margin: 0;
+    padding: 12px 18px 18px;
+    gap: 0;
+    border-top: 1px solid rgba(255, 255, 255, .12);
+    background: #09140d;
+    box-shadow: 0 12px 24px rgba(0,0,0,.35);
+  }
+  .nav.nav-mobile-open .nav-item {
+    display: block;
+    padding: 12px 10px;
+    font-size: 15px;
+  }
+}

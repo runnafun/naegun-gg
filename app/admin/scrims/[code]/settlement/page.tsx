@@ -25,7 +25,7 @@ export default function SettlementPage(){
    }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setLoading(false)}
  }
  const fields={background:"#131619",border:"1px solid #333a37",color:"#fff",padding:12,borderRadius:4};
- return <main style={{background:"#090b0a",color:"#f7f7f7",minHeight:"100vh",padding:"42px max(20px,calc((100% - 1100px)/2))",fontFamily:"Arial,sans-serif"}}>
+ return <main className="ng-scrim-subpage" style={{background:"#090b0a",color:"#f7f7f7",minHeight:"100vh",padding:"42px max(20px,calc((100% - 1100px)/2))",fontFamily:"Arial,sans-serif"}}>
    <p style={{color:"#9bca66",fontSize:12}}>NAEGUN.GG · RANKED ADMIN</p><h1 style={{fontSize:30,marginTop:10}}>{code} · BO3 최종 정산</h1>
    <p style={{color:"#9caaa0"}}>결과를 확인하기 전까지 코인·보호권·방패는 지급되지 않습니다.</p>
    {error&&<div style={{color:"#ffc6c6",margin:"20px 0"}}>오류: {error}</div>}
